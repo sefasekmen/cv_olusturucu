@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Profesyonel CV'nizi saniyeler içinde oluşturun. Gerçek zamanlı önizleme, güvenli saklama ve PDF çıktı desteği.">
+    <title>CV Oluşturucu - Profesyonel CV Tasarımı</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Header / Navigation -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="navbar-container">
+                <!-- Logo / Title -->
+                <div class="logo">
+                    <span class="logo-icon">📄</span>
+                    <h1 class="logo-text">CV Oluşturucu</h1>
+                </div>
+                
+                <!-- Primary Navigation Button -->
+                <button class="btn btn-load-cv" id="loadCVBtn">
+                    <span class="btn-icon">📂</span>
+                    Kayıtlı CV Yükle
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <h2 class="hero-title">Profesyonel CV'nizi Oluşturun</h2>
+                <p class="hero-subtitle">
+                    Saniyeler içinde profesyonel ve A4/PDF çıktısına uygun CV'nizi hazırlayın. 
+                    Gerçek zamanlı önizleme ile değişikliklerinizi anında görün.
+                </p>
+                <button class="btn btn-cta" id="ctaBtn">
+                    Şimdi Başla
+                    <span class="btn-arrow">→</span>
+                </button>
+            </div>
+            <!-- Animated Background Shapes -->
+            <div class="hero-background">
+                <div class="shape shape-circle-1"></div>
+                <div class="shape shape-circle-2"></div>
+                <div class="shape shape-square"></div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features" id="featuresSection">
+            <div class="features-container">
+                <h2 class="section-title">Neden CV Oluşturucu?</h2>
+                <p class="section-subtitle">Harika özellikleri keşfedin</p>
+                
+                <div class="features-grid">
+                    <!-- Feature 1: Real-time Preview -->
+                    <article class="feature-card">
+                        <div class="feature-icon">👁️</div>
+                        <h3 class="feature-title">Gerçek Zamanlı Önizleme</h3>
+                        <p class="feature-description">
+                            Yazarken CV'nizi anında görerek tam kontrol sahibi olun.
+                        </p>
+                    </article>
+
+                    <!-- Feature 2: Secure Storage -->
+                    <article class="feature-card">
+                        <div class="feature-icon">🔒</div>
+                        <h3 class="feature-title">Tarayıcıda Güvenli Saklama</h3>
+                        <p class="feature-description">
+                            Verileriniz localStorage'de güvenle saklanır, hiç kimse erişemez.
+                        </p>
+                    </article>
+
+                    <!-- Feature 3: Multiple Templates -->
+                    <article class="feature-card">
+                        <div class="feature-icon">🎨</div>
+                        <h3 class="feature-title">Çoklu Şablon Desteği</h3>
+                        <p class="feature-description">
+                            Çeşitli profesyonel şablonlar arasından seçim yapın.
+                        </p>
+                    </article>
+
+                    <!-- Feature 4: PDF Output -->
+                    <article class="feature-card">
+                        <div class="feature-icon">📥</div>
+                        <h3 class="feature-title">A4 Çıktı Uyumluluğu</h3>
+                        <p class="feature-description">
+                            CV'nizi PDF olarak indirin ve yazıcıdan A4 boyutunda yazdırın.
+                        </p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Templates Section -->
+        <section class="templates" id="templatesSection">
+            <div class="templates-container">
+                <h2 class="section-title">CV Şablonları</h2>
+                <p class="section-subtitle">En uygun şablonu seçin ve başlayın</p>
+                
+                <div class="templates-grid">
+                    <!-- Template 1: Classic -->
+                    <article class="template-card">
+                        <div class="template-preview template-classic">
+                            <div class="template-header">Adı Soyadı</div>
+                            <div class="template-section">Özet</div>
+                            <div class="template-line"></div>
+                            <div class="template-section">Deneyim</div>
+                            <div class="template-line"></div>
+                            <div class="template-section">Eğitim</div>
+                        </div>
+                        <div class="template-info">
+                            <h3 class="template-title">Klasik</h3>
+                            <p class="template-description">
+                                Zamansız ve profesyonel. Tüm sektörler için ideal.
+                            </p>
+                            <button class="btn btn-template" data-template="classic">
+                                Bu şablonla başla
+                            </button>
+                        </div>
+                    </article>
+
+                    <!-- Template 2: Modern -->
+                    <article class="template-card">
+                        <div class="template-preview template-modern">
+                            <div class="template-header-modern">Adı Soyadı</div>
+                            <div class="template-content-modern">
+                                <div class="template-section-modern">Deneyim</div>
+                                <div class="template-line"></div>
+                                <div class="template-section-modern">Beceriler</div>
+                            </div>
+                        </div>
+                        <div class="template-info">
+                            <h3 class="template-title">Modern</h3>
+                            <p class="template-description">
+                                Güncel ve yaratıcı. Tasarımcılar ve sanatçılar için.
+                            </p>
+                            <button class="btn btn-template" data-template="modern">
+                                Bu şablonla başla
+                            </button>
+                        </div>
+                    </article>
+
+                    <!-- Template 3: Minimal -->
+                    <article class="template-card">
+                        <div class="template-preview template-minimal">
+                            <div class="template-minimal-header">Adı Soyadı</div>
+                            <div class="template-minimal-content">
+                                <span class="template-dot">•</span> Deneyim
+                                <span class="template-dot">•</span> Eğitim
+                            </div>
+                        </div>
+                        <div class="template-info">
+                            <h3 class="template-title">Minimal</h3>
+                            <p class="template-description">
+                                Sade ve etkili. İçerik ön planda, tasarım arka planda.
+                            </p>
+                            <button class="btn btn-template" data-template="minimal">
+                                Bu şablonla başla
+                            </button>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <p class="footer-text">
+                &copy; 2024 CV Oluşturucu. Tüm hakları saklıdır. 
+                <span class="footer-divider">|</span>
+                Üniversite Final Projesi
+            </p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
