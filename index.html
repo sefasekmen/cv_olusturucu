@@ -5,52 +5,75 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Profesyonel CV'nizi saniyeler içinde oluşturun. Gerçek zamanlı önizleme, güvenli saklama ve PDF çıktı desteği.">
     <title>CV Oluşturucu - Profesyonel CV Tasarımı</title>
+    
+    <!-- Google Fonts Import - Montserrat -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Header / Navigation -->
+    <!-- ===== INTERACTIVE CANVAS BACKGROUND ===== -->
+    <!-- Vanilla JS ve Canvas kullanarak beyaz partiküller ve mouse interaksiyonu -->
+    <canvas id="particleCanvas" class="canvas-background"></canvas>
+
+    <!-- ===== Header / Navigation - REVERSED LAYOUT ===== -->
+    <!-- "Kayıtlı CV Yükle" solda, Logo sağda -->
     <header class="header">
         <nav class="navbar">
             <div class="navbar-container">
-                <!-- Logo / Title -->
-                <div class="logo">
-                    <span class="logo-icon">📄</span>
-                    <h1 class="logo-text">CV Oluşturucu</h1>
-                </div>
-                
-                <!-- Primary Navigation Button -->
-                <button class="btn btn-load-cv" id="loadCVBtn">
-                    <span class="btn-icon">📂</span>
-                    Kayıtlı CV Yükle
+                <!-- Load CV Button - Solda, Glowing hover effect ile -->
+                <button class="btn btn-load-cv" id="loadCVBtn" aria-label="Kayıtlı CV yükle">
+                    <span class="btn-icon">
+                        <!-- Folder SVG Icon -->
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                    </span>
+                    <span class="btn-text">Kayıtlı CV Yükle</span>
                 </button>
+                
+                <!-- Logo / Title - Sağda, Cherry Red gradient text effect ile -->
+                <div class="logo">
+                    <h1 class="logo-text">CV Oluşturucu</h1>
+                    <span class="logo-icon">
+                        <!-- Document SVG Icon -->
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                        </svg>
+                    </span>
+                </div>
             </div>
         </nav>
     </header>
 
-    <!-- Main Content -->
-    <main>
-        <!-- Hero Section -->
-        <section class="hero">
+    <!-- ===== Main Content ===== -->
+    <main class="main-content">
+        
+        <!-- Hero Section - Canvas arka planı üzerinde -->
+        <section class="hero" id="heroSection">
             <div class="hero-content">
-                <h2 class="hero-title">Profesyonel CV'nizi Oluşturun</h2>
+                <h2 class="hero-title">
+                    <span class="gradient-text">Profesyonel CV'nizi</span>
+                    <br>
+                    Saniyeler İçinde Oluşturun
+                </h2>
                 <p class="hero-subtitle">
-                    Saniyeler içinde profesyonel ve A4/PDF çıktısına uygun CV'nizi hazırlayın. 
-                    Gerçek zamanlı önizleme ile değişikliklerinizi anında görün.
+                    İçeriğinize odaklanın, tasarımı bize bırakın. Gerçek zamanlı önizleme ile 
+                    mükemmel CV'nizi oluşturun ve PDF olarak indirin.
                 </p>
-                <button class="btn btn-cta" id="ctaBtn">
-                    Şimdi Başla
-                    <span class="btn-arrow">→</span>
+                
+                <!-- CTA Button - Smooth scroll ile -->
+                <button class="btn btn-cta btn-primary" id="ctaBtn" aria-label="Şimdi başla">
+                    <span class="btn-text">Şimdi Başla</span>
+                    <span class="btn-arrow">↓</span>
                 </button>
-            </div>
-            <!-- Animated Background Shapes -->
-            <div class="hero-background">
-                <div class="shape shape-circle-1"></div>
-                <div class="shape shape-circle-2"></div>
-                <div class="shape shape-square"></div>
             </div>
         </section>
 
-        <!-- Features Section -->
+        <!-- Features Section - SVG Icons ile -->
         <section class="features" id="featuresSection">
             <div class="features-container">
                 <h2 class="section-title">Neden CV Oluşturucu?</h2>
@@ -59,108 +82,141 @@
                 <div class="features-grid">
                     <!-- Feature 1: Real-time Preview -->
                     <article class="feature-card">
-                        <div class="feature-icon">👁️</div>
+                        <div class="feature-icon">
+                            <!-- Eye SVG Icon - Floating animation ile -->
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        </div>
                         <h3 class="feature-title">Gerçek Zamanlı Önizleme</h3>
                         <p class="feature-description">
-                            Yazarken CV'nizi anında görerek tam kontrol sahibi olun.
+                            Yazarken CV'nizi anında görerek tam kontrol sahibi olun. Her değişiklik anlık olarak yansıtılır.
                         </p>
                     </article>
 
                     <!-- Feature 2: Secure Storage -->
                     <article class="feature-card">
-                        <div class="feature-icon">🔒</div>
+                        <div class="feature-icon">
+                            <!-- Lock SVG Icon - Floating animation ile -->
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                            </svg>
+                        </div>
                         <h3 class="feature-title">Tarayıcıda Güvenli Saklama</h3>
                         <p class="feature-description">
-                            Verileriniz localStorage'de güvenle saklanır, hiç kimse erişemez.
+                            Verileriniz localStorage'de güvenle saklanır. Hiçbir sunucu erişimi, tamamen özel.
                         </p>
                     </article>
 
                     <!-- Feature 3: Multiple Templates -->
                     <article class="feature-card">
-                        <div class="feature-icon">🎨</div>
+                        <div class="feature-icon">
+                            <!-- Palette SVG Icon - Floating animation ile -->
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <circle cx="12" cy="12" r="6"></circle>
+                                <circle cx="12" cy="7" r="1.5"></circle>
+                                <circle cx="17" cy="17" r="1.5"></circle>
+                                <circle cx="7" cy="17" r="1.5"></circle>
+                                <circle cx="17" cy="7" r="1.5"></circle>
+                            </svg>
+                        </div>
                         <h3 class="feature-title">Çoklu Şablon Desteği</h3>
                         <p class="feature-description">
-                            Çeşitli profesyonel şablonlar arasından seçim yapın.
+                            Çeşitli profesyonel şablonlar arasından seçim yapın. Tüm endüstriler için uygun tasarımlar.
                         </p>
                     </article>
 
                     <!-- Feature 4: PDF Output -->
                     <article class="feature-card">
-                        <div class="feature-icon">📥</div>
+                        <div class="feature-icon">
+                            <!-- Download SVG Icon - Floating animation ile -->
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                        </div>
                         <h3 class="feature-title">A4 Çıktı Uyumluluğu</h3>
                         <p class="feature-description">
-                            CV'nizi PDF olarak indirin ve yazıcıdan A4 boyutunda yazdırın.
+                            CV'nizi PDF olarak indirin. A4 boyutunda mükemmel şekilde yazdırılmaya hazır.
                         </p>
                     </article>
                 </div>
             </div>
         </section>
 
-        <!-- Templates Section -->
+        <!-- Templates Section - The Powder Pink Zone! 🌸 -->
         <section class="templates" id="templatesSection">
             <div class="templates-container">
                 <h2 class="section-title">CV Şablonları</h2>
-                <p class="section-subtitle">En uygun şablonu seçin ve başlayın</p>
+                <p class="section-subtitle">En uygun şablonu seçin ve hemen başlayın</p>
                 
                 <div class="templates-grid">
                     <!-- Template 1: Classic -->
-                    <article class="template-card">
+                    <article class="template-card template-card-1">
                         <div class="template-preview template-classic">
                             <div class="template-header">Adı Soyadı</div>
-                            <div class="template-section">Özet</div>
-                            <div class="template-line"></div>
-                            <div class="template-section">Deneyim</div>
-                            <div class="template-line"></div>
-                            <div class="template-section">Eğitim</div>
+                            <div class="template-meta">İletişim Bilgileri</div>
+                            <div class="template-divider"></div>
+                            <div class="template-section">Profesyonel Özet</div>
+                            <div class="template-item">Uzun deneyim ve başarı</div>
+                            <div class="template-divider"></div>
+                            <div class="template-section">İş Deneyimi</div>
+                            <div class="template-item">Şirket - Pozisyon (Tarih)</div>
                         </div>
                         <div class="template-info">
                             <h3 class="template-title">Klasik</h3>
                             <p class="template-description">
-                                Zamansız ve profesyonel. Tüm sektörler için ideal.
+                                Zamansız ve profesyonel. Tüm sektörler için ideal, geleneksel işe alımlar için mükemmel.
                             </p>
-                            <button class="btn btn-template" data-template="classic">
-                                Bu şablonla başla
+                            <button class="btn btn-template btn-template-pink" data-template="classic" aria-label="Klasik şablonla başla">
+                                Bu Şablonla Başla
                             </button>
                         </div>
                     </article>
 
                     <!-- Template 2: Modern -->
-                    <article class="template-card">
+                    <article class="template-card template-card-2">
                         <div class="template-preview template-modern">
                             <div class="template-header-modern">Adı Soyadı</div>
+                            <div class="template-tag">Web Developer | Creative</div>
                             <div class="template-content-modern">
                                 <div class="template-section-modern">Deneyim</div>
-                                <div class="template-line"></div>
-                                <div class="template-section-modern">Beceriler</div>
+                                <div class="template-item-modern">Yenilikçi projeler ve teknoloji</div>
+                                <div class="template-item-modern">Güncel teknoloji Stack'i</div>
                             </div>
                         </div>
                         <div class="template-info">
                             <h3 class="template-title">Modern</h3>
                             <p class="template-description">
-                                Güncel ve yaratıcı. Tasarımcılar ve sanatçılar için.
+                                Güncel ve yaratıcı. Tasarımcılar, yazılımcılar ve sanatçılar için özel tasarım.
                             </p>
-                            <button class="btn btn-template" data-template="modern">
-                                Bu şablonla başla
+                            <button class="btn btn-template btn-template-pink" data-template="modern" aria-label="Modern şablonla başla">
+                                Bu Şablonla Başla
                             </button>
                         </div>
                     </article>
 
                     <!-- Template 3: Minimal -->
-                    <article class="template-card">
+                    <article class="template-card template-card-3">
                         <div class="template-preview template-minimal">
                             <div class="template-minimal-header">Adı Soyadı</div>
                             <div class="template-minimal-content">
-                                <span class="template-dot">•</span> Deneyim
-                                <span class="template-dot">•</span> Eğitim
+                                <div class="template-minimal-item">Email • Telefon • LinkedIn</div>
+                                <div class="template-section-minimal">Temel Bilgiler</div>
+                                <div class="template-minimal-item">Ödül ve başarılar listesi</div>
                             </div>
                         </div>
                         <div class="template-info">
                             <h3 class="template-title">Minimal</h3>
                             <p class="template-description">
-                                Sade ve etkili. İçerik ön planda, tasarım arka planda.
+                                Sade ve etkili. İçerik ön planda, tasarım arka planda. Maksimum odaklanma.
                             </p>
-                            <button class="btn btn-template" data-template="minimal">
-                                Bu şablonla başla
+                            <button class="btn btn-template btn-template-pink" data-template="minimal" aria-label="Minimal şablonla başla">
+                                Bu Şablonla Başla
                             </button>
                         </div>
                     </article>
@@ -169,7 +225,7 @@
         </section>
     </main>
 
-    <!-- Footer -->
+    <!-- ===== Footer ===== -->
     <footer class="footer">
         <div class="footer-container">
             <p class="footer-text">
@@ -177,10 +233,13 @@
                 <span class="footer-divider">|</span>
                 Üniversite Final Projesi
             </p>
+            <p class="footer-subtitle">
+                Profesyonel CV'nizi dakikalar içinde oluşturun ✨
+            </p>
         </div>
     </footer>
 
-    <!-- JavaScript -->
+    <!-- JavaScript - Canvas background ve interactive features -->
     <script src="script.js"></script>
 </body>
 </html>

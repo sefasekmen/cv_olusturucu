@@ -1,350 +1,608 @@
-/* =============================================
-   CV OLUŞTURUCU - MAIN JAVASCRIPT FILE
-   Vanilla JavaScript - Event Listeners & Interactive Features
-   ============================================= */
+/* ========================================================
+   CV OLUŞTURUCU - VANILLA JAVASCRIPT
+   Canvas Particle Animation System (Beyaz Partiküller)
+   Interactive Background: Mouse Reaction, Physics, Line Drawing
+   100% Vanilla JS - No Libraries
+   ======================================================== */
 
-// ===== DOM Element References =====
-// Get all important elements from the DOM for event handling
+// ===== CANVAS SETUP & INITIALIZATION =====
+// Canvas elementini al ve 2D context oluştur
+const canvas = document.getElementById('particleCanvas');
+const ctx = canvas.getContext('2d');
 
+// Canvas'ı pencere boyutuna ayarla
+function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+// ===== MOUSE POSITION TRACKING =====
+// Kullanıcı mouse'u hareket ettirdiğinde koordinatları takip et
+let mouseX = canvas.width / 2;
+let mouseY = canvas.height / 2;
+let mouseActive = false;
+
+document.addEventListener('mousemove', (event) => {
+    mouseX = event.clientX;
+    mouseY = event.clientY;
+    mouseActive = true;
+});
+
+document.addEventListener('mouseleave', () => {
+    mouseActive = false;
+});
+
+document.addEventListener('mouseenter', () => {
+    mouseActive = true;
+});
+
+// ===== PARTICLE CLASS =====
+// Beyaz partiküllerin fizik ve davranışını tanımla
+class Particle {
+    constructor(x, y) {
+        // Pozisyon - Random başlangıç noktası
+        this.x = x || Math.random() * canvas.width;
+        this.y = y || Math.random() * canvas.height;
+        
+        // Hız - Random yön ve büyüklük
+        this.vx = (Math.random() - 0.5) * 2;  // -1 ile 1 arasında
+        this.vy = (Math.random() - 0.5) * 2;  // -1 ile 1 arasında
+        
+        // Partikül özellikleri
+        this.radius = Math.random() * 1.5 + 0.5;  // Boyut: 0.5 - 2px
+        this.mass = this.radius;  // Kütlesi boyutuyla orantılı
+        
+        // Orijinal hız kaydı (sabit tutmak için)
+        this.baseVx = this.vx;
+        this.baseVy = this.vy;
+        
+        // Renk ve opaklık
+        this.opacity = 0.7;
+        this.color = '#ffffff';  // Beyaz
+    }
+    
+    // ===== UPDATE METODU =====
+    // Partikülün konumunu her frame güncelle
+    update() {
+        // 1. Mouse etkileşimi (çekim / itme)
+        if (mouseActive) {
+            // Mouse'a mesafeyi hesapla
+            const dx = this.x - mouseX;
+            const dy = this.y - mouseY;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            
+            // Etkileşim alanı (piksel cinsinden)
+            const interactionRadius = 150;
+            
+            if (distance < interactionRadius && distance > 0) {
+                // Normalize et (birim vektör yap)
+                const normalizedDx = dx / distance;
+                const normalizedDy = dy / distance;
+                
+                // Gücü mesafeyle azalt (daha yakın = daha güçlü)
+                const force = (interactionRadius - distance) / interactionRadius;
+                
+                // Partiküle itme kuvveti uygula (mouse'tan uzaklaş)
+                const pushStrength = 0.3;
+                this.vx += normalizedDx * force * pushStrength;
+                this.vy += normalizedDy * force * pushStrength;
+                
+                // Opaklığını arttır (mouse yakın ise daha görünür)
+                this.opacity = Math.min(1, 0.7 + (force * 0.3));
+            } else {
+                // Mouse uzaksa opaklık normal düzeye dön
+                this.opacity = Math.max(0.3, this.opacity - 0.01);
+            }
+        }
+        
+        // 2. Konumu hızla güncelle
+        this.x += this.vx;
+        this.y += this.vy;
+        
+        // 3. Hızı hafif düşür (friction/damping)
+        this.vx *= 0.98;
+        this.vy *= 0.98;
+        
+        // 4. Duvarlardan sıçra (bounce physics)
+        const bounceStrength = 0.8;  // Sıçrama gücü (0.8 = biraz enerji kaybı)
+        
+        // Sağ duvar
+        if (this.x + this.radius > canvas.width) {
+            this.x = canvas.width - this.radius;
+            this.vx *= -bounceStrength;
+        }
+        
+        // Sol duvar
+        if (this.x - this.radius < 0) {
+            this.x = this.radius;
+            this.vx *= -bounceStrength;
+        }
+        
+        // Üst duvar
+        if (this.y - this.radius < 0) {
+            this.y = this.radius;
+            this.vy *= -bounceStrength;
+        }
+        
+        // Alt duvar
+        if (this.y + this.radius > canvas.height) {
+            this.y = canvas.height - this.radius;
+            this.vy *= -bounceStrength;
+        }
+    }
+    
+    // ===== DRAW METODU =====
+    // Partikülü canvas'e çiz
+    draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
+        ctx.fill();
+        ctx.closePath();
+    }
+}
+
+// ===== PARTICLE SYSTEM OLUŞTUR =====
+// Başlangıçta partikülleri yarat
+const particles = [];
+const particleCount = 50;  // Partiküll sayısı (performans vs görünüm dengesi)
+
+for (let i = 0; i < particleCount; i++) {
+    particles.push(new Particle());
+}
+
+// ===== ÇIZGI BAĞLANTISI FONKSİYONU =====
+// Yakın partiküller arasında çizgi çiz
+function drawConnections() {
+    // Bağlantı maksimum mesafesi
+    const maxDistance = 100;
+    
+    for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+            const dx = particles[i].x - particles[j].x;
+            const dy = particles[i].y - particles[j].y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            
+            // Eğer partiküller yakın ise çizgi çiz
+            if (distance < maxDistance) {
+                // Opaklığı mesafeye göre ayarla (daha yakın = daha opak)
+                const opacity = (maxDistance - distance) / maxDistance * 0.3;
+                
+                ctx.strokeStyle = `rgba(255, 255, 255, ${opacity})`;
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(particles[i].x, particles[i].y);
+                ctx.lineTo(particles[j].x, particles[j].y);
+                ctx.stroke();
+                ctx.closePath();
+            }
+        }
+    }
+}
+
+// ===== ATTRACTION FONKSİYONU =====
+// Tüm partikülleri mouse'a doğru çek (minor efekt)
+function applyMouseAttraction() {
+    if (!mouseActive) return;
+    
+    particles.forEach(particle => {
+        const dx = mouseX - particle.x;
+        const dy = mouseY - particle.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        
+        const attractionRadius = 200;
+        
+        if (distance < attractionRadius && distance > 0) {
+            const attractionStrength = 0.05;
+            const force = (attractionRadius - distance) / attractionRadius;
+            
+            const normalizedDx = dx / distance;
+            const normalizedDy = dy / distance;
+            
+            // HAFIF çekim (itme kadar kuvvetli değil)
+            particle.vx += normalizedDx * force * attractionStrength;
+            particle.vy += normalizedDy * force * attractionStrength;
+        }
+    });
+}
+
+// ===== MAIN ANIMATION LOOP =====
+// requestAnimationFrame kullanarak smooth animasyon oluştur
+function animate() {
+    // Canvas'ı temizle (hafif trail efekti ile)
+    ctx.fillStyle = 'rgba(74, 14, 14, 0.02)';  // Çok hafif trail efekti
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    // Partikülleri güncelle ve çiz
+    particles.forEach(particle => {
+        particle.update();
+        particle.draw();
+    });
+    
+    // Yakın partiküller arasında çizgiler çiz
+    drawConnections();
+    
+    // Mouse çekimini uygula (hafif efekt)
+    applyMouseAttraction();
+    
+    // Sonraki frame için tekrarla
+    requestAnimationFrame(animate);
+}
+
+// Animasyonu başlat
+animate();
+
+// ===== DOM ELEMENT REFERENCES =====
+// Tüm interactive elemanlar için referanslar
 const loadCVBtn = document.getElementById('loadCVBtn');
 const ctaBtn = document.getElementById('ctaBtn');
 const templateButtons = document.querySelectorAll('.btn-template');
 const templatesSection = document.getElementById('templatesSection');
 
-// ===== Event Listener: Load Saved CV Button =====
-// Handle the "Kayıtlı CV Yükle" button click
-// Purpose: Allow users to load previously saved CV data from localStorage
+// ===== EVENT LISTENERS ===== 
 
+// "Kayıtlı CV Yükle" butonu
 if (loadCVBtn) {
     loadCVBtn.addEventListener('click', function() {
         console.log('Load CV button clicked');
-        
-        // Check if there's saved CV data in localStorage
-        const savedCV = localStorage.getItem('savedCV');
-        
-        if (savedCV) {
-            // If saved data exists, redirect to editor with the saved data
-            console.log('Saved CV found, navigating to editor...');
-            alert('Kaydedilmiş CV'niz bulundu! Düzenleyiciye yönlendiriliyorsunuz...');
-            // In production, redirect to the editor page with saved data
-            // window.location.href = 'editor.html?mode=edit';
-        } else {
-            // If no saved data, inform the user
-            console.log('No saved CV found in localStorage');
-            alert('Henüz kaydedilmiş CV bulunmuyor. Yeni bir CV oluşturmak için bir şablon seçin.');
-        }
+        handleLoadCVClick();
     });
 }
 
-// ===== Event Listener: CTA Button - Smooth Scroll =====
-// Handle the primary "Şimdi Başla" button click
-// Purpose: Smoothly scroll down to the templates section
-
+// "Şimdi Başla" CTA butonu - Smooth scroll
 if (ctaBtn) {
     ctaBtn.addEventListener('click', function() {
-        console.log('CTA button clicked - scrolling to templates section');
-        
-        // Use smooth scroll to navigate to templates section
+        console.log('CTA button clicked - scrolling to templates');
         if (templatesSection) {
             templatesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        } else {
-            console.warn('Templates section not found');
         }
     });
 }
 
-// ===== Event Listener: Template Selection Buttons =====
-// Handle individual template card button clicks
-// Purpose: Store selected template and redirect to CV editor
-
+// Şablon seçim butonları
 if (templateButtons.length > 0) {
     templateButtons.forEach((button) => {
         button.addEventListener('click', function(event) {
-            // Prevent default button behavior
             event.preventDefault();
-            
-            // Get the selected template name from data attribute
-            const selectedTemplate = this.getAttribute('data-template');
-            
-            console.log(`Template selected: ${selectedTemplate}`);
-            
-            // Store the selected template in localStorage for later use
-            localStorage.setItem('selectedTemplate', selectedTemplate);
-            
-            // Display confirmation message
-            const templateNames = {
-                classic: 'Klasik',
-                modern: 'Modern',
-                minimal: 'Minimal'
-            };
-            
-            const templateName = templateNames[selectedTemplate] || selectedTemplate;
-            alert(`${templateName} şablonuyla başlıyorsunuz! Düzenleyiciye yönlendiriliyorsunuz...`);
-            
-            // In production, redirect to the editor page
-            // Uncomment the line below when editor.html is created:
-            // window.location.href = 'editor.html?template=' + selectedTemplate;
-            
-            console.log(`Redirecting to editor with ${selectedTemplate} template...`);
+            handleTemplateSelection(this);
         });
     });
 }
 
-// ===== Event Listener: Keyboard Navigation (Optional Enhancement) =====
-// Handle Enter key press on buttons for better accessibility
-
+// Keyboard Navigation
 document.addEventListener('keydown', function(event) {
-    // If Enter is pressed on a focused button, trigger click
-    if (event.key === 'Enter' && event.target.classList.contains('btn')) {
-        console.log('Button activated via keyboard (Enter key)');
-        event.target.click();
+    if (event.key === 'Enter') {
+        const focusedElement = document.activeElement;
+        if (focusedElement && focusedElement.classList.contains('btn')) {
+            console.log('Button activated via keyboard (Enter)');
+            focusedElement.click();
+        }
     }
 });
 
-// ===== Feature: Auto-Save to LocalStorage (Optional Data Persistence) =====
-// Purpose: Save app preferences or temporary data
+// ===== HANDLE LOAD CV CLICK =====
+// localStorage'den kaydedilmiş CV'yi yükle
+
+function handleLoadCVClick() {
+    const savedCV = localStorage.getItem('savedCV');
+    
+    if (savedCV) {
+        console.log('Kaydedilmiş CV bulundu');
+        showNotification('Kaydedilmiş CV\'niz bulundu! Düzenleyiciye yönlendiriliyorsunuz...');
+        
+        // Production'da editor sayfasına yönlendir
+        // window.location.href = 'editor.html?mode=edit';
+    } else {
+        console.log('Kaydedilmiş CV yok');
+        showNotification('Henüz kaydedilmiş CV bulunmuyor. Yeni bir CV oluşturmak için bir şablon seçin.', 'warning');
+    }
+}
+
+// ===== HANDLE TEMPLATE SELECTION =====
+// Seçilen şablonu kaydet ve kullanıcıya bildir
+
+function handleTemplateSelection(button) {
+    const selectedTemplate = button.getAttribute('data-template');
+    
+    if (!selectedTemplate) {
+        console.error('Şablon seçimi başarısız');
+        return;
+    }
+    
+    console.log(`Şablon seçildi: ${selectedTemplate}`);
+    
+    // localStorage'e şablonu kaydet
+    localStorage.setItem('selectedTemplate', selectedTemplate);
+    localStorage.setItem('templateSelectionTime', new Date().toISOString());
+    
+    // Şablon adlarını tanımla
+    const templateNames = {
+        classic: 'Klasik',
+        modern: 'Modern',
+        minimal: 'Minimal'
+    };
+    
+    const templateName = templateNames[selectedTemplate] || selectedTemplate;
+    const message = `✨ ${templateName} şablonuyla başlıyorsunuz!`;
+    showNotification(message, 'success');
+    
+    // Production'da editor sayfasına yönlendir
+    // window.location.href = 'editor.html?template=' + selectedTemplate;
+    
+    console.log(`${selectedTemplate} şablonu yükleniyor...`);
+}
+
+// ===== NOTIFICATION SYSTEM =====
+// Kullanıcıya bilgi mesajlarını göster
+
+function showNotification(message, type = 'info') {
+    // alert() yerine daha şık bir sistem yap
+    alert(message);
+    
+    // Gelecek versiyonda custom toast notification
+    // const notification = document.createElement('div');
+    // notification.className = `notification notification-${type}`;
+    // notification.textContent = message;
+    // document.body.appendChild(notification);
+}
+
+// ===== INTERACTIVE BACKGROUND EFFECTS =====
+// Mouse hareketlerine göre orbs'ları hareket ettir
+
+function initializeInteractiveBackground() {
+    document.addEventListener('mousemove', function(event) {
+        mouseX = event.clientX;
+        mouseY = event.clientY;
+        
+        // Her orb'u mouse konumuna göre hareket ettir (parallax effect)
+        if (orbs.length > 0) {
+            orbs.forEach((orb, index) => {
+                // Her orb için farklı hız (parallax depth)
+                const speed = (index + 1) * 0.02;
+                const offsetX = (mouseX - window.innerWidth / 2) * speed;
+                const offsetY = (mouseY - window.innerHeight / 2) * speed;
+                
+                orb.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+            });
+        }
+    });
+}
+
+// ===== SCROLL ANIMATIONS =====
+// Kaydırırken elemanları animate et (Intersection Observer)
+
+function initializeScrollAnimations() {
+    // IntersectionObserver ayarla
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -100px 0px'
+    };
+    
+    const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                // Görünür hale gelince animasyon ekle
+                entry.target.style.animation = 'fadeInUp 0.6s ease-out';
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, observerOptions);
+    
+    // Feature cards ve template cards'a observer uygula
+    const animatedElements = document.querySelectorAll(
+        '.feature-card, .template-card, .section-title'
+    );
+    
+    animatedElements.forEach(element => {
+        element.style.opacity = '0';
+        element.style.transform = 'translateY(20px)';
+        observer.observe(element);
+    });
+}
+
+// ===== ACCESSIBILITY ENHANCEMENTS =====
+// Erişilebilirlik - Klavye navigasyonu ve ARIA
+
+function initializeAccessibility() {
+    // Focus visible için renk şeması
+    const buttons = document.querySelectorAll('.btn');
+    buttons.forEach(button => {
+        button.addEventListener('focus', function() {
+            this.style.outline = '3px solid #0066ff';
+            this.style.outlineOffset = '2px';
+        });
+        
+        button.addEventListener('blur', function() {
+            this.style.outline = 'none';
+        });
+    });
+    
+    // Skip links (optional, prodüksiyon için)
+    console.log('Accessibility features initialized');
+}
+
+// ===== APP PREFERENCES & PERSISTENCE =====
+// Uygulama tercihlerini kaydet
 
 function initializeAppPreferences() {
-    // Check if user is visiting for the first time
     const hasVisited = localStorage.getItem('appVisited');
     
     if (!hasVisited) {
-        console.log('First visit detected - setting initial preferences');
+        console.log('🎉 İlk ziyaret algılandı');
         
-        // Set initial app preferences
+        // İlk ziyaret verilerini kaydet
         localStorage.setItem('appVisited', 'true');
-        localStorage.setItem('appVersion', '1.0.0');
-        localStorage.setItem('lastVisit', new Date().toISOString());
+        localStorage.setItem('appVersion', '2.0.0');
+        localStorage.setItem('firstVisitTime', new Date().toISOString());
+        localStorage.setItem('theme', 'light');
     } else {
-        console.log('Returning visitor detected');
-        const lastVisit = localStorage.getItem('lastVisit');
-        console.log(`Last visit: ${lastVisit}`);
+        // Tekrarlayan ziyaretçi
+        const firstVisit = localStorage.getItem('firstVisitTime');
+        console.log(`👋 Hoş geldin! İlk ziyaret: ${firstVisit}`);
     }
+    
+    // Son ziyaret zamanını güncelle
+    localStorage.setItem('lastVisitTime', new Date().toISOString());
 }
 
-// ===== Feature: Smooth Scroll Enhancement for Internal Links =====
-// Purpose: Smooth scroll for any anchor links on the page
+// ===== ADVANCED: MOUSE OVER BUTTON EFFECTS =====
+// Butonlar üzerinde hover'da ışık efekti
 
-function initializeSmoothScroll() {
-    // Get all anchor links on the page
-    const internalLinks = document.querySelectorAll('a[href^="#"]');
+function initializeButtonGlowEffects() {
+    const buttons = document.querySelectorAll('.btn');
     
-    internalLinks.forEach((link) => {
-        link.addEventListener('click', function(event) {
-            event.preventDefault();
+    buttons.forEach(button => {
+        button.addEventListener('mousemove', function(event) {
+            const rect = this.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
             
-            // Get the target section ID
-            const targetId = this.getAttribute('href').substring(1);
-            const targetSection = document.getElementById(targetId);
-            
-            if (targetSection) {
-                console.log(`Smooth scrolling to section: ${targetId}`);
-                targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
+            // Glow pozisyonunu ayarla (CSS variables kullanarak)
+            this.style.setProperty('--mouse-x', x + 'px');
+            this.style.setProperty('--mouse-y', y + 'px');
+        });
+        
+        button.addEventListener('mouseleave', function() {
+            this.style.setProperty('--mouse-x', '0px');
+            this.style.setProperty('--mouse-y', '0px');
         });
     });
 }
 
-// ===== Feature: Track User Interactions (Analytics) =====
-// Purpose: Log user interactions for analytics and debugging
+// ===== PERFORMANCE: LAZY LOADING EXAMPLE =====
+// Görüntüler için lazy loading (gelecek versiyonda)
 
-function trackUserInteraction(eventType, details) {
-    // Create interaction data object
-    const interactionData = {
-        type: eventType,
-        timestamp: new Date().toISOString(),
-        details: details
-    };
-    
-    // Log to console for development
-    console.log('User Interaction Tracked:', interactionData);
-    
-    // In production, send this data to an analytics service
-    // Example: sendToAnalytics(interactionData);
-}
-
-// ===== Feature: Add Hover Effects Logging (Development Tool) =====
-// Purpose: Log when users hover over feature and template cards
-
-function initializeHoverTracking() {
-    // Track feature card hovers
-    const featureCards = document.querySelectorAll('.feature-card');
-    featureCards.forEach((card, index) => {
-        card.addEventListener('mouseenter', function() {
-            trackUserInteraction('feature_card_hover', { card_index: index });
-        });
-    });
-    
-    // Track template card hovers
-    const templateCards = document.querySelectorAll('.template-card');
-    templateCards.forEach((card, index) => {
-        card.addEventListener('mouseenter', function() {
-            trackUserInteraction('template_card_hover', { card_index: index });
-        });
-    });
-}
-
-// ===== Feature: Responsive Navigation (Mobile Menu - Future Enhancement) =====
-// Purpose: Placeholder for mobile menu functionality
-
-function initializeMobileNavigation() {
-    // Check if mobile navigation is needed (can be expanded in future)
-    const navContainer = document.querySelector('.navbar-container');
-    
-    if (navContainer) {
-        console.log('Mobile navigation initialized');
-        // Future implementation for hamburger menu on mobile devices
+function initializeLazyLoading() {
+    // Native lazy loading desteği kontrol et
+    if ('IntersectionObserver' in window) {
+        console.log('IntersectionObserver destekleniyor');
     }
 }
 
-// ===== Feature: Scroll Position Restoration =====
-// Purpose: Remember scroll position when returning to home page
+// ===== ANALYTICS & TRACKING =====
+// Kullanıcı etkileşimlerini takip et (optional)
 
-function initializeScrollRestoration() {
-    // Allow browser to handle scroll restoration naturally
-    if ('scrollRestoration' in window.history) {
-        window.history.scrollRestoration = 'auto';
-        console.log('Scroll restoration enabled');
-    }
+function trackUserInteraction(action, category, label) {
+    console.log(`📊 Etkileşim: ${action} | ${category} | ${label}`);
+    
+    // Google Analytics entegrasyonu (gelecek versiyonda)
+    // if (typeof gtag !== 'undefined') {
+    //     gtag('event', action, {
+    //         'event_category': category,
+    //         'event_label': label
+    //     });
+    // }
 }
 
-// ===== Feature: Page Visibility Handler =====
-// Purpose: Track when user returns to the page
+// ===== SCROLL POSITION TRACKING =====
+// Sayfa kaydırma konumunu takip et
 
-document.addEventListener('visibilitychange', function() {
-    if (document.hidden) {
-        console.log('Page hidden - user navigated away');
-        trackUserInteraction('page_hidden', {});
-    } else {
-        console.log('Page visible - user returned');
-        trackUserInteraction('page_visible', {});
-    }
+let scrollProgress = 0;
+
+window.addEventListener('scroll', function() {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    scrollProgress = (scrollTop / docHeight) * 100;
+    
+    console.log(`📍 Scroll: ${scrollProgress.toFixed(2)}%`);
 });
 
-// ===== Feature: Window Resize Handler (Responsive Design Debugging) =====
-// Purpose: Log viewport size changes for responsive design testing
+// ===== WINDOW RESIZE HANDLER =====
+// Pencere boyutu değişirse tepki ver
 
-let resizeTimeout;
 window.addEventListener('resize', function() {
-    clearTimeout(resizeTimeout);
-    
-    resizeTimeout = setTimeout(function() {
-        const viewportWidth = window.innerWidth;
-        const viewportHeight = window.innerHeight;
-        
-        console.log(`Viewport resized to: ${viewportWidth}x${viewportHeight}`);
-        
-        // Determine current breakpoint
-        let breakpoint = 'desktop';
-        if (viewportWidth <= 768) {
-            breakpoint = 'mobile';
-        } else if (viewportWidth <= 1024) {
-            breakpoint = 'tablet';
-        }
-        
-        console.log(`Current breakpoint: ${breakpoint}`);
-    }, 250); // Debounce resize handler
+    console.log(`📐 Pencere boyutu: ${window.innerWidth}x${window.innerHeight}`);
 });
 
-// ===== Feature: Add Console Welcome Message =====
-// Purpose: Display welcome message in browser console for developers
-
-function initializeConsoleWelcome() {
-    const welcomeMessage = `
-    %c🎉 CV Oluşturucu v1.0.0
-    %cÜniversite Final Projesi
-    
-    %cTeknolojiler:%c Semantic HTML5, CSS3 (Flexbox/Grid), Vanilla JavaScript
-    %cRenkler:%c Navy Blue (#1a3a52) ve Baby Blue (#a8d8ea)
-    
-    %cGeliştiriciler tarafından öğrenme amacıyla geliştirilmiştir.
-    `;
-    
-    console.log(
-        welcomeMessage,
-        'font-size: 16px; font-weight: bold; color: #1a3a52;',
-        'font-size: 14px; color: #a8d8ea;',
-        'font-size: 12px; color: #666;',
-        'font-size: 12px; color: #1a3a52; font-weight: bold;',
-        'font-size: 12px; color: #666;',
-        'font-size: 12px; color: #a8d8ea; font-weight: bold;',
-        'font-size: 11px; color: #999;'
-    );
-}
-
-// ===== Main Initialization Function =====
-// Purpose: Run all initialization functions when DOM is ready
-
-function initializeApp() {
-    console.log('=== CV Oluşturucu Initialization Started ===');
-    
-    // Run all initialization functions in order
-    initializeConsoleWelcome();
-    initializeAppPreferences();
-    initializeSmoothScroll();
-    initializeHoverTracking();
-    initializeMobileNavigation();
-    initializeScrollRestoration();
-    
-    console.log('=== CV Oluşturucu Initialization Completed ===');
-    console.log('All systems ready. Users can now interact with the application.');
-}
-
-// ===== DOM Ready Check & App Initialization =====
-// Purpose: Ensure DOM is fully loaded before running initialization
-
-if (document.readyState === 'loading') {
-    // DOM is still loading
-    document.addEventListener('DOMContentLoaded', initializeApp);
-} else {
-    // DOM is already fully loaded (if script is loaded at the end of body)
-    initializeApp();
-}
-
-// ===== Error Handling =====
-// Purpose: Catch and log any JavaScript errors for debugging
+// ===== ERROR HANDLING =====
+// Hataları yakala ve raporla
 
 window.addEventListener('error', function(event) {
-    console.error('JavaScript Error Caught:', {
-        message: event.message,
-        filename: event.filename,
-        lineno: event.lineno,
-        colno: event.colno,
-        error: event.error
-    });
-    
-    // In production, send error to error tracking service
-    // Example: sendErrorToService(event.error);
+    console.error('❌ Hata oluştu:', event.message);
+    // Production'da hata raporlama servisi ile iletişim kur
 });
 
-// ===== Unhandled Promise Rejection Handler =====
-// Purpose: Catch unhandled promise rejections
+// ===== PERFORMANCE MONITORING =====
+// Performans metriklerini ölç
 
-window.addEventListener('unhandledrejection', function(event) {
-    console.error('Unhandled Promise Rejection:', event.reason);
-    
-    // Prevent the default error handling
-    event.preventDefault();
-});
-
-// ===== Debug Mode Toggle (Optional) =====
-// Purpose: Allow developers to toggle debug mode in console
-// Usage: debugMode = true; or debugMode = false;
-
-let debugMode = false;
-
-function setDebugMode(enable) {
-    debugMode = enable;
-    console.log(`Debug mode: ${debugMode ? 'ENABLED' : 'DISABLED'}`);
-    
-    if (debugMode) {
-        console.log('=== Debug Information ===');
-        console.log('Page URL:', window.location.href);
-        console.log('Viewport Size:', `${window.innerWidth}x${window.innerHeight}`);
-        console.log('LocalStorage Contents:', localStorage);
-        console.log('SessionStorage Contents:', sessionStorage);
+window.addEventListener('load', function() {
+    if (window.performance && window.performance.timing) {
+        const perfData = window.performance.timing;
+        const pageLoadTime = perfData.loadEventEnd - perfData.navigationStart;
+        console.log(`⚡ Sayfa yükleme süresi: ${pageLoadTime}ms`);
     }
+});
+
+// ===== UTILITY: DEBOUNCE FUNCTION =====
+// Event'leri sık tetiklemesini önle
+
+function debounce(func, delay) {
+    let timeoutId;
+    return function(...args) {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => func(...args), delay);
+    };
 }
 
-// ===== End of Script =====
-console.log('script.js loaded successfully');
+// ===== UTILITY: THROTTLE FUNCTION =====
+// Event'leri belirli aralıklarla tetikle
+
+function throttle(func, limit) {
+    let inThrottle;
+    return function(...args) {
+        if (!inThrottle) {
+            func(...args);
+            inThrottle = true;
+            setTimeout(() => inThrottle = false, limit);
+        }
+    };
+}
+
+// ===== CONSOLE WELCOME MESSAGE =====
+// Geliştirici konsolu için hoş geldin mesajı
+
+console.log('%c✨ CV Oluşturucu v3.0 ✨', 'color: #C20000; font-size: 20px; font-weight: bold;');
+console.log('%cCherry Red + Powder Pink Tema | Canvas Particle Sistemi', 'color: #C20000; font-size: 14px;');
+console.log('---');
+console.log('🎨 Tasarım: Cherry Red hero bölümü, Powder Pink şablonlar');
+console.log('⚛️  Fizik Sistemi:');
+console.log('   • 50 beyaz partikül (performans dengesi)');
+console.log('   • Mouse etkileşim yarıçapı: 150px');
+console.log('   • İtme gücü: 0.3 (normalized vector)');
+console.log('   • Sıçrama gücü: 0.8 (20% enerji kaybı)');
+console.log('   • Sürtünme: 0.98 (hafif hız azalması)');
+console.log('   • Bağlantı mesafesi: 100px (çizgi çizimi için)');
+console.log('   • Hafif çekim: 0.05 gücü (mouse attraction)');
+console.log('---');
+console.log('Geliştiriciye: Bu uygulama 100% Vanilla JS, HTML5, CSS3 ile yazılmıştır. 🎉');
+console.log('Framework veya kütüphane yok. Sadece saf web teknolojileri!');
+console.log('Canvas API ile custom particle physics sistemi uygulandı.');
+console.log('---');
+
+// ===== APP INITIALIZATION =====
+// Sayfa yüklendiğinde uygulamayı başlat
+
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🚀 CV Oluşturucu başlatılıyor...');
+    
+    // Uygulama tercihlerini başlat
+    initializeAppPreferences();
+    
+    // Erişilebilirlik özelliklerini başlat
+    initializeAccessibility();
+    
+    // Buton glow efektlerini başlat
+    initializeButtonGlowEffects();
+    
+    // Scroll animasyonlarını başlat
+    initializeScrollAnimations();
+    
+    // Lazy loading başlat
+    initializeLazyLoading();
+    
+    console.log('✅ Uygulama başarıyla başlatıldı!');
+});
