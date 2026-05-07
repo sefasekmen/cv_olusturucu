@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="CV şablonlarını keşfet ve seç. Klasik, Modern, Minimal tasarımlar.">
+    <title>CV Şablonları - CV Oluşturucu</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Paylaşılan stil dosyası -->
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        /* ========================================================
+           SABLONLAR.HTML - ŞABLONLARı KARŞILAŞTIRMA SAYFASI
+           ======================================================== */
+
+        /* ===== SAYFA YAPISI ===== */
+        body.templates-page {
+            background: transparent;
+            overflow-x: hidden;
+        }
+
+        /* ===== BAŞLIK BÖLÜMÜ ===== */
+        .templates-hero {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: var(--spacing-4xl) var(--spacing-xl);
+            margin-top: 2rem;
+            animation: fadeInDown 0.6s ease-out;
+        }
+
+        .templates-hero-title {
+            font-size: var(--font-size-4xl);
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--cherry-ruby) 0%, var(--cherry-bright) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: var(--spacing-md);
+            letter-spacing: -1px;
+        }
+
+        .templates-hero-subtitle {
+            font-size: var(--font-size-lg);
+            color: rgba(255, 255, 255, 0.8);
+            max-width: 600px;
+            margin: 0 auto var(--spacing-2xl);
+            line-height: 1.6;
+        }
+
+        /* ===== ŞABLONLARı GRID ===== */
+        .templates-container {
+            position: relative;
+            z-index: 10;
+            max-width: 1200px;
+            margin: 0 auto var(--spacing-4xl);
+            padding: 0 var(--spacing-xl);
+        }
+
+        .templates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: var(--spacing-3xl);
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        /* ===== ŞABLONKARTı ===== */
+        .template-card-wrapper {
+            position: relative;
+            height: 100%;
+        }
+
+        .template-card {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            transition: all var(--transition-normal);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+
+        .template-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: var(--shadow-cherry-glow), var(--shadow-xl);
+        }
+
+        /* ŞABLONÖNİZLEME */
+        .template-preview {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: rgba(0, 0, 0, 0.15);
+            font-weight: 700;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .template-preview.klasik {
+            background: linear-gradient(135deg, #fafafa 0%, #f0f0f0 100%);
+        }
+
+        .template-preview.modern {
+            background: linear-gradient(135deg, var(--cherry-ruby) 0%, #8B0000 100%);
+            color: rgba(255, 255, 255, 0.2);
+        }
+
+        .template-preview.minimal {
+            background: linear-gradient(135deg, #fff0f5 0%, #ffe4e1 100%);
+        }
+
+        /* ŞABLONİçERİĞİ */
+        .template-content {
+            padding: var(--spacing-2xl);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .template-name {
+            font-size: var(--font-size-xl);
+            font-weight: 800;
+            color: var(--cherry-deep);
+            margin-bottom: var(--spacing-sm);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .template-category {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--pink-soft) 0%, var(--pink-light) 100%);
+            color: var(--cherry-deep);
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: var(--radius-full);
+            font-size: 0.7rem;
+            font-weight: 700;
+            margin-bottom: var(--spacing-md);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .template-description {
+            font-size: var(--font-size-sm);
+            color: var(--gray-medium);
+            line-height: 1.6;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .template-features {
+            list-style: none;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .template-features li {
+            font-size: 0.85rem;
+            color: #555;
+            padding: 0.3rem 0;
+            padding-left: 1.2rem;
+            position: relative;
+        }
+
+        .template-features li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--cherry-ruby);
+            font-weight: 700;
+        }
+
+        /* BUTON */
+        .btn-template-switch {
+            background: linear-gradient(135deg, var(--cherry-ruby) 0%, var(--cherry-bright) 100%);
+            color: white;
+            border: none;
+            padding: var(--spacing-md) var(--spacing-lg);
+            border-radius: var(--radius-lg);
+            font-family: var(--font-primary);
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            box-shadow: var(--shadow-cherry-glow);
+            width: 100%;
+        }
+
+        .btn-template-switch:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-cherry-glow), var(--shadow-lg);
+        }
+
+        .btn-template-switch:active {
+            transform: translateY(-1px);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .templates-hero-title {
+                font-size: var(--font-size-2xl);
+            }
+
+            .templates-grid {
+                grid-template-columns: 1fr;
+                gap: var(--spacing-2xl);
+            }
+        }
+    </style>
+</head>
+<body class="templates-page">
+    <!-- ===== CANVAS ARKA PLAN ===== -->
+    <canvas id="particleCanvas" class="canvas-background"></canvas>
+
+    <!-- ===== BAŞLIK ===== -->
+    <header class="header" role="banner">
+        <nav class="navbar" role="navigation" aria-label="Ana navigasyon">
+            <div class="navbar-container">
+                <!-- Logo - Solda -->
+                <div class="logo">
+                    <a href="index.html" class="logo-link" aria-label="Ana sayfaya git">
+                        <img src="logo.png" alt="CV Oluşturucu Logo" class="logo-img">
+                    </a>
+                </div>
+                
+                <!-- Kayıtlı CV Yükle - Sağda -->
+                <button id="loadCVBtn" class="btn btn-load-cv" aria-label="Kaydedilmiş CV'yi yükle">
+                    <span class="btn-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                    </span>
+                    <span class="btn-text">Kayıtlı CV Yükle</span>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- ===== ANA İÇERİK ===== -->
+    <main class="main-content" role="main">
+        <!-- ŞABLONLARı BAŞLIK -->
+        <section class="templates-hero">
+            <h1 class="templates-hero-title">CV Şablonları</h1>
+            <p class="templates-hero-subtitle">
+                Profesyonel CV'nizi oluşturmak için tasarlanan üç benzersiz şablondan birini seçin. 
+                Her şablon farklı endüstriler ve kariyer seviyeleri için optimize edilmiştir.
+            </p>
+        </section>
+
+        <!-- ŞABLONLARı GRID -->
+        <section class="templates-container">
+            <div class="templates-grid">
+
+                <!-- KLASIK ŞABLON -->
+                <div class="template-card-wrapper">
+                    <article class="template-card">
+                        <div class="template-preview klasik">
+                            📋
+                        </div>
+                        <div class="template-content">
+                            <div>
+                                <h2 class="template-name">Klasik</h2>
+                                <span class="template-category">Kurumsal & Profesyonel</span>
+                                <p class="template-description">
+                                    Geleneksel, temiz ve profesyonel tasarım. Banka, kamu kurumları, 
+                                    hukuk ve finans sektörleri için ideal.
+                                </p>
+                                <ul class="template-features">
+                                    <li>Siyah-beyaz tasarım</li>
+                                    <li>Maksimum netlik</li>
+                                    <li>Konservatif yapı</li>
+                                    <li>Tüm sektörlerde kabul</li>
+                                </ul>
+                            </div>
+                            <button class="btn-template-switch" data-template="template-klasik" aria-label="Klasik şablona geç">
+                                Bu Şablona Geç
+                            </button>
+                        </div>
+                    </article>
+                </div>
+
+                <!-- MODERN ŞABLON -->
+                <div class="template-card-wrapper">
+                    <article class="template-card">
+                        <div class="template-preview modern">
+                            ⚡
+                        </div>
+                        <div class="template-content">
+                            <div>
+                                <h2 class="template-name">Modern</h2>
+                                <span class="template-category">Yaratıcı & Teknoloji</span>
+                                <p class="template-description">
+                                    Canlı renkler ve dinamik yapı. Yazılım geliştirici, tasarımcı, 
+                                    pazarlama ve yaratıcı endüstriler için mükemmel.
+                                </p>
+                                <ul class="template-features">
+                                    <li>İki sütunlu yapı</li>
+                                    <li>Renk aksentleri</li>
+                                    <li>Dinamik tasarım</li>
+                                    <li>Çağdaş görünüm</li>
+                                </ul>
+                            </div>
+                            <button class="btn-template-switch" data-template="template-modern" aria-label="Modern şablona geç">
+                                Bu Şablona Geç
+                            </button>
+                        </div>
+                    </article>
+                </div>
+
+                <!-- MİNİMAL ŞABLON -->
+                <div class="template-card-wrapper">
+                    <article class="template-card">
+                        <div class="template-preview minimal">
+                            ✨
+                        </div>
+                        <div class="template-content">
+                            <div>
+                                <h2 class="template-name">Minimal</h2>
+                                <span class="template-category">Odaklanmış & Zarif</span>
+                                <p class="template-description">
+                                    Minimalist tasarım, maksimum etki. İçerik-odaklı işler, 
+                                    akademik çalışmalar ve spesifik beceriler için uygun.
+                                </p>
+                                <ul class="template-features">
+                                    <li>Yalın tasarım</li>
+                                    <li>İçeriğe odaklı</li>
+                                    <li>Zarif tipografi</li>
+                                    <li>Hızlı tarama</li>
+                                </ul>
+                            </div>
+                            <button class="btn-template-switch" data-template="template-minimal" aria-label="Minimal şablona geç">
+                                Bu Şablona Geç
+                            </button>
+                        </div>
+                    </article>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer" role="contentinfo">
+        <p>&copy; 2026 CV Oluşturucu. Tüm hakları saklıdır. | <a href="index.html">Ana Sayfa</a> • <a href="sablonlar.html">Şablonlar</a> • <a href="cvlerim.html">CV'lerim</a></p>
+    </footer>
+
+    <!-- ===== JAVASCRIPT ===== -->
+    <script src="script.js"></script>
+    <script>
+        // ===== ŞABLON SEÇİMİ =====
+        // Şablona geç butonlarını dinle
+        document.querySelectorAll('.btn-template-switch').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const selectedTemplate = this.dataset.template;
+                
+                // localStorage'e kaydet
+                localStorage.setItem('selectedTemplate', selectedTemplate);
+                
+                // Başarı bilgisi göster
+                console.log(`✨ ${selectedTemplate} şablonu seçildi. Editor sayfasına yönlendiriliyorsunuz...`);
+                
+                // Editor sayfasına yönlendir (CV verisi kaybedilmeyecek)
+                window.location.href = 'editor.html?template=' + encodeURIComponent(selectedTemplate);
+            });
+        });
+
+        // ===== SAYFA YÜKLENDİĞİNDE =====
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('📄 Şablonlar sayfası yüklendi.');
+        });
+    </script>
+</body>
+</html>

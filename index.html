@@ -18,12 +18,19 @@
     <!-- Vanilla JS ve Canvas kullanarak beyaz partiküller ve mouse interaksiyonu -->
     <canvas id="particleCanvas" class="canvas-background"></canvas>
 
-    <!-- ===== Header / Navigation - REVERSED LAYOUT ===== -->
-    <!-- "Kayıtlı CV Yükle" solda, Logo sağda -->
+    <!-- ===== Header / Navigation ===== -->
+    <!-- Logo solda, "Kayıtlı CV Yükle" sağda -->
     <header class="header">
         <nav class="navbar">
             <div class="navbar-container">
-                <!-- Load CV Button - Solda, Glowing hover effect ile -->
+                <!-- Logo / Title - Solda, Cherry Red gradient text effect ile -->
+                <div class="logo">
+                    <a href="index.html" class="logo-link" aria-label="Ana sayfaya git">
+                        <img src="logo.png" alt="CV Oluşturucu Logo" class="logo-img">
+                    </a>
+                </div>
+                
+                <!-- Load CV Button - Sağda, Glowing hover effect ile -->
                 <button class="btn btn-load-cv" id="loadCVBtn" aria-label="Kayıtlı CV yükle">
                     <span class="btn-icon">
                         <!-- Folder SVG Icon -->
@@ -33,18 +40,6 @@
                     </span>
                     <span class="btn-text">Kayıtlı CV Yükle</span>
                 </button>
-                
-                <!-- Logo / Title - Sağda, Cherry Red gradient text effect ile -->
-                <div class="logo">
-                    <h1 class="logo-text">CV Oluşturucu</h1>
-                    <span class="logo-icon">
-                        <!-- Document SVG Icon -->
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                            <polyline points="14 2 14 8 20 8"></polyline>
-                        </svg>
-                    </span>
-                </div>
             </div>
         </nav>
     </header>
@@ -229,9 +224,7 @@
     <footer class="footer">
         <div class="footer-container">
             <p class="footer-text">
-                &copy; 2024 CV Oluşturucu. Tüm hakları saklıdır. 
-                <span class="footer-divider">|</span>
-                Üniversite Final Projesi
+                &copy; 2026 CV Oluşturucu. Tüm hakları saklıdır.               
             </p>
             <p class="footer-subtitle">
                 Profesyonel CV'nizi dakikalar içinde oluşturun ✨

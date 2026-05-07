@@ -8,7 +8,9 @@
 // ===== CANVAS SETUP & INITIALIZATION =====
 // Canvas elementini al ve 2D context oluştur
 const canvas = document.getElementById('particleCanvas');
-const ctx = canvas.getContext('2d');
+const ctx = canvas ? canvas.getContext('2d') : null;
+
+if (canvas && ctx) {
 
 // Canvas'ı pencere boyutuna ayarla
 function resizeCanvas() {
@@ -234,6 +236,7 @@ function animate() {
 
 // Animasyonu başlat
 animate();
+}
 
 // ===== DOM ELEMENT REFERENCES =====
 // Tüm interactive elemanlar için referanslar
@@ -287,14 +290,23 @@ document.addEventListener('keydown', function(event) {
 // localStorage'den kaydedilmiş CV'yi yükle
 
 function handleLoadCVClick() {
-    const savedCV = localStorage.getItem('savedCV');
-    
-    if (savedCV) {
+    let cvListesi = [];
+
+    try {
+        cvListesi = JSON.parse(localStorage.getItem('cvListesi')) || [];
+    } catch (error) {
+        cvListesi = [];
+    }
+
+    if (cvListesi.length > 0) {
+        const enSonCV = cvListesi[cvListesi.length - 1];
+        if (enSonCV && enSonCV.ad) {
+            localStorage.setItem('aktifCVAdi', enSonCV.ad);
+        }
+
         console.log('Kaydedilmiş CV bulundu');
-        showNotification('Kaydedilmiş CV\'niz bulundu! Düzenleyiciye yönlendiriliyorsunuz...');
-        
-        // Production'da editor sayfasına yönlendir
-        // window.location.href = 'editor.html?mode=edit';
+        showNotification('Kaydedilmiş CV\'ler bulundu. CV listesine yönlendiriliyorsunuz...');
+        window.location.href = 'cvlerim.html';
     } else {
         console.log('Kaydedilmiş CV yok');
         showNotification('Henüz kaydedilmiş CV bulunmuyor. Yeni bir CV oluşturmak için bir şablon seçin.', 'warning');
@@ -328,9 +340,7 @@ function handleTemplateSelection(button) {
     const templateName = templateNames[selectedTemplate] || selectedTemplate;
     const message = `✨ ${templateName} şablonuyla başlıyorsunuz!`;
     showNotification(message, 'success');
-    
-    // Production'da editor sayfasına yönlendir
-    // window.location.href = 'editor.html?template=' + selectedTemplate;
+    window.location.href = 'editor.html?template=' + encodeURIComponent(selectedTemplate);
     
     console.log(`${selectedTemplate} şablonu yükleniyor...`);
 }

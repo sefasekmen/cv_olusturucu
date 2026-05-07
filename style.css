@@ -156,35 +156,29 @@ body {
 .logo {
     display: flex;
     align-items: center;
-    gap: var(--spacing-md);
     cursor: pointer;
     transition: transform var(--transition-normal);
     user-select: none;
 }
 
-.logo:hover {
-    transform: scale(1.08);
+.logo-link {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
 }
 
-.logo-icon {
-    font-size: 2rem;
-    color: var(--cherry-light);
-    animation: iconBounce 2.5s ease-in-out infinite;
+.logo-img {
+    height: 54px;
+    width: auto;
+    object-fit: contain;
+    display: block;
+    transform: scale(1.42);
+    transform-origin: left center;
+    transition: transform var(--transition-fast);
 }
 
-@keyframes iconBounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-8px); }
-}
-
-.logo-text {
-    font-size: var(--font-size-xl);
-    font-weight: 800;
-    background: linear-gradient(135deg, var(--cherry-light) 0%, var(--cherry-bright) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    letter-spacing: -0.5px;
+.logo-link:hover .logo-img {
+    transform: scale(1.48);
 }
 
 /* ===== BUTTON STYLES ===== */
@@ -715,10 +709,6 @@ body {
         gap: var(--spacing-lg);
     }
     
-    .logo-text {
-        font-size: var(--font-size-lg);
-    }
-    
     .btn-primary {
         padding: var(--spacing-md) var(--spacing-2xl);
         font-size: var(--font-size-base);
@@ -741,6 +731,11 @@ body {
     
     .btn-load-cv .btn-text {
         display: none;
+    }
+
+    .logo-img {
+        height: 40px;
+        transform: scale(1.18);
     }
     
     .templates-grid {
@@ -767,4 +762,188 @@ body {
 .template-card:focus-visible {
     outline: 3px solid var(--cherry-bright);
     outline-offset: 2px;
+}
+
+/* ===== EDITOR PAGE OVERRIDES ===== */
+body.editor-page {
+    background: transparent !important;
+    color: var(--gray-dark);
+    overflow: hidden;
+}
+
+body.editor-page,
+body.editor-page button,
+body.editor-page input,
+body.editor-page textarea,
+body.editor-page select {
+    font-family: var(--font-primary) !important;
+}
+
+body.editor-page .editor-layout {
+    background: transparent !important;
+}
+
+body.editor-page .editor-form-panel {
+    background: rgba(255, 255, 255, 0.85) !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-right: 1px solid rgba(255, 255, 255, 0.35);
+    box-shadow: var(--shadow-lg);
+}
+
+body.editor-page .editor-preview-panel {
+    background: transparent !important;
+}
+
+body.editor-page .editor-form-panel,
+body.editor-page .editor-preview-panel {
+    scrollbar-width: thin;
+    scrollbar-color: var(--cherry-ruby) rgba(255, 255, 255, 0.25);
+}
+
+body.editor-page .editor-form-panel::-webkit-scrollbar,
+body.editor-page .editor-preview-panel::-webkit-scrollbar {
+    width: 6px;
+}
+
+body.editor-page .editor-form-panel::-webkit-scrollbar-track,
+body.editor-page .editor-preview-panel::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+body.editor-page .editor-form-panel::-webkit-scrollbar-thumb,
+body.editor-page .editor-preview-panel::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, var(--cherry-ruby), var(--cherry-bright));
+    border-radius: var(--radius-md);
+}
+
+body.editor-page .btn-toolbar,
+body.editor-page .btn-tpl,
+body.editor-page .form-tab,
+body.editor-page .cv-name-input,
+body.editor-page input,
+body.editor-page textarea,
+body.editor-page select {
+    border-radius: var(--radius-md) !important;
+    transition: all var(--transition-normal);
+}
+
+body.editor-page .btn-toolbar:hover,
+body.editor-page .btn-tpl:hover,
+body.editor-page .form-tab:hover {
+    transform: translateY(-2px);
+}
+
+body.editor-page .btn-toolbar:focus-visible,
+body.editor-page .btn-tpl:focus-visible,
+body.editor-page .form-tab:focus-visible,
+body.editor-page .cv-name-input:focus-visible,
+body.editor-page input:focus-visible,
+body.editor-page textarea:focus-visible,
+body.editor-page select:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(168, 216, 234, 0.35);
+}
+
+body.editor-page .editor-header {
+    background: rgba(74, 14, 14, 0.92);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+body.editor-page .editor-logo {
+    text-decoration: none;
+}
+
+/* ===== PRINT STYLES ===== */
+@media print {
+    @page {
+        size: A4;
+        margin: 6mm;
+    }
+
+    html,
+    body {
+        width: 210mm;
+        min-height: 297mm;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: #ffffff !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    body.editor-page .editor-header,
+    body.editor-page .editor-form-panel,
+    body.editor-page .modal-overlay,
+    body.editor-page .toast,
+    body.editor-page .canvas-background,
+    body.preview-page .preview-toolbar,
+    body.preview-page .canvas-background,
+    body.preview-page .preview-area > *:not(.cv-paper) {
+        display: none !important;
+    }
+
+    body.editor-page .editor-layout,
+    body.preview-page .preview-area {
+        display: block !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        min-height: auto !important;
+        overflow: visible !important;
+    }
+
+    body.editor-page .editor-preview-panel,
+    body.preview-page .preview-area {
+        background: white !important;
+    }
+
+    .cv-paper {
+        position: static !important;
+        width: 198mm !important;
+        min-height: auto !important;
+        margin: 0 !important;
+        padding: 12mm !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        overflow: visible !important;
+        transform: none !important;
+    }
+
+    .cv-paper.template-klasik,
+    .cv-paper.template-modern,
+    .cv-paper.template-minimal {
+        margin: 0 auto !important;
+    }
+
+    .cv-paper.template-modern {
+        font-size: 0.94rem !important;
+    }
+
+    .cv-paper.template-modern .cv-modern-body {
+        display: grid !important;
+        grid-template-columns: 1fr 2fr !important;
+        width: 100% !important;
+    }
+
+    .cv-paper.template-modern .cv-modern-banner,
+    .cv-paper.template-modern .cv-modern-body,
+    .cv-paper.template-klasik .cv-header,
+    .cv-paper.template-minimal .cv-header {
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+
+    .cv-section,
+    .cv-entry,
+    .cv-modern-sidebar,
+    .cv-modern-main {
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+
+    .cv-paper * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
 }
