@@ -287,38 +287,60 @@ document.addEventListener('keydown', function(event) {
 });
 
 // ===== HANDLE LOAD CV CLICK =====
-// localStorage'den kaydedilmiş CV'yi yükle
+// localStorage'den kaydedilmiş CV'yi yükle ve cvlerim.html'e yönlendir
+// Eğer CV varsa: cvlerim.html sayfasına git
+// Yoksa: Kullanıcı yeni CV yaratmaya teşvik et
+//
+// AMAÇ: 'Kayıtlı CV Yükle' butonunun tıklanmasını işle
+// FLOW: localStorage oku → CV kontrol et → cvlerim.html'e yönlendir
 
 function handleLoadCVClick() {
-    let cvListesi = [];
+    let cvListesi = []; // localStorage'dan alınan CV array'i
 
     try {
+        // localStorage'den 'cvListesi' JSON string'ini oku ve parse et
         cvListesi = JSON.parse(localStorage.getItem('cvListesi')) || [];
     } catch (error) {
+        // Eğer localStorage corrupted ise, boş array kullan
         cvListesi = [];
     }
 
     if (cvListesi.length > 0) {
-        const enSonCV = cvListesi[cvListesi.length - 1];
+        // CASE 1: Kaydedilmiş CV'ler var
+        const enSonCV = cvListesi[cvListesi.length - 1]; // Son CV'yi al (en yeni)
         if (enSonCV && enSonCV.ad) {
+            // En son CV'nin adını 'aktifCVAdi' olarak kaydet (cvlerim.html'de kullanılacak)
             localStorage.setItem('aktifCVAdi', enSonCV.ad);
         }
 
         console.log('Kaydedilmiş CV bulundu');
         showNotification('Kaydedilmiş CV\'ler bulundu. CV listesine yönlendiriliyorsunuz...');
+        // CV yönetim sayfasına yönlendir
         window.location.href = 'cvlerim.html';
     } else {
+        // CASE 2: Hiçbir CV kaydı yok
         console.log('Kaydedilmiş CV yok');
         showNotification('Henüz kaydedilmiş CV bulunmuyor. Yeni bir CV oluşturmak için bir şablon seçin.', 'warning');
     }
 }
 
 // ===== HANDLE TEMPLATE SELECTION =====
-// Seçilen şablonu kaydet ve kullanıcıya bildir
+// Kullanıcı CV şablonu seçtiğinde: localStorage'e kaydet ve editor.html'e yönlendir
+//
+// AMAÇ: Şablon seçim butonunun tıklanmasını işle
+// FLOW: Template ID oku → localStorage'a kaydet → editor.html'e yönlendir
+//
+// localStorage KEYS:
+// - selectedTemplate: 'classic' | 'modern' | 'minimal'
+// - templateSelectionTime: ISO 8601 timestamp (audit trail)
+// (Bu değerler editor.html'de okunarak form başlatılacak)
 
 function handleTemplateSelection(button) {
+    // Tıklanan şablon butonundan template ID'sini oku
+    // HTML: <button data-template="classic">Klasik</button>
     const selectedTemplate = button.getAttribute('data-template');
     
+    // Validation: Eğer data-template attribute yoksa hata
     if (!selectedTemplate) {
         console.error('Şablon seçimi başarısız');
         return;
@@ -326,20 +348,27 @@ function handleTemplateSelection(button) {
     
     console.log(`Şablon seçildi: ${selectedTemplate}`);
     
-    // localStorage'e şablonu kaydet
+    // localStorage'a seçimi kaydet (editor.html'de kullanılacak)
     localStorage.setItem('selectedTemplate', selectedTemplate);
+    // Seçim zamanını timestamp olarak kaydet (kullanıcı deneyimi analizi için)
     localStorage.setItem('templateSelectionTime', new Date().toISOString());
     
-    // Şablon adlarını tanımla
+    // Template'lar için insan tarafından okunabilir adlar
+    // Bu adlar success notification'da gösterilir
     const templateNames = {
-        classic: 'Klasik',
-        modern: 'Modern',
-        minimal: 'Minimal'
+        classic: 'Klasik',    // Profesyonel, siyah-beyaz, serif
+        modern: 'Modern',     // İki sütun, gradient banner
+        minimal: 'Minimal'    // Yalın, pastel accent
     };
     
+    // Seçilen template'ın adını al (fallback: template ID)
     const templateName = templateNames[selectedTemplate] || selectedTemplate;
+    // Başarı mesajı (emoji ile gösterişli)
     const message = `✨ ${templateName} şablonuyla başlıyorsunuz!`;
     showNotification(message, 'success');
+    
+    // editor.html'e yönlendir
+    // URL parameter'ı template info'su editor.html'de de kontrol edilebilsin diye ekle
     window.location.href = 'editor.html?template=' + encodeURIComponent(selectedTemplate);
     
     console.log(`${selectedTemplate} şablonu yükleniyor...`);

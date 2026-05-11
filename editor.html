@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="CV'nizi gerçek zamanlı olarak düzenleyin ve önizleyin.">
     <title>CV Düzenleyici - CV Oluşturucu</title>
+    <link rel="icon" type="image/png" href="logo.png">
 
     <!-- Google Fonts - Ana sayfayla aynı fontlar -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1998,49 +1999,7 @@
             inputlar.telefon.value = telefonFormatla(inputlar.telefon.value);
         }
 
-        function tarihAraligiFormatla(deger) {
-            const temizMetin = String(deger || '')
-                .replace(/[–—]/g, '-')
-                .replace(/\s+/g, ' ')
-                .trim();
 
-            if (!temizMetin) {
-                return '';
-            }
-
-            const sayilar = temizMetin.replace(/\D/g, '');
-            if (!sayilar) {
-                return temizMetin.replace(/\s*-\s*/g, ' - ');
-            }
-
-            if (sayilar.length <= 4) {
-                return sayilar;
-            }
-
-            return sayilar.slice(0, 4) + ' - ' + sayilar.slice(4, 8);
-        }
-
-        function notOrtalamasiFormatla(deger) {
-            const temiz = String(deger || '').replace(',', '.').trim();
-
-            if (!temiz) {
-                return '';
-            }
-
-            const parcalar = temiz.split('/');
-            const notHam = parcalar[0].replace(/[^0-9.]/g, '');
-            const sistemHam = (parcalar[1] || '4.00').replace(/[^0-9.]/g, '');
-
-            const not = notHam.includes('.')
-                ? notHam
-                : (notHam.length === 1 ? notHam + '.00' : notHam.length === 2 ? notHam + '.0' : notHam.slice(0, 1) + '.' + notHam.slice(1, 3).padEnd(2, '0'));
-
-            const sistem = sistemHam.includes('.')
-                ? sistemHam
-                : (sistemHam.length === 1 ? sistemHam + '.00' : sistemHam.length === 2 ? sistemHam + '.0' : sistemHam.slice(0, 1) + '.' + sistemHam.slice(1, 3).padEnd(2, '0'));
-
-            return not + ' / ' + sistem;
-        }
 
         function veriUrlOku(dosya) {
             return new Promise((resolve, reject) => {
@@ -2346,10 +2305,7 @@
                     if (idx === -1) return;
                     if (this.classList.contains('entry-sirket')) durum.deneyimler[idx].sirket = this.value;
                     if (this.classList.contains('entry-pozisyon')) durum.deneyimler[idx].pozisyon = this.value;
-                    if (this.classList.contains('entry-tarih')) {
-                        this.value = tarihAraligiFormatla(this.value);
-                        durum.deneyimler[idx].tarih = this.value;
-                    }
+                    if (this.classList.contains('entry-tarih')) durum.deneyimler[idx].tarih = this.value;
                     if (this.classList.contains('entry-aciklama')) durum.deneyimler[idx].aciklama = this.value;
                     deneyimOnizlemesiGuncelle();
                 });
@@ -2434,14 +2390,8 @@
                     if (idx === -1) return;
                     if (this.classList.contains('entry-okul')) durum.egitimler[idx].okul = this.value;
                     if (this.classList.contains('entry-bolum')) durum.egitimler[idx].bolum = this.value;
-                    if (this.classList.contains('entry-tarih')) {
-                        this.value = tarihAraligiFormatla(this.value);
-                        durum.egitimler[idx].tarih = this.value;
-                    }
-                    if (this.classList.contains('entry-not')) {
-                        this.value = notOrtalamasiFormatla(this.value);
-                        durum.egitimler[idx].not = this.value;
-                    }
+                    if (this.classList.contains('entry-tarih')) durum.egitimler[idx].tarih = this.value;
+                    if (this.classList.contains('entry-not')) durum.egitimler[idx].not = this.value;
                     egitimOnizlemesiGuncelle();
                 });
             });
@@ -2845,10 +2795,10 @@
                 if (!lastEntry) return;
                 lastEntry.querySelector('.entry-sirket').value = d.sirket || '';
                 lastEntry.querySelector('.entry-pozisyon').value = d.pozisyon || '';
-                lastEntry.querySelector('.entry-tarih').value = tarihAraligiFormatla(d.tarih || '');
+                lastEntry.querySelector('.entry-tarih').value = d.tarih || '';
                 lastEntry.querySelector('.entry-aciklama').value = d.aciklama || '';
                 const last = durum.deneyimler[durum.deneyimler.length - 1];
-                if (last) { last.sirket = d.sirket || ''; last.pozisyon = d.pozisyon || ''; last.tarih = tarihAraligiFormatla(d.tarih || ''); last.aciklama = d.aciklama || ''; }
+                if (last) { last.sirket = d.sirket || ''; last.pozisyon = d.pozisyon || ''; last.tarih = d.tarih || ''; last.aciklama = d.aciklama || ''; }
             });
 
             // Eğitimleri yükle
@@ -2858,10 +2808,10 @@
                 if (!lastEntry) return;
                 lastEntry.querySelector('.entry-okul').value = e.okul || '';
                 lastEntry.querySelector('.entry-bolum').value = e.bolum || '';
-                lastEntry.querySelector('.entry-tarih').value = tarihAraligiFormatla(e.tarih || '');
-                lastEntry.querySelector('.entry-not').value = notOrtalamasiFormatla(e.not || '');
+                lastEntry.querySelector('.entry-tarih').value = e.tarih || '';
+                lastEntry.querySelector('.entry-not').value = e.not || '';
                 const last = durum.egitimler[durum.egitimler.length - 1];
-                if (last) { last.okul = e.okul || ''; last.bolum = e.bolum || ''; last.tarih = tarihAraligiFormatla(e.tarih || ''); last.not = notOrtalamasiFormatla(e.not || ''); }
+                if (last) { last.okul = e.okul || ''; last.bolum = e.bolum || ''; last.tarih = e.tarih || ''; last.not = e.not || ''; }
             });
 
             // Becerileri yükle
