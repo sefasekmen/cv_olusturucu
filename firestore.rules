@@ -1,0 +1,21 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Kullanıcıların kendi CV'lerine erişmesini sağlayan kural
+    match /users/{userId}/cvs/{cvId} {
+      // Sadece giriş yapmış olan ve UID'si userId ile eşleşen kullanıcılar okuyup yazabilir
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Genel paylaşılan CV'lerin dışarıdan okunabilmesi (view.html için)
+    match /users/{userId}/cvs/{cvId} {
+      allow read: if resource.data.isPublic == true;
+    }
+    
+    // Varsayılan olarak diğer tüm erişimleri reddet
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

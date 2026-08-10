@@ -2716,18 +2716,6 @@
                 // Formdaki dil seçimi seçeneklerini de çevir
                 updateDilSecenekleri();
 
-                const guncelCvVerisi = mevcutCVVerisiniTopla();
-
-                if (typeof CVRender !== 'undefined' && typeof CVRender.renderCV === 'function' && cvPaperEl) {
-                    CVRender.renderCV(cvPaperEl, guncelCvVerisi);
-                    try { analizPaneliniGuncelle(); } catch (e) { console.error('Analiz güncelleme hatası:', e); }
-                    return;
-                }
-
-                if (cvPaperEl) {
-                    cvPaperEl.innerHTML = '';
-                }
-
                 const dict = window.CV_LANGUAGES ? window.CV_LANGUAGES[lang] : null;
 
                 const modernMi = modernLayoutMi(durum.aktifSablon);
@@ -3203,7 +3191,6 @@
                 bolumGorunurlukAyarla('cvBeceriSection', durum.beceriler.some(b => b.ad));
                 bolumGorunurlukAyarla('cvBeceriSectionModern', durum.beceriler.some(b => b.ad));
                 analizPaneliniGuncelle();
-                onizlemeyiGuncelle();
             }
 
             // ===== DİNAMİK BÖLÜM: PROJELER =====
@@ -3982,15 +3969,6 @@
             const cvNameInput = document.getElementById('cvNameInput');
 
             function mevcutCVVerisiniTopla() {
-                const text = (value) => String(value || '').trim();
-                const collectEntries = (containerId, selector, mapper) => {
-                    const container = document.getElementById(containerId);
-                    if (!container) return [];
-                    return Array.from(container.querySelectorAll(selector))
-                        .map(mapper)
-                        .filter((item) => item && Object.values(item).some((value) => text(value)));
-                };
-
                 return {
                     id: aktifCVId || undefined,
                     name: cvNameInput.value.trim() || aktifCVAdi || 'İsimsiz CV',
@@ -4012,56 +3990,14 @@
                         ozet: inputlar.ozet ? inputlar.ozet.value : ''
                     },
                     summary: inputlar.ozet ? inputlar.ozet.value : '',
-                    experience: collectEntries('deneyimContainer', '.dynamic-entry', (entry) => ({
-                        id: entry.dataset.entryId,
-                        sirket: text(entry.querySelector('.entry-sirket')?.value),
-                        pozisyon: text(entry.querySelector('.entry-pozisyon')?.value),
-                        tarih: text(entry.querySelector('.entry-tarih')?.value),
-                        aciklama: text(entry.querySelector('.entry-aciklama')?.value)
-                    })),
-                    education: collectEntries('egitimContainer', '.dynamic-entry', (entry) => ({
-                        id: entry.dataset.entryId,
-                        okul: text(entry.querySelector('.entry-okul')?.value),
-                        bolum: text(entry.querySelector('.entry-bolum')?.value),
-                        tarih: text(entry.querySelector('.entry-tarih')?.value),
-                        not: text(entry.querySelector('.entry-not')?.value)
-                    })),
-                    skills: collectEntries('beceriContainer', '.skill-entry', (entry) => ({
-                        id: entry.dataset.entryId,
-                        ad: text(entry.querySelector('.entry-beceri-ad')?.value),
-                        seviye: 70
-                    })),
-                    projects: collectEntries('projeContainer', '.dynamic-entry', (entry) => ({
-                        id: entry.dataset.entryId,
-                        ad: text(entry.querySelector('.entry-proje-ad')?.value),
-                        teknoloji: text(entry.querySelector('.entry-proje-teknoloji')?.value),
-                        link: text(entry.querySelector('.entry-proje-link')?.value),
-                        aciklama: text(entry.querySelector('.entry-proje-aciklama')?.value)
-                    })),
-                    languages: collectEntries('dilContainer', '.dynamic-entry', (entry) => ({
-                        id: entry.dataset.entryId,
-                        ad: entry.querySelector('.entry-dil-ad')?.value || '',
-                        seviye: entry.querySelector('.entry-dil-seviye')?.value || 'B1'
-                    })),
-                    certificates: collectEntries('sertifikaContainer', '.dynamic-entry', (entry) => ({
-                        id: entry.dataset.entryId,
-                        ad: text(entry.querySelector('.entry-sertifika-ad')?.value),
-                        kurum: text(entry.querySelector('.entry-sertifika-kurum')?.value),
-                        tarih: text(entry.querySelector('.entry-sertifika-tarih')?.value)
-                    })),
-                    volunteers: collectEntries('gonulluContainer', '.dynamic-entry', (entry) => ({
-                        id: entry.dataset.entryId,
-                        kurum: text(entry.querySelector('.entry-gonullu-kurum')?.value),
-                        rol: text(entry.querySelector('.entry-gonullu-rol')?.value),
-                        tarih: text(entry.querySelector('.entry-gonullu-tarih')?.value),
-                        aciklama: text(entry.querySelector('.entry-gonullu-aciklama')?.value)
-                    })),
-                    references: collectEntries('referansContainer', '.dynamic-entry', (entry) => ({
-                        id: entry.dataset.entryId,
-                        ad: text(entry.querySelector('.entry-referans-ad')?.value),
-                        unvan: text(entry.querySelector('.entry-referans-unvan')?.value),
-                        iletisim: text(entry.querySelector('.entry-referans-iletisim')?.value)
-                    })),
+                    experience: durum.deneyimler,
+                    education: durum.egitimler,
+                    skills: durum.beceriler,
+                    projects: durum.projeler,
+                    languages: durum.diller,
+                    certificates: durum.sertifikalar,
+                    volunteers: durum.gonullu,
+                    references: durum.referanslar,
                     accentColor: durum.aksanRengi,
                     updatedAt: new Date().toISOString()
                 };
@@ -4422,30 +4358,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
     <script src="js/firebase-config.js"></script>
-    <script>
-        (function () {
-            const params = new URLSearchParams(window.location.search);
-            const isLocalDev = ['localhost', '127.0.0.1', '::1'].includes(window.location.hostname) || params.get('dev') === '1' || params.get('noauth') === '1';
-
-            if (isLocalDev) {
-                const guestUser = { email: 'local@dev' };
-                window.auth = {
-                    currentUser: guestUser,
-                    onAuthStateChanged(callback) {
-                        callback(guestUser);
-                        return () => {};
-                    },
-                    signOut: async () => {},
-                    signInWithEmailAndPassword: async () => guestUser,
-                    createUserWithEmailAndPassword: async () => guestUser
-                };
-                window.__LOCAL_DEV_MODE__ = true;
-                return;
-            }
-
-            document.write('<script src="js/auth.js"><\/script>');
-        })();
-    </script>
+    <script src="js/auth.js"></script>
     <script src="js/saveManager.js?v=5"></script>
     <script src="js/cv-render.js?v=6"></script>
     <script src="js/cookie-consent.js"></script>

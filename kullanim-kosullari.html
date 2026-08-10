@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Online CV Oluşturucu Kullanım Koşulları.">
+    <title>Kullanım Koşulları - Online CV Oluşturucu</title>
+    <link rel="icon" type="image/webp" href="logo.webp">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="styles/style.css">
+    
+    <style>
+        .legal-content {
+            max-width: 800px;
+            margin: 120px auto 60px;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.85);
+        }
+        .legal-title {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: var(--white);
+            background: linear-gradient(135deg, var(--cherry-ruby), var(--pink-powder));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .legal-content h2 {
+            font-size: 1.5rem;
+            margin: 2rem 0 1rem;
+            color: var(--cherry-ruby);
+        }
+        .legal-content p {
+            line-height: 1.7;
+            margin-bottom: 1rem;
+        }
+        .legal-content ul {
+            margin-bottom: 1.5rem;
+            padding-left: 1.5rem;
+        }
+        .legal-content li {
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="particleCanvas" class="canvas-background"></canvas>
+
+    <header class="header">
+        <nav class="navbar">
+            <div class="navbar-container">
+                <div class="logo">
+                    <a href="index.html" class="logo-link">
+                        <img src="logo.webp" alt="CV Oluşturucu Logo" class="logo-img">
+                    </a>
+                </div>
+                <div class="nav-actions">
+                    <button onclick="window.toggleUiLanguage()" class="nav-action-btn lang-toggle-btn" title="Switch to English" style="background: transparent; border: 1px solid #ddd; padding: 0.5rem; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 0.85rem; margin-right: 10px;">🇹🇷 TR</button>
+                    <a href="index.html" class="nav-action-btn" style="text-decoration: none;">Ana Sayfaya Dön</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        <section class="legal-content">
+            <h1 class="legal-title">Kullanım Koşulları</h1>
+            <p><strong>Son Güncelleme:</strong> 7 Temmuz 2026</p>
+            
+            <p>Online CV Oluşturucu ("Site" veya "Platform") web sitesini ziyaret ederek veya kullanarak aşağıdaki kullanım koşullarını kabul etmiş olursunuz. Lütfen bu koşulları dikkatlice okuyunuz.</p>
+
+            <h2>1. Hizmetin Sağlanması</h2>
+            <p>Online CV Oluşturucu, kullanıcılarına profesyonel özgeçmiş hazırlama, kaydetme ve PDF formatında indirme hizmetlerini ücretsiz olarak sunar. Hizmetler "olduğu gibi" sunulmakta olup, kesintisiz veya hatasız olacağı garanti edilmemektedir.</p>
+
+            <h2>2. Kullanıcı Yükümlülükleri</h2>
+            <p>Platformu kullanırken aşağıdaki kurallara uymayı kabul edersiniz:</p>
+            <ul>
+                <li>Oluşturduğunuz özgeçmişlerde verdiğiniz bilgilerin doğruluğundan tamamen siz sorumlusunuz.</li>
+                <li>Site altyapısına zarar verecek, sistemleri kilitleyecek veya diğer kullanıcıların deneyimini olumsuz etkileyecek yazılımsal saldırı, spam veya zararlı işlemler yapmamayı taahhüt edersiniz.</li>
+                <li>Giriş bilgilerinizin güvenliğini sağlamak sizin sorumluluğunuzdadır.</li>
+            </ul>
+
+            <h2>3. Fikri Mülkiyet</h2>
+            <p>Platformumuzda bulunan CV şablon tasarımları, arayüz, logolar ve yazılımlar Online CV Oluşturucu'ya aittir. Oluşturduğunuz içeriklerin (özgeçmiş bilgileri) mülkiyeti ise size aittir.</p>
+
+            <h2>4. Hizmetin Değiştirilmesi veya Durdurulması</h2>
+            <p>Platform, önceden haber vermeksizin hizmetleri kısmen veya tamamen durdurma, özelliklerini değiştirme veya sınırlama hakkını saklı tutar.</p>
+
+            <h2>5. Sorumluluk Reddi</h2>
+            <p>Kullanıcıların özgeçmişlerinde yer alan bilgilerin doğruluğu ve bu CV'ler ile yapılan iş başvurularının sonuçları hakkında hiçbir sorumluluk kabul etmiyoruz.</p>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2026 CV Oluşturucu. Tüm hakları saklıdır. | <a href="index.html">Ana Sayfa</a> • <a href="gizlilik.html">Gizlilik Politikası</a></p>
+    </footer>
+    <script src="js/i18n.js"></script>
+    <script src="js/script.js?v=6"></script>
+</body>
+</html>

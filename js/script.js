@@ -7,6 +7,7 @@
 
 // ===== CANVAS SETUP & INITIALIZATION =====
 // Canvas elementini al ve 2D context oluştur
+(function() {
 const canvas = document.getElementById('particleCanvas');
 const ctx = canvas ? canvas.getContext('2d') : null;
 
@@ -237,6 +238,7 @@ function animate() {
 // Animasyonu başlat
 animate();
 }
+})(); // End of canvas particle IIFE
 
 // ===== DOM ELEMENT REFERENCES =====
 // Tüm interactive elemanlar için referanslar
@@ -258,9 +260,10 @@ if (loadCVBtn) {
 // "Şimdi Başla" CTA butonu - Smooth scroll
 if (ctaBtn) {
     ctaBtn.addEventListener('click', function() {
-        console.log('CTA button clicked - scrolling to templates');
-        if (templatesSection) {
-            templatesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        console.log('CTA button clicked - scrolling to features');
+        const featuresSection = document.getElementById('featuresSection');
+        if (featuresSection) {
+            featuresSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
     });
 }
@@ -287,53 +290,31 @@ document.addEventListener('keydown', function(event) {
 });
 
 // ===== HANDLE LOAD CV CLICK =====
-// localStorage'den kaydedilmiş CV'yi yükle ve cvlerim.html'e yönlendir
+// Firebase'den kaydedilmiş CV'leri kontrol et ve cvlerim.html'e yönlendir
 // Eğer CV varsa: cvlerim.html sayfasına git
 // Yoksa: Kullanıcı yeni CV yaratmaya teşvik et
 //
 // AMAÇ: 'Kayıtlı CV Yükle' butonunun tıklanmasını işle
-// FLOW: localStorage oku → CV kontrol et → cvlerim.html'e yönlendir
+// FLOW: Firebase'den CV kontrol et → cvlerim.html'e yönlendir
 
-function handleLoadCVClick() {
-    let cvListesi = []; // localStorage'dan alınan CV array'i
-
-    try {
-        // localStorage'den 'cvListesi' JSON string'ini oku ve parse et
-        cvListesi = JSON.parse(localStorage.getItem('cvListesi')) || [];
-    } catch (error) {
-        // Eğer localStorage corrupted ise, boş array kullan
-        cvListesi = [];
-    }
-
-    if (cvListesi.length > 0) {
-        // CASE 1: Kaydedilmiş CV'ler var
-        const enSonCV = cvListesi[cvListesi.length - 1]; // Son CV'yi al (en yeni)
-        if (enSonCV && enSonCV.ad) {
-            // En son CV'nin adını 'aktifCVAdi' olarak kaydet (cvlerim.html'de kullanılacak)
-            localStorage.setItem('aktifCVAdi', enSonCV.ad);
-        }
-
-        console.log('Kaydedilmiş CV bulundu');
-        showNotification('Kaydedilmiş CV\'ler bulundu. CV listesine yönlendiriliyorsunuz...');
-        // CV yönetim sayfasına yönlendir
+async function handleLoadCVClick() {
+    // Giriş yapılmışsa doğrudan CV'lerim sayfasına (dashboard) yönlendir
+    // CV olup olmadığını kontrol etmek sayfa geçişini yavaşlatır ve gereksiz ağ isteği yapar.
+    // Dashboard sayfasının kendi "boş durum (empty state)" UI'ı vardır.
+    if (window.auth && window.auth.currentUser) {
         window.location.href = 'cvlerim.html';
     } else {
-        // CASE 2: Hiçbir CV kaydı yok
-        console.log('Kaydedilmiş CV yok');
-        showNotification('Henüz kaydedilmiş CV bulunmuyor. Yeni bir CV oluşturmak için bir şablon seçin.', 'warning');
+        showNotification('Lütfen önce giriş yapın.', 'warning');
     }
 }
 
 // ===== HANDLE TEMPLATE SELECTION =====
-// Kullanıcı CV şablonu seçtiğinde: localStorage'e kaydet ve editor.html'e yönlendir
+// Kullanıcı CV şablonu seçtiğinde: URL parametresiyle editor.html'e yönlendir
 //
 // AMAÇ: Şablon seçim butonunun tıklanmasını işle
-// FLOW: Template ID oku → localStorage'a kaydet → editor.html'e yönlendir
+// FLOW: Template ID oku → editor.html?template=X ile yönlendir
 //
-// localStorage KEYS:
-// - selectedTemplate: 'classic' | 'modern' | 'minimal'
-// - templateSelectionTime: ISO 8601 timestamp (audit trail)
-// (Bu değerler editor.html'de okunarak form başlatılacak)
+// Şablon bilgisi URL parametresi ile taşınır (localStorage kullanılmaz)
 
 function handleTemplateSelection(button) {
     // Tıklanan şablon butonundan template ID'sini oku
@@ -345,20 +326,52 @@ function handleTemplateSelection(button) {
         console.error('Şablon seçimi başarısız');
         return;
     }
+
+    const premiumTemplates = ['minimal', 'creative', 'tech', 'executive', 'template-minimal', 'template-creative', 'template-tech', 'template-executive'];
+    if (!window.isPremium && premiumTemplates.includes(selectedTemplate)) {
+        if (typeof window.showPremiumModal === 'function') {
+            window.showPremiumModal('Premium Şablonlar');
+        }
+        return;
+    }
     
     console.log(`Şablon seçildi: ${selectedTemplate}`);
     
-    // localStorage'a seçimi kaydet (editor.html'de kullanılacak)
-    localStorage.setItem('selectedTemplate', selectedTemplate);
-    // Seçim zamanını timestamp olarak kaydet (kullanıcı deneyimi analizi için)
-    localStorage.setItem('templateSelectionTime', new Date().toISOString());
+    // Giriş yapıp yapmadığını kontrol et
+    if (window.auth && !window.auth.currentUser) {
+        if (document.getElementById('authRequiredModal')) return;
+        
+        const targetPath = 'editor.html?template=' + encodeURIComponent(selectedTemplate);
+        const authUrl = 'auth.html?redirect=' + encodeURIComponent(window.location.pathname.replace(/[^/]+$/, '') + targetPath);
+        
+        const modalHtml = `
+            <div id="authRequiredModal" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); display:flex; justify-content:center; align-items:center; z-index:9999; backdrop-filter: blur(4px);">
+                <div style="background:var(--white); padding:2.5rem; border-radius:1rem; text-align:center; box-shadow:0 10px 30px rgba(0,0,0,0.2); max-width:400px; width:90%; animation: slideIn 0.3s ease;">
+                    <div style="font-size:3rem; margin-bottom:1rem;">🔒</div>
+                    <h3 style="color:var(--dark-text); margin-bottom:1rem; font-family:var(--font-heading); font-size:1.5rem;">Giriş Yapmanız Gerekiyor</h3>
+                    <p style="color:var(--gray-medium); margin-bottom:2rem; line-height:1.6; font-size:0.95rem;">Şablonu kullanmaya başlamak ve CV'nizi kaydedebilmek için lütfen giriş yapın veya ücretsiz hesap oluşturun.</p>
+                    <div style="display:flex; gap:1rem; justify-content:center; flex-wrap:wrap;">
+                        <button onclick="document.getElementById('authRequiredModal').remove()" class="btn btn-secondary" style="flex:1; padding:0.8rem; font-size:0.9rem; background:#f1f5f9; color:#475569; border:none; border-radius:0.5rem; font-weight:600; cursor:pointer;">Vazgeç</button>
+                        <button onclick="window.location.href='${authUrl}'" class="btn btn-primary" style="flex:1; padding:0.8rem; font-size:0.9rem; white-space:nowrap; background:var(--cherry-ruby); color:white; border:none; border-radius:0.5rem; font-weight:600; cursor:pointer; box-shadow:0 4px 10px rgba(225, 29, 72, 0.3);">Giriş Yap / Kayıt Ol</button>
+                    </div>
+                </div>
+            </div>
+        `;
+        document.body.insertAdjacentHTML('beforeend', modalHtml);
+        return;
+    }
+    
+    // Şablon seçimi URL parametresiyle editor.html'e iletilir (localStorage kullanılmaz)
     
     // Template'lar için insan tarafından okunabilir adlar
     // Bu adlar success notification'da gösterilir
     const templateNames = {
         classic: 'Klasik',    // Profesyonel, siyah-beyaz, serif
         modern: 'Modern',     // İki sütun, gradient banner
-        minimal: 'Minimal'    // Yalın, pastel accent
+        minimal: 'Minimal',   // Yalın, pastel accent
+        creative: 'Creative',
+        tech: 'Tech',
+        executive: 'Executive'
     };
     
     // Seçilen template'ın adını al (fallback: template ID)
@@ -367,9 +380,10 @@ function handleTemplateSelection(button) {
     const message = `✨ ${templateName} şablonuyla başlıyorsunuz!`;
     showNotification(message, 'success');
     
-    // editor.html'e yönlendir
-    // URL parameter'ı template info'su editor.html'de de kontrol edilebilsin diye ekle
-    window.location.href = 'editor.html?template=' + encodeURIComponent(selectedTemplate);
+    // editor.html'e yönlendir (tost bildiriminin görünmesi için hafif gecikmeli)
+    setTimeout(() => {
+        window.location.href = 'editor.html?template=' + encodeURIComponent(selectedTemplate);
+    }, 1200);
     
     console.log(`${selectedTemplate} şablonu yükleniyor...`);
 }
@@ -378,14 +392,37 @@ function handleTemplateSelection(button) {
 // Kullanıcıya bilgi mesajlarını göster
 
 function showNotification(message, type = 'info') {
-    // alert() yerine daha şık bir sistem yap
-    alert(message);
+    let container = document.getElementById('toastContainer');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'toastContainer';
+        container.className = 'toast-container';
+        document.body.appendChild(container);
+    }
+
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
     
-    // Gelecek versiyonda custom toast notification
-    // const notification = document.createElement('div');
-    // notification.className = `notification notification-${type}`;
-    // notification.textContent = message;
-    // document.body.appendChild(notification);
+    let icon = 'ℹ️';
+    if (type === 'success') icon = '✨';
+    if (type === 'error') icon = '❌';
+    if (type === 'warning') icon = '⚠️';
+
+    toast.innerHTML = `<span>${icon}</span> <span>${message}</span>`;
+    container.appendChild(toast);
+
+    setTimeout(() => {
+        toast.classList.add('show');
+    }, 10);
+
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => {
+            if (toast.parentNode) {
+                toast.parentNode.removeChild(toast);
+            }
+        }, 400);
+    }, 3000);
 }
 
 // ===== INTERACTIVE BACKGROUND EFFECTS =====
@@ -622,11 +659,155 @@ console.log('Framework veya kütüphane yok. Sadece saf web teknolojileri!');
 console.log('Canvas API ile custom particle physics sistemi uygulandı.');
 console.log('---');
 
+/* ========================================================
+   FEATURE 1: AUTO SAVE SYSTEM
+   Form değişikliklerini izle ve otomatik kaydet
+   ======================================================== */
+
+let currentCVData = {
+    id: null,
+    name: '',
+    template: 'template-modern',
+    personal: {},
+    summary: '',
+    experience: [],
+    education: [],
+    skills: [],
+    projects: [],
+    languages: [],
+    certificates: [],
+    volunteers: [],
+    references: []
+};
+
+function initAutoSaveSystem() {
+    // Save status güncellemesi
+    saveManager.subscribe(({ status, message }) => {
+        const statusEl = document.getElementById('saveStatus');
+        const statusText = document.getElementById('saveStatusText');
+        
+        if (!statusEl) return;
+
+        statusEl.className = `save-status ${status}`;
+        
+        switch (status) {
+            case 'saving':
+                statusText.textContent = 'Kaydediliyor...';
+                break;
+            case 'saved':
+                statusText.textContent = 'Kaydedildi';
+                setTimeout(() => {
+                    if (statusEl.classList.contains('saved')) {
+                        statusEl.classList.remove('saved');
+                    }
+                }, 2000);
+                break;
+            case 'error':
+                statusText.textContent = 'Hata! ' + (message || 'Tekrar deneyin');
+                console.error('Save error:', message);
+                break;
+            case 'cloud-sync-start':
+                statusText.textContent = '☁️ Bulutla Eşitleniyor...';
+                statusEl.classList.add('saving');
+                break;
+            case 'cloud-sync-success':
+                statusText.textContent = '☁️ Buluta Kaydedildi ✓';
+                statusEl.classList.add('saved');
+                showNotification(message || 'Bulutla eşitlendi', 'success');
+                setTimeout(() => {
+                    statusEl.classList.remove('saved');
+                }, 3000);
+                break;
+            case 'cloud-sync-error':
+                statusText.textContent = '☁️ Bulut Hatası';
+                showNotification(message || 'Bulut eşitleme hatası', 'error');
+                break;
+        }
+    });
+
+    // Removed conflicting save/new listeners that bypass form data
+}
+
+// ===== PREMIUM (FREEMIUM) STATE YÖNETİMİ =====
+window.isPremium = true; // Premium zorunluluğu geçici olarak devre dışı bırakıldı
+
+function initPremiumState() {
+    window.isPremium = true;
+    applyPremiumState();
+}
+
+function applyPremiumState() {
+    document.body.classList.remove('free-tier');
+}
+
+// TEST İÇİN: Konsoldan veya herhangi bir butondan çalıştırılabilir
+window.grantPremium = async function() {
+    window.isPremium = true;
+    localStorage.setItem('isPremium', 'true');
+    applyPremiumState();
+    
+    if (window.auth && window.auth.currentUser && window.db) {
+        try {
+            await window.db.collection("users").doc(window.auth.currentUser.uid).set({ isPremium: true }, { merge: true });
+            alert('Tebrikler! Hesabınız başarıyla ve kalıcı olarak Premium yapıldı! (Firebase güncellendi)');
+        } catch (e) {
+            console.error(e);
+            alert('Tarayıcı üzerinden geçici Premium yapıldı. (Firebase\'e yazma izniniz olmayabilir)');
+        }
+    } else {
+        alert('Şu an giriş yapmadığınız için tarayıcıda geçici olarak Premium oldunuz.');
+    }
+    window.location.reload();
+}
+
+window.showPremiumModal = function(featureName = 'Bu özellik') {
+    let modal = document.getElementById('premiumModal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'premiumModal';
+        modal.className = 'modal premium-modal';
+        modal.innerHTML = `
+            <div class="modal-content premium-modal-content">
+                <span class="close-modal">&times;</span>
+                <h2 style="color: var(--cherry-ruby); margin-top: 0;">👑 Premium'a Yükseltin</h2>
+                <p style="font-size: 1.1rem; line-height: 1.6;"><strong>${featureName}</strong> sadece Premium kullanıcılarımıza özeldir.</p>
+                <div class="premium-features-list" style="background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 12px; margin: 1.5rem 0; text-align: left;">
+                    <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.8rem;">
+                        <li>✨ Sınırsız Premium Şablonlar</li>
+                        <li>🚀 Filigransız PDF Çıktısı (CV İmzası Olmaz)</li>
+                        <li>🎨 Gelişmiş Renk ve Font Özelleştirme</li>
+                        <li>📄 Farklı Pozisyonlar İçin Sınırsız CV Versiyonu</li>
+                    </ul>
+                </div>
+                <button class="btn btn-primary btn-cta" style="width: 100%;" onclick="alert('Ödeme altyapısı yakında buraya entegre edilecek!')">Hemen Premium Al - 49₺/Ay</button>
+            </div>
+        `;
+        document.body.appendChild(modal);
+        
+        modal.querySelector('.close-modal').onclick = () => modal.style.display = 'none';
+        window.addEventListener('click', (e) => {
+            if (e.target === modal) modal.style.display = 'none';
+        });
+    } else {
+        modal.querySelector('p').innerHTML = `<strong>${featureName}</strong> sadece Premium kullanıcılarımıza özeldir.`;
+    }
+    modal.style.display = 'flex';
+}
+
 // ===== APP INITIALIZATION =====
 // Sayfa yüklendiğinde uygulamayı başlat
 
 document.addEventListener('DOMContentLoaded', function() {
     console.log('🚀 CV Oluşturucu başlatılıyor...');
+    
+    // Premium Durumunu Başlat
+    initPremiumState();
+    
+    // Auto Save Sistemi başlat
+    if (typeof saveManager !== 'undefined') {
+        initAutoSaveSystem();
+        console.log('✅ Auto-Save System aktif');
+    }
     
     // Uygulama tercihlerini başlat
     initializeAppPreferences();

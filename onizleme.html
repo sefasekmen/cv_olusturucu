@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="CV'nizi önizleyin ve yazdırın.">
     <title>CV Önizleme - CV Oluşturucu</title>
-    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="icon" type="image/webp" href="logo.webp">
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,7 +13,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- Paylaşılan stil dosyası -->
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="styles/style.css">
+    <link rel="stylesheet" href="styles/cv-templates.css?v=6">
 
     <style>
         /* ========================================================
@@ -160,118 +161,8 @@
             z-index: 10;
         }
 
-        /* ===== CV KAĞIDI ===== */
-        .cv-paper {
-            width: 210mm;
-            min-height: 297mm;
-            background: white;
-            box-shadow: 0 8px 50px rgba(0, 0, 0, 0.3);
-            border-radius: 2px;
-            position: relative;
-            transform-origin: top center;
-            margin-bottom: var(--spacing-2xl);
-        }
-
-        body.preview-page .cv-paper {
-            max-height: calc(100vh - 160px);
-            overflow-y: auto;
-            overflow-x: hidden;
-            scrollbar-width: thin;
-            scrollbar-color: rgba(0,0,0,0.22) transparent;
-        }
-
-        body.preview-page .cv-paper::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        body.preview-page .cv-paper::-webkit-scrollbar-thumb {
-            background: rgba(0,0,0,0.22);
-            border-radius: 999px;
-        }
-
-        /* CV Şablonları Stilleri */
-        .cv-paper.template-klasik {
-            font-family: 'Georgia', 'Times New Roman', serif;
-            color: #222;
-            padding: 0;
-        }
-
-        .cv-paper.template-klasik .cv-header {
-            padding: 2rem 2.5rem 1.5rem;
-            border-bottom: 3px solid #222;
-            display: flex;
-            align-items: flex-start;
-            gap: 1.5rem;
-        }
-
-        .cv-paper.template-klasik .cv-body {
-            padding: 1.5rem 2.5rem;
-        }
-
-        .cv-paper.template-modern {
-            font-family: 'Montserrat', sans-serif;
-            display: flex;
-            flex-direction: column;
-            color: #222;
-        }
-
-        .cv-paper.template-modern .cv-modern-banner {
-            background: linear-gradient(135deg, var(--accent-color, #C20000) 0%, color-mix(in srgb, var(--accent-color, #C20000) 70%, #000) 100%);
-            padding: 2rem 2.5rem;
-            color: white;
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-        }
-
-        .cv-paper.template-modern .cv-modern-body {
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-        }
-
-        .cv-paper.template-modern .cv-modern-sidebar {
-            background: #f9f2f2;
-            padding: 1.5rem 1.25rem;
-            border-right: 1px solid #eee;
-        }
-
-        .cv-paper.template-modern .cv-modern-main {
-            padding: 1.5rem 1.75rem;
-        }
-
-        .cv-paper.template-minimal {
-            font-family: 'Montserrat', sans-serif;
-            color: #333;
-            padding: 2.5rem 3rem;
-        }
-
-        /* Ortak CV Stilleri */
-        .cv-name {
-            font-weight: 700;
-            margin-bottom: 0.25rem;
-        }
-
-        .cv-section-title {
-            font-weight: 800;
-            text-transform: uppercase;
-            margin-bottom: 0.75rem;
-        }
-
-        .cv-entry {
-            margin-bottom: 0.85rem;
-        }
-
-        .cv-field-empty {
-            display: none !important;
-        }
-
         /* ===== RESPONSIVE ===== */
         @media (max-width: 1024px) {
-            .cv-paper {
-                width: 180mm;
-                min-height: 254mm;
-            }
-
             .toolbar-title {
                 display: none;
             }
@@ -297,11 +188,6 @@
                 justify-content: space-between;
             }
 
-            .cv-paper {
-                width: 100%;
-                max-width: 380px;
-            }
-
             .color-palette-label {
                 display: none;
             }
@@ -315,74 +201,18 @@
                 width: 14px;
                 height: 14px;
             }
-        }
-
-        /* ===== YAZDIRMA CSS ===== */
-        @media print {
-            @page {
-                size: A4;
-                margin: 6mm;
-            }
-
-            * {
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
-            }
-
-            html,
-            body {
-                width: 210mm;
-                min-height: 297mm;
-                background: white !important;
-                margin: 0;
-                padding: 0;
-            }
-
-            .preview-toolbar,
-            .preview-area > *:not(.cv-paper) {
-                display: none !important;
-            }
 
             .preview-area {
-                margin: 0;
-                padding: 0;
-                min-height: auto;
-                display: block;
-                overflow: visible;
+                overflow-x: hidden !important;
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+                align-items: flex-start !important;
             }
 
             .cv-paper {
-                width: 198mm;
-                min-height: auto;
-                padding: 12mm;
-                box-shadow: none;
-                border-radius: 0;
-                margin: 0;
-                transform: none;
-                overflow: visible;
-                page-break-inside: avoid;
-            }
-
-            .cv-paper.template-modern {
-                font-size: 0.94rem;
-            }
-
-            .cv-paper.template-modern .cv-modern-banner,
-            .cv-paper.template-modern .cv-modern-body,
-            .cv-paper.template-klasik .cv-header,
-            .cv-paper.template-minimal .cv-header {
-                page-break-inside: avoid;
-            }
-
-            .cv-entry,
-            .cv-section,
-            .cv-modern-sidebar,
-            .cv-modern-main {
-                page-break-inside: avoid;
-            }
-
-            canvas {
-                display: none !important;
+                width: 210mm !important;
+                min-width: 210mm !important;
+                flex-shrink: 0 !important;
             }
         }
     </style>
@@ -397,6 +227,7 @@
             <h1 class="toolbar-title">CV Önizleme</h1>
             
             <div class="toolbar-group">
+                <button onclick="window.toggleUiLanguage()" class="lang-toggle-btn" title="Switch to English" style="background: transparent; border: 1px solid #ddd; padding: 0.5rem; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 0.85rem; margin-right: 15px;">🇹🇷 TR</button>
                 <!-- RENK PALETİ -->
                 <div>
                     <span class="color-palette-label">Renk Teması:</span>
@@ -439,175 +270,141 @@
     </main>
 
     <!-- ===== JAVASCRIPT ===== -->
-    <script src="script.js"></script>
+    <!-- Firebase Compat SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    
+    <script src="js/firebase-config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/saveManager.js?v=5"></script>
+    <script src="js/script.js?v=6"></script>
+    <script src="js/cv-render.js?v=6"></script>
     <script>
-        // ===== CV ÖNİZLEME VE YAZDIRMA SAYFASI =====
-
         const cvPaper = document.getElementById('cvPaper');
+        const printRoot = document.documentElement;
 
-        // ===== RENK PALETİ =====
+        function yazdirmaTemasiniGuncelle() {
+            const techAktifMi = cvPaper.classList.contains('template-tech');
+            printRoot.classList.toggle('print-tech-paper', techAktifMi);
+            document.body.classList.toggle('print-tech-paper', techAktifMi);
+        }
+
+        window.addEventListener('beforeprint', yazdirmaTemasiniGuncelle);
+        window.addEventListener('afterprint', () => {
+            printRoot.classList.remove('print-tech-paper');
+            document.body.classList.remove('print-tech-paper');
+        });
+
         document.querySelectorAll('.color-swatch').forEach(swatch => {
-            swatch.addEventListener('click', function() {
+            swatch.addEventListener('click', function () {
                 document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
                 this.classList.add('active');
-
-                const color = this.dataset.color;
-                cvPaper.style.setProperty('--accent-color', color);
+                cvPaper.style.setProperty('--accent-color', this.dataset.color);
             });
         });
 
-        // ===== CV VERİSİNİ YÜKLE =====
-        function cvVerisiniYukle() {
-            // localStorage'den aktif CV'yi al
-            const cvListesi = JSON.parse(localStorage.getItem('cvListesi')) || [];
-            const aktifCVAdi = localStorage.getItem('aktifCVAdi');
-
+        async function cvVerisiniYukle() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const idParam = urlParams.get('id');
             let cvVerisi = null;
-            if (aktifCVAdi) {
-                cvVerisi = cvListesi.find(cv => cv.ad === aktifCVAdi);
+
+            // Loading göster
+            cvPaper.innerHTML = '<p style="padding:2rem;text-align:center;color:#999;">CV yükleniyor...</p>';
+
+            // Auth'un hazır olmasını bekle
+            await new Promise((resolve) => {
+                if (window.auth && window.auth.currentUser) {
+                    resolve();
+                } else if (window.auth) {
+                    const unsubscribe = window.auth.onAuthStateChanged(() => {
+                        unsubscribe();
+                        resolve();
+                    });
+                    // 3 saniye timeout
+                    setTimeout(resolve, 3000);
+                } else {
+                    resolve();
+                }
+            });
+
+            // saveManager sync bekle
+            if (window.auth && window.auth.currentUser && window.saveManager) {
+                try {
+                    await window.saveManager.syncWithFirebase();
+                } catch(e) {}
+            }
+
+            if (idParam) {
+                // 1. saveManager.loadCV ile Firebase'den yükle
+                if (typeof saveManager !== 'undefined') {
+                    try {
+                        cvVerisi = await saveManager.loadCV(idParam);
+                    } catch (e) {
+                        console.warn('loadCV failed for id:', e);
+                    }
+                }
+
+                // 2. ID ile bulunamadıysa ad/name ile dene
+                if (!cvVerisi && typeof saveManager !== 'undefined') {
+                    try {
+                        const allCvs = await saveManager.getAllCVs();
+                        cvVerisi = allCvs.find(c => c.name === idParam || c.ad === idParam);
+                    } catch (e) {}
+                }
+            } else {
+                // URL parametresi yoksa, Firebase'den son güncellenen CV'yi yükle
+                if (typeof saveManager !== 'undefined') {
+                    try {
+                        const allCvs = await saveManager.getAllCVs();
+                        if (allCvs.length > 0) {
+                            // En son güncellenen CV'yi seç
+                            allCvs.sort((a, b) => new Date(b.updatedAt || 0) - new Date(a.updatedAt || 0));
+                            cvVerisi = allCvs[0];
+                        }
+                    } catch(e) {
+                        console.warn('Firebase CV yükleme başarısız:', e);
+                    }
+                }
             }
 
             if (!cvVerisi) {
-                cvPaper.innerHTML = '<p style="padding: 2rem; text-align: center; color: #999;">CV yükleme başarısız. Lütfen bir CV seçin.</p>';
+                cvPaper.innerHTML = '<p style="padding:2rem;text-align:center;color:#999;">CV yükleme başarısız. Lütfen bir CV seçin.</p>';
                 return;
             }
 
-            // Şablona göre CV'yi oluştur
-            const template = cvVerisi.sablon || 'template-klasik';
-            cvPaper.className = 'cv-paper ' + template;
-
-            const k = cvVerisi.kisisel || {};
-
-            if (template === 'template-modern') {
-                renderModernCV(cvVerisi, k);
-            } else if (template === 'template-minimal') {
-                renderMinimalCV(cvVerisi, k);
+            if (typeof CVRender !== 'undefined') {
+                CVRender.renderCV(cvPaper, cvVerisi);
             } else {
-                renderKlasikCV(cvVerisi, k);
+                cvPaper.innerHTML = '<p style="padding:2rem;text-align:center;color:#999;">Render modülü yüklenemedi.</p>';
             }
 
-            // Renk temasını uygula
-            if (cvVerisi.aksanRengi) {
-                cvPaper.style.setProperty('--accent-color', cvVerisi.aksanRengi);
-                // Aktif renkli button'u bul ve seç
+            if (cvVerisi.aksanRengi || cvVerisi.accentColor) {
+                const renk = cvVerisi.aksanRengi || cvVerisi.accentColor;
                 document.querySelectorAll('.color-swatch').forEach(s => {
-                    if (s.dataset.color === cvVerisi.aksanRengi) {
-                        document.querySelectorAll('.color-swatch').forEach(x => x.classList.remove('active'));
-                        s.classList.add('active');
-                    }
+                    s.classList.toggle('active', s.dataset.color === renk);
                 });
             }
         }
 
-        // ===== KLASIK ŞABLON CV OLUŞTUR =====
-        function renderKlasikCV(cvData, kisisel) {
-            const html = `
-                <div class="cv-header">
-                    ${kisisel.foto ? `<img src="${escapeHtml(kisisel.foto)}" class="cv-photo" alt="Profil fotoğrafı" style="width:90px;height:90px;border-radius:50%;border:3px solid #222;flex-shrink:0;object-fit:cover;">` : `<div style="width:90px;height:90px;background:#f0f0f0;border-radius:50%;border:3px solid #ccc;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1.8rem;color:#aaa;">👤</div>`}
-                    <div class="cv-header-info">
-                        <h1 class="cv-name" style="font-size:2rem;color:#111;margin-bottom:0.25rem;">${escapeHtml(kisisel.ad || '')}</h1>
-                        <p class="cv-title" style="font-size:1rem;color:#555;font-style:italic;margin-bottom:0.5rem;">${escapeHtml(kisisel.unvan || '')}</p>
-                        <div class="cv-contact" style="font-size:0.78rem;color:#444;display:flex;flex-wrap:wrap;gap:0.25rem 1rem;">
-                            ${kisisel.email ? `<span>✉ ${escapeHtml(kisisel.email)}</span>` : ''}
-                            ${kisisel.telefon ? `<span>📞 ${escapeHtml(kisisel.telefon)}</span>` : ''}
-                            ${kisisel.konum ? `<span>📍 ${escapeHtml(kisisel.konum)}</span>` : ''}
-                            ${kisisel.linkedin ? `<span>🔗 ${escapeHtml(kisisel.linkedin)}</span>` : ''}
-                            ${kisisel.website ? `<span>🌐 ${escapeHtml(kisisel.website)}</span>` : ''}
-                        </div>
-                    </div>
-                </div>
-                <div class="cv-body">
-                    ${kisisel.ozet ? `<div class="cv-section"><h2 class="cv-section-title" style="font-size:0.9rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#111;border-bottom:1.5px solid #111;padding-bottom:0.3rem;margin-bottom:0.75rem;">Profesyonel Özet</h2><p style="font-size:0.85rem;color:#444;line-height:1.65;">${escapeHtml(kisisel.ozet)}</p></div>` : ''}
-                    ${cvData.deneyimler?.length ? `<div class="cv-section"><h2 class="cv-section-title" style="font-size:0.9rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#111;border-bottom:1.5px solid #111;padding-bottom:0.3rem;margin-bottom:0.75rem;">İş Deneyimi</h2>${cvData.deneyimler.map(d => `<div class="cv-entry" style="margin-bottom:0.85rem;"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:0.5rem;"><div><div style="font-size:0.9rem;font-weight:700;color:#111;">${escapeHtml(d.pozisyon || '')}</div><div style="font-size:0.82rem;color:#555;font-style:italic;">${escapeHtml(d.sirket || '')}</div></div><div style="font-size:0.78rem;color:#777;white-space:nowrap;">${escapeHtml(d.tarih || '')}</div></div>${d.aciklama ? `<p style="font-size:0.82rem;color:#444;line-height:1.55;margin-top:0.2rem;">${escapeHtml(d.aciklama)}</p>` : ''}</div>`).join('')}</div>` : ''}
-                    ${cvData.egitimler?.length ? `<div class="cv-section"><h2 class="cv-section-title" style="font-size:0.9rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#111;border-bottom:1.5px solid #111;padding-bottom:0.3rem;margin-bottom:0.75rem;">Eğitim</h2>${cvData.egitimler.map(e => `<div class="cv-entry" style="margin-bottom:0.85rem;"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:0.5rem;"><div><div style="font-size:0.9rem;font-weight:700;color:#111;">${escapeHtml(e.bolum || '')}</div><div style="font-size:0.82rem;color:#555;font-style:italic;">${escapeHtml(e.okul || '')}${e.not ? ` • Not: ${escapeHtml(e.not)}` : ''}</div></div><div style="font-size:0.78rem;color:#777;white-space:nowrap;">${escapeHtml(e.tarih || '')}</div></div></div>`).join('')}</div>` : ''}
-                    ${cvData.beceriler?.length ? `<div class="cv-section"><h2 class="cv-section-title" style="font-size:0.9rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#111;border-bottom:1.5px solid #111;padding-bottom:0.3rem;margin-bottom:0.75rem;">Beceriler</h2>${cvData.beceriler.map(b => `<div style="margin-bottom:0.5rem;"><div style="display:flex;justify-content:space-between;font-size:0.8rem;font-weight:600;color:#333;margin-bottom:0.2rem;"><span>${escapeHtml(b.ad || '')}</span><span>${b.seviye || 0}%</span></div><div style="height:5px;background:#e0e0e0;border-radius:3px;overflow:hidden;"><div style="height:100%;background:#333;border-radius:3px;width:${b.seviye || 0}%;"></div></div></div>`).join('')}</div>` : ''}
-                    ${cvData.projeler?.length ? `<div class="cv-section"><h2 class="cv-section-title" style="font-size:0.9rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#111;border-bottom:1.5px solid #111;padding-bottom:0.3rem;margin-bottom:0.75rem;">Projeler</h2>${cvData.projeler.map(p => `<div class="cv-entry" style="margin-bottom:0.85rem;"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:0.5rem;"><div><div style="font-size:0.9rem;font-weight:700;color:#111;">${escapeHtml(p.ad || '')}</div>${p.teknoloji ? `<div style="font-size:0.82rem;color:#555;font-style:italic;">${escapeHtml(p.teknoloji)}</div>` : ''}</div></div>${p.aciklama ? `<p style="font-size:0.82rem;color:#444;line-height:1.55;margin-top:0.2rem;">${escapeHtml(p.aciklama)}</p>` : ''}</div>`).join('')}</div>` : ''}
-                </div>
-            `;
-            cvPaper.innerHTML = html;
-        }
-
-        function renderModernCV(cvData, kisisel) {
-            const html = `
-                <div class="cv-modern-banner">
-                    ${kisisel.foto ? `<img src="${escapeHtml(kisisel.foto)}" class="cv-photo" alt="Profil fotoğrafı" style="width:100px;height:100px;border-radius:50%;border:4px solid rgba(255,255,255,0.4);flex-shrink:0;object-fit:cover;">` : `<div style="width:100px;height:100px;background:rgba(255,255,255,0.15);border-radius:50%;border:4px solid rgba(255,255,255,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:2rem;color:rgba(255,255,255,0.5);">👤</div>`}
-                    <div>
-                        <h1 class="cv-name" style="font-size:1.8rem;font-weight:900;letter-spacing:-0.5px;color:white;margin-bottom:0.2rem;">${escapeHtml(kisisel.ad || '')}</h1>
-                        <p class="cv-title" style="font-size:0.9rem;color:rgba(255,255,255,0.8);font-weight:600;margin-bottom:0.4rem;">${escapeHtml(kisisel.unvan || '')}</p>
-                        <div class="cv-contact" style="font-size:0.75rem;color:rgba(255,255,255,0.75);display:flex;flex-wrap:wrap;gap:0.2rem 0.8rem;">
-                            ${kisisel.email ? `<span>✉ ${escapeHtml(kisisel.email)}</span>` : ''}
-                            ${kisisel.telefon ? `<span>📞 ${escapeHtml(kisisel.telefon)}</span>` : ''}
-                            ${kisisel.konum ? `<span>📍 ${escapeHtml(kisisel.konum)}</span>` : ''}
-                        </div>
-                    </div>
-                </div>
-                <div class="cv-modern-body">
-                    <div class="cv-modern-sidebar">
-                        ${kisisel.ozet ? `<div class="cv-section"><h2 class="cv-section-title">Özet</h2><p style="font-size:0.82rem;color:#444;line-height:1.6;">${escapeHtml(kisisel.ozet)}</p></div>` : ''}
-                        ${cvData.beceriler?.length ? `<div class="cv-section"><h2 class="cv-section-title">Beceriler</h2>${cvData.beceriler.map(b => `<div style="margin-bottom:0.6rem;"><div style="display:flex;justify-content:space-between;font-size:0.76rem;font-weight:600;color:#333;margin-bottom:0.2rem;"><span>${escapeHtml(b.ad || '')}</span><span>${b.seviye || 0}%</span></div><div style="height:6px;background:#e0e0e0;border-radius:3px;overflow:hidden;"><div style="height:100%;background:var(--accent-color,#C20000);border-radius:3px;width:${b.seviye || 0}%;"></div></div></div>`).join('')}</div>` : ''}
-                    </div>
-                    <div class="cv-modern-main">
-                        ${cvData.deneyimler?.length ? `<div class="cv-section"><h2 class="cv-section-title">İş Deneyimi</h2>${cvData.deneyimler.map(d => `<div class="cv-entry" style="margin-bottom:0.85rem;"><div style="display:flex;justify-content:space-between;align-items:flex-start;"><div><div style="font-size:0.85rem;font-weight:700;color:#111;">${escapeHtml(d.pozisyon || '')}</div><div style="font-size:0.78rem;color:var(--accent-color,#C20000);font-weight:600;">${escapeHtml(d.sirket || '')}</div></div><div style="font-size:0.7rem;color:#888;white-space:nowrap;">${escapeHtml(d.tarih || '')}</div></div>${d.aciklama ? `<p style="font-size:0.78rem;color:#555;line-height:1.5;margin-top:0.2rem;">${escapeHtml(d.aciklama)}</p>` : ''}</div>`).join('')}</div>` : ''}
-                        ${cvData.egitimler?.length ? `<div class="cv-section"><h2 class="cv-section-title">Eğitim</h2>${cvData.egitimler.map(e => `<div class="cv-entry" style="margin-bottom:0.85rem;"><div style="display:flex;justify-content:space-between;align-items:flex-start;"><div><div style="font-size:0.85rem;font-weight:700;color:#111;">${escapeHtml(e.bolum || '')}</div><div style="font-size:0.78rem;color:var(--accent-color,#C20000);font-weight:600;">${escapeHtml(e.okul || '')}${e.not ? ` • ${escapeHtml(e.not)}` : ''}</div></div><div style="font-size:0.7rem;color:#888;white-space:nowrap;">${escapeHtml(e.tarih || '')}</div></div></div>`).join('')}</div>` : ''}
-                        ${cvData.projeler?.length ? `<div class="cv-section"><h2 class="cv-section-title">Projeler</h2>${cvData.projeler.map(p => `<div class="cv-entry" style="margin-bottom:0.85rem;"><div style="display:flex;justify-content:space-between;align-items:flex-start;"><div><div style="font-size:0.85rem;font-weight:700;color:#111;">${escapeHtml(p.ad || '')}</div>${p.teknoloji ? `<div style="font-size:0.78rem;color:var(--accent-color,#C20000);font-weight:600;">${escapeHtml(p.teknoloji)}</div>` : ''}</div></div>${p.aciklama ? `<p style="font-size:0.78rem;color:#555;line-height:1.5;margin-top:0.2rem;">${escapeHtml(p.aciklama)}</p>` : ''}</div>`).join('')}</div>` : ''}
-                    </div>
-                </div>
-            `;
-            cvPaper.innerHTML = html;
-        }
-
-        function renderMinimalCV(cvData, kisisel) {
-            const html = `
-                <div class="cv-header" style="display:flex;align-items:center;gap:1.5rem;margin-bottom:1.5rem;padding-bottom:1.25rem;border-bottom:1px solid #eee;">
-                    ${kisisel.foto ? `<img src="${escapeHtml(kisisel.foto)}" style="width:80px;height:80px;border-radius:50%;border:3px solid var(--accent-color,#F08080);flex-shrink:0;object-fit:cover;">` : `<div style="width:80px;height:80px;background:#fff0f5;border-radius:50%;border:3px solid var(--accent-color,#F08080);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1.6rem;color:var(--accent-color,#F08080);">👤</div>`}
-                    <div>
-                        <h1 class="cv-name" style="font-size:1.8rem;font-weight:900;color:#111;letter-spacing:-0.5px;margin-bottom:0.2rem;">${escapeHtml(kisisel.ad || '')}</h1>
-                        <p class="cv-title" style="font-size:0.88rem;color:var(--accent-color,#F08080);font-weight:600;margin-bottom:0.4rem;">${escapeHtml(kisisel.unvan || '')}</p>
-                        <div style="font-size:0.75rem;color:#888;display:flex;flex-wrap:wrap;gap:0.2rem 0.75rem;">
-                            ${kisisel.email ? `<span>✉ ${escapeHtml(kisisel.email)}</span>` : ''}
-                            ${kisisel.telefon ? `<span>📞 ${escapeHtml(kisisel.telefon)}</span>` : ''}
-                            ${kisisel.konum ? `<span>📍 ${escapeHtml(kisisel.konum)}</span>` : ''}
-                        </div>
-                    </div>
-                </div>
-                ${kisisel.ozet ? `<div class="cv-section" style="margin-bottom:1.4rem;"><h2 class="cv-section-title" style="font-size:0.78rem;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:var(--accent-color,#F08080);margin-bottom:0.75rem;display:flex;align-items:center;gap:0.5rem;"><span>Profesyonel Özet</span><div style="flex:1;height:1px;background:var(--accent-color,#F08080);opacity:0.3;"></div></h2><p style="font-size:0.83rem;color:#555;line-height:1.65;">${escapeHtml(kisisel.ozet)}</p></div>` : ''}
-                ${cvData.deneyimler?.length ? `<div class="cv-section" style="margin-bottom:1.4rem;"><h2 class="cv-section-title" style="font-size:0.78rem;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:var(--accent-color,#F08080);margin-bottom:0.75rem;display:flex;align-items:center;gap:0.5rem;"><span>İş Deneyimi</span><div style="flex:1;height:1px;background:var(--accent-color,#F08080);opacity:0.3;"></div></h2>${cvData.deneyimler.map(d => `<div class="cv-entry" style="margin-bottom:0.85rem;"><div style="display:flex;justify-content:space-between;align-items:flex-start;"><div><div style="font-size:0.88rem;font-weight:700;color:#222;">${escapeHtml(d.pozisyon || '')}</div><div style="font-size:0.8rem;color:#777;">${escapeHtml(d.sirket || '')}</div></div><div style="font-size:0.75rem;color:#aaa;white-space:nowrap;">${escapeHtml(d.tarih || '')}</div></div>${d.aciklama ? `<p style="font-size:0.8rem;color:#555;line-height:1.55;margin-top:0.2rem;">${escapeHtml(d.aciklama)}</p>` : ''}</div>`).join('')}</div>` : ''}
-                ${cvData.egitimler?.length ? `<div class="cv-section" style="margin-bottom:1.4rem;"><h2 class="cv-section-title" style="font-size:0.78rem;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:var(--accent-color,#F08080);margin-bottom:0.75rem;display:flex;align-items:center;gap:0.5rem;"><span>Eğitim</span><div style="flex:1;height:1px;background:var(--accent-color,#F08080);opacity:0.3;"></div></h2>${cvData.egitimler.map(e => `<div class="cv-entry" style="margin-bottom:0.85rem;"><div style="display:flex;justify-content:space-between;align-items:flex-start;"><div><div style="font-size:0.88rem;font-weight:700;color:#222;">${escapeHtml(e.bolum || '')}</div><div style="font-size:0.8rem;color:#777;">${escapeHtml(e.okul || '')}${e.not ? ` • ${escapeHtml(e.not)}` : ''}</div></div><div style="font-size:0.75rem;color:#aaa;white-space:nowrap;">${escapeHtml(e.tarih || '')}</div></div></div>`).join('')}</div>` : ''}
-                ${cvData.beceriler?.length ? `<div class="cv-section" style="margin-bottom:1.4rem;"><h2 class="cv-section-title" style="font-size:0.78rem;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:var(--accent-color,#F08080);margin-bottom:0.75rem;display:flex;align-items:center;gap:0.5rem;"><span>Beceriler</span><div style="flex:1;height:1px;background:var(--accent-color,#F08080);opacity:0.3;"></div></h2>${cvData.beceriler.map(b => `<div style="margin-bottom:0.5rem;"><div style="display:flex;justify-content:space-between;font-size:0.78rem;font-weight:600;color:#333;margin-bottom:0.2rem;"><span>${escapeHtml(b.ad || '')}</span><span>${b.seviye || 0}%</span></div><div style="height:4px;background:rgba(240,128,128,0.15);border-radius:2px;overflow:hidden;"><div style="height:100%;background:var(--accent-color,#F08080);border-radius:2px;width:${b.seviye || 0}%;"></div></div></div>`).join('')}</div>` : ''}
-                ${cvData.projeler?.length ? `<div class="cv-section" style="margin-bottom:1.4rem;"><h2 class="cv-section-title" style="font-size:0.78rem;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:var(--accent-color,#F08080);margin-bottom:0.75rem;display:flex;align-items:center;gap:0.5rem;"><span>Projeler</span><div style="flex:1;height:1px;background:var(--accent-color,#F08080);opacity:0.3;"></div></h2>${cvData.projeler.map(p => `<div class="cv-entry" style="margin-bottom:0.85rem;"><div style="display:flex;justify-content:space-between;align-items:flex-start;"><div><div style="font-size:0.88rem;font-weight:700;color:#222;">${escapeHtml(p.ad || '')}</div>${p.teknoloji ? `<div style="font-size:0.8rem;color:#777;">${escapeHtml(p.teknoloji)}</div>` : ''}</div></div>${p.aciklama ? `<p style="font-size:0.8rem;color:#555;line-height:1.55;margin-top:0.2rem;">${escapeHtml(p.aciklama)}</p>` : ''}</div>`).join('')}</div>` : ''}
-            `;
-            cvPaper.innerHTML = html;
-        }
-
-        // ===== XSS KORUMA =====
-        function escapeHtml(text) {
-            if (!text) return '';
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-
-        // ===== YAZDIRMA =====
         document.getElementById('btnPrint').addEventListener('click', () => {
-            console.log('🖨️ CV yazdırılıyor...');
+            yazdirmaTemasiniGuncelle();
             window.print();
         });
 
-        // ===== DÜZENLEYİCİYE DÖN =====
         document.getElementById('btnEdit').addEventListener('click', () => {
-            const aktifCVAdi = localStorage.getItem('aktifCVAdi');
-            if (aktifCVAdi) {
-                window.location.href = 'editor.html?mode=edit&cv=' + encodeURIComponent(aktifCVAdi);
+            const urlParams = new URLSearchParams(window.location.search);
+            const idParam = urlParams.get('id');
+            
+            if (idParam) {
+                window.location.href = 'editor.html?id=' + encodeURIComponent(idParam);
             } else {
                 window.location.href = 'editor.html';
             }
         });
 
-        // ===== SAYFA YÜKLENÜNCE =====
-        document.addEventListener('DOMContentLoaded', () => {
-            cvVerisiniYukle();
-            console.log('👀 CV önizleme sayfası yüklendi.');
-        });
+        document.addEventListener('DOMContentLoaded', cvVerisiniYukle);
     </script>
+    <script src="js/i18n.js"></script>
 </body>
 </html>

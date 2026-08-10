@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giriş Yap - CV Oluşturucu</title>
+    <link rel="icon" type="image/webp" href="logo.webp">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/style.css?v=2">
+    
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a0505 0%, #3a0a0a 100%);
+            color: #fff;
+        }
+
+        .auth-container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 3rem;
+            border-radius: var(--radius-2xl);
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            text-align: center;
+        }
+
+        .auth-logo {
+            margin-bottom: 2rem;
+            height: 60px;
+        }
+
+        .auth-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            color: var(--pink-pale);
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.8);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            background: rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: var(--radius-md);
+            color: #fff;
+            font-family: inherit;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--cherry-bright);
+            box-shadow: 0 0 0 2px rgba(194, 0, 0, 0.3);
+        }
+
+        .auth-btn {
+            width: 100%;
+            padding: 0.9rem;
+            margin-top: 1rem;
+            background: linear-gradient(135deg, var(--cherry-ruby) 0%, var(--cherry-bright) 100%);
+            border: none;
+            border-radius: var(--radius-md);
+            color: #fff;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .auth-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-cherry-glow);
+        }
+
+        .auth-switch {
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.6);
+        }
+
+        .auth-switch a {
+            color: var(--pink-soft);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .auth-switch a:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            color: #ff6b6b;
+            background: rgba(255, 0, 0, 0.1);
+            padding: 0.8rem;
+            border-radius: var(--radius-sm);
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="auth-container" id="login-box">
+        <a href="index.html">
+            <img src="logo.webp" alt="CV Oluşturucu Logo" class="auth-logo">
+        </a>
+        <h1 class="auth-title">Giriş Yap</h1>
+        
+        <div class="error-message" id="login-error"></div>
+
+        <form id="login-form">
+            <div class="form-group">
+                <label for="login-email">E-posta Adresi</label>
+                <input type="email" id="login-email" class="form-input" required>
+            </div>
+            <div class="form-group">
+                <label for="login-password">Şifre</label>
+                <input type="password" id="login-password" class="form-input" required>
+            </div>
+            <button type="submit" class="auth-btn">Giriş Yap</button>
+        </form>
+
+        <div class="auth-switch">
+            Hesabınız yok mu? <a href="#" id="show-register">Kayıt Ol</a>
+        </div>
+    </div>
+
+    <div class="auth-container" id="register-box" style="display: none;">
+        <a href="index.html">
+            <img src="logo.webp" alt="CV Oluşturucu Logo" class="auth-logo">
+        </a>
+        <h1 class="auth-title">Kayıt Ol</h1>
+        
+        <div class="error-message" id="reg-error"></div>
+
+        <form id="register-form">
+            <div class="form-group">
+                <label for="reg-email">E-posta Adresi</label>
+                <input type="email" id="reg-email" class="form-input" required>
+            </div>
+            <div class="form-group">
+                <label for="reg-password">Şifre</label>
+                <input type="password" id="reg-password" class="form-input" required minlength="6">
+            </div>
+            <div class="form-group">
+                <label for="reg-password-confirm">Şifre (Tekrar)</label>
+                <input type="password" id="reg-password-confirm" class="form-input" required minlength="6">
+            </div>
+            <button type="submit" class="auth-btn">Kayıt Ol</button>
+        </form>
+
+        <div class="auth-switch">
+            Zaten hesabınız var mı? <a href="#" id="show-login">Giriş Yap</a>
+        </div>
+    </div>
+
+    <!-- Firebase Compat SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    
+    <script src="js/firebase-config.js"></script>
+    <script src="js/auth.js"></script>
+</body>
+</html>

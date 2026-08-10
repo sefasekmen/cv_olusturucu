@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV Görüntüle - Online CV Oluşturucu</title>
+    <meta name="description" content="Paylaşılan profesyonel CV'yi görüntüleyin.">
+    <link rel="icon" type="image/webp" href="logo.webp">
+    <link rel="stylesheet" href="styles/style.css">
+    <link rel="stylesheet" href="styles/cv-templates.css?v=6">
+    <style>
+        body {
+            background: #1a1a2e;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            font-family: var(--font-body);
+        }
+        .view-header {
+            background: rgba(74, 14, 14, 0.92);
+            backdrop-filter: blur(10px);
+            width: 100%;
+            padding: 0.8rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-sizing: border-box;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.12);
+        }
+        .view-header a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .view-header img {
+            height: 32px;
+        }
+        .view-container {
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+            flex: 1;
+        }
+        .view-loading {
+            color: white;
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+        .view-loading h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        .view-error {
+            color: #f87171;
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+        .view-actions {
+            display: flex;
+            gap: 10px;
+        }
+        .view-actions button {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.85rem;
+            transition: background 0.2s;
+        }
+        .view-actions button:hover {
+            background: rgba(255,255,255,0.2);
+        }
+        @media print {
+            .view-header { display: none !important; }
+            .view-container { padding: 0; }
+            body { background: white; }
+        }
+    </style>
+</head>
+<body>
+    <header class="view-header">
+        <a href="index.html">
+            <img src="logo.webp" alt="CV Oluşturucu Logo">
+        </a>
+        <div class="view-actions">
+            <button onclick="window.print()">📄 PDF / Yazdır</button>
+            <a href="index.html" style="background: var(--cherry-ruby); border: none; color: white; padding: 0.5rem 1rem; border-radius: 8px; font-weight: 600; font-size: 0.85rem; text-decoration: none;">Kendi CV'ni Oluştur</a>
+        </div>
+    </header>
+
+    <div class="view-container" id="viewContainer">
+        <div class="view-loading" id="viewLoading">
+            <h2>⏳ CV Yükleniyor...</h2>
+            <p>Lütfen bekleyiniz.</p>
+        </div>
+    </div>
+
+    <!-- Firebase Compat SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="js/firebase-config.js"></script>
+    <script src="js/cv-render.js?v=6"></script>
+
+    <script>
+    (async function() {
+        const container = document.getElementById('viewContainer');
+        const loading = document.getElementById('viewLoading');
+
+        // URL'den CV ID'sini al
+        const params = new URLSearchParams(window.location.search);
+        const cvId = params.get('id');
+
+        if (!cvId) {
+            loading.innerHTML = '<div class="view-error"><h2>❌ Geçersiz Link</h2><p>Bu CV linki geçersiz veya eksik. Lütfen linki kontrol edin.</p><a href="index.html" style="color: #8b5cf6; margin-top: 1rem; display: inline-block;">Ana Sayfaya Dön</a></div>';
+            return;
+        }
+
+        try {
+            // Firebase'den CV'yi collectionGroup ile çek
+            const snapshot = await window.db.collectionGroup('cvs').where('id', '==', cvId).get();
+
+            if (snapshot.empty) {
+                loading.innerHTML = '<div class="view-error"><h2>❌ CV Bulunamadı</h2><p>Bu CV silinmiş veya erişim izni kaldırılmış olabilir.</p><a href="index.html" style="color: #8b5cf6; margin-top: 1rem; display: inline-block;">Ana Sayfaya Dön</a></div>';
+                return;
+            }
+
+            const cvData = snapshot.docs[0].data();
+
+            // Public kontrolü
+            if (!cvData.isPublic) {
+                loading.innerHTML = '<div class="view-error"><h2>🔒 Bu CV Gizli</h2><p>CV sahibi bu CV\'yi herkese açık olarak paylaşmamış.</p><a href="index.html" style="color: #8b5cf6; margin-top: 1rem; display: inline-block;">Ana Sayfaya Dön</a></div>';
+                return;
+            }
+
+            // CV kağıdını oluştur
+            const paper = document.createElement('div');
+            paper.className = `cv-paper ${cvData.template || 'template-klasik'}`;
+            paper.id = 'cvPaper';
+
+            // cv-render.js?v=6'deki renderCV fonksiyonu
+            if (typeof CVRender !== 'undefined' && typeof CVRender.renderCV === 'function') {
+                CVRender.renderCV(paper, cvData);
+            } else {
+                // Basit fallback render
+                paper.innerHTML = renderBasicCV(cvData);
+            }
+
+            container.innerHTML = '';
+            container.appendChild(paper);
+
+            // Sayfa başlığını güncelle
+            const name = cvData.personal?.fullName || cvData.ad || 'CV';
+            document.title = `${name} - CV`;
+
+        } catch (error) {
+            console.error('CV yükleme hatası:', error);
+            loading.innerHTML = '<div class="view-error"><h2>❌ Yükleme Hatası</h2><p>CV yüklenirken bir hata oluştu. Lütfen daha sonra tekrar deneyin.</p><a href="index.html" style="color: #8b5cf6; margin-top: 1rem; display: inline-block;">Ana Sayfaya Dön</a></div>';
+        }
+    })();
+
+    function renderBasicCV(data) {
+        const p = data.personal || {};
+        let html = `<div class="cv-header"><div class="cv-header-info">`;
+        html += `<h1 class="cv-name">${p.fullName || data.ad || ''}</h1>`;
+        if (p.title) html += `<div class="cv-title">${p.title}</div>`;
+        html += `</div></div>`;
+        if (data.summary) html += `<div class="cv-section"><h2 class="cv-section-title">Profesyonel Özet</h2><p class="cv-summary-text">${data.summary}</p></div>`;
+        return html;
+    }
+    </script>
+</body>
+</html>

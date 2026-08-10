@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Kaydedilmiş CV'lerinizi yönetin, düzenleyin ve yazdırın.">
     <title>CV'lerim - CV Oluşturucu</title>
-    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="icon" type="image/png" href="logo.webp">
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,7 +13,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- Paylaşılan stil dosyası -->
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="styles/style.css">
 
     <style>
         /* ========================================================
@@ -161,8 +161,8 @@
             background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
         }
 
+        /* Titreme sorunu olduğu için transform: translateY kaldırıldı */
         .cv-card:hover {
-            transform: translateY(-6px);
             background: rgba(255, 255, 255, 0.16);
             box-shadow: 0 16px 40px rgba(194, 0, 0, 0.2), 0 0 30px rgba(194, 0, 0, 0.15);
             border-color: rgba(194, 0, 0, 0.4);
@@ -282,7 +282,6 @@
             background: linear-gradient(135deg, var(--cherry-ruby), var(--cherry-bright));
             color: white;
             border-color: var(--cherry-bright);
-            transform: translateY(-2px);
             box-shadow: 0 6px 16px rgba(194, 0, 0, 0.3);
         }
 
@@ -300,7 +299,6 @@
         .btn-card-print:hover {
             background: rgba(194, 0, 0, 0.25);
             border-color: var(--cherry-ruby);
-            transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(194, 0, 0, 0.2);
         }
 
@@ -319,7 +317,6 @@
             background: #ef4444;
             color: white;
             border-color: #dc2626;
-            transform: translateY(-2px);
             box-shadow: 0 6px 16px rgba(239, 68, 68, 0.3);
         }
 
@@ -502,7 +499,16 @@
             }
 
             .cv-card-actions {
-                gap: 0.5rem;
+                justify-content: space-around;
+                gap: 1rem;
+                padding-top: 0.5rem;
+                width: 100%;
+            }
+
+            .btn-card-action {
+                width: 48px;
+                height: 48px;
+                font-size: 1.3rem;
             }
 
             .empty-state {
@@ -527,19 +533,19 @@
                 <!-- Logo - Solda -->
                 <div class="logo">
                     <a href="index.html" class="logo-link" aria-label="Ana sayfaya git">
-                        <img src="logo.png" alt="CV Oluşturucu Logo" class="logo-img">
+                        <img src="logo.webp" alt="CV Oluşturucu Logo" class="logo-img">
                     </a>
                 </div>
                 
-                <!-- Kayıtlı CV Yükle - Sağda -->
-                <button id="loadCVBtn" class="btn btn-load-cv" aria-label="Kaydedilmiş CV'yi yükle">
-                    <span class="btn-icon">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
-                        </svg>
-                    </span>
-                    <span class="btn-text">Kayıtlı CV Yükle</span>
-                </button>
+                <!-- Yeni CV Oluştur / Auth Butonu -->
+                <div class="nav-buttons" style="display: flex; gap: 10px; align-items: center;">
+                    <button onclick="window.toggleUiLanguage()" class="nav-action-btn lang-toggle-btn" title="Switch to English" style="background: transparent; border: 1px solid #ddd; padding: 0.5rem; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 0.85rem;">🇹🇷 TR</button>
+                    <button onclick="window.showPremiumModal('Premium Üyelik')" class="nav-action-btn premium-btn" style="background: linear-gradient(135deg, #f59e0b, #d97706); color: white; border: none; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; font-weight: 600;">👑 Premium'a Geç</button>
+                    <button id="auth-btn" class="nav-action-btn">Giriş Yap</button>
+                    <a href="index.html" class="btn btn-primary" style="padding: 0.5rem 1.5rem; font-size: 0.9rem;">
+                        <span class="btn-text">Yeni CV Oluştur</span>
+                    </a>
+                </div>
             </div>
         </nav>
     </header>
@@ -582,7 +588,7 @@
 
     <!-- ===== FOOTER ===== -->
     <footer class="footer" role="contentinfo">
-        <p>&copy; 2026 CV Oluşturucu. Tüm hakları saklıdır. | <a href="index.html">Ana Sayfa</a> • <a href="sablonlar.html">Şablonlar</a> • <a href="cvlerim.html">CV'lerim</a></p>
+        <p>&copy; 2026 CV Oluşturucu. Tüm hakları saklıdır. | <a href="gizlilik.html">Gizlilik Politikası</a> • <a href="kullanim-kosullari.html">Kullanım Koşulları</a></p>
     </footer>
 
     <!-- ===== SİLME ONAY MODAL ===== -->
@@ -600,33 +606,73 @@
     </div>
 
     <!-- ===== JAVASCRIPT ===== -->
-    <script src="script.js"></script>
+    <!-- Firebase Compat SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    
+    <script src="js/firebase-config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/saveManager.js?v=5"></script>
+    <script src="js/atsAnalyzer.js"></script>
+    <script src="js/cookie-consent.js"></script>
+    <script src="js/script.js?v=6"></script>
     <script>
-        // ===== CV'LERİ YÖNET ===== 
-        // localStorage'den CV listesini oku
+        // ===== YARDIMCI FONKSİYONLAR =====
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
 
-        function cvListesiAl() {
-            try {
-                return JSON.parse(localStorage.getItem('cvListesi')) || [];
-            } catch (e) {
-                return [];
+        function cvBosKayitMi(cv) {
+            if (!cv) return true;
+            const isim = (cv.kisisel && cv.kisisel.ad) || cv.ad || cv.name || '';
+            const eposta = (cv.kisisel && cv.kisisel.eposta) || cv.email || '';
+            const unvan = (cv.kisisel && cv.kisisel.unvan) || cv.title || '';
+            
+            return (isim.trim() === '' && eposta.trim() === '' && unvan.trim() === '');
+        }
+
+        function cvAnahtari(cv) {
+            return String(cv?.id || cv?.name || cv?.ad || '').trim().toLowerCase();
+        }
+
+        // ===== CVLERİ FIREBASE'DEN ASYNC YÜKLE =====
+        async function birlesikCVListesiAl() {
+            const birlesik = new Map();
+
+            if (typeof saveManager !== 'undefined') {
+                try {
+                    // Firebase-first: getAllCVs() Firebase'den çeker
+                    const saveManagerListe = await saveManager.getAllCVs();
+                    (saveManagerListe || []).forEach(cv => {
+                        const anahtar = cvAnahtari(cv);
+                        if (!anahtar) return;
+                        birlesik.set(anahtar, { ...cv, __kaynak: 'saveManager' });
+                    });
+                } catch (e) {
+                    console.warn('saveManager getAllCVs failed:', e);
+                }
             }
+
+            return Array.from(birlesik.values()).filter(cv => !cvBosKayitMi(cv));
         }
 
-        function cvListesiKaydet(liste) {
-            localStorage.setItem('cvListesi', JSON.stringify(liste));
-        }
-
-        // ===== KARTLARI OLUŞTUR =====
-        function kartlarıGuncelle() {
-            const cvListesi = cvListesiAl();
+        // ===== KARTLARI OLUŞTUR (ASYNC) =====
+        async function kartlarıGuncelle() {
             const grid = document.getElementById('cvCardsGrid');
             const emptyState = document.getElementById('emptyState');
             const maxWarning = document.getElementById('maxCVWarning');
             const newCVBtn = document.getElementById('btnNewCV');
 
-            // Max CV kontrolü
-            if (cvListesi.length >= 5) {
+            // Loading durumu göster
+            grid.innerHTML = '<p style="text-align:center;color:rgba(255,255,255,0.5);padding:2rem;width:100%;">CV\'leriniz yükleniyor...</p>';
+            emptyState.style.display = 'none';
+
+            const birlesikListesi = await birlesikCVListesiAl();
+
+            if (birlesikListesi.length >= 5) {
                 maxWarning.style.display = 'block';
                 newCVBtn.disabled = true;
             } else {
@@ -634,21 +680,24 @@
                 newCVBtn.disabled = false;
             }
 
-            // Grid temizle
             grid.innerHTML = '';
 
-            if (cvListesi.length === 0) {
+            if (birlesikListesi.length === 0) {
                 emptyState.style.display = 'flex';
                 return;
             }
 
             emptyState.style.display = 'none';
 
-            // Her CV için kart oluştur
-            cvListesi.forEach((cv, idx) => {
-                const kart = document.createElement('div');
-                kart.className = 'cv-card';
-                kart.innerHTML = `
+            birlesikListesi.forEach((cv, idx) => {
+                const fullName = cv.name || cv.kisisel?.ad || cv.personal?.fullName || cv.ad || 'İsimsiz CV';
+                const email = cv.kisisel?.email || cv.personal?.email || cv.email || '-';
+                const template = cv.sablon || cv.template || 'template-klasik';
+                const lastEdited = cv.tarih || cv.updatedAt ? new Date(cv.updatedAt || cv.tarih).toLocaleDateString('tr-TR') : 'Bilinmiyor';
+
+                const card = document.createElement('div');
+                card.className = 'cv-card';
+                card.innerHTML = `
                     <div class="cv-card-header">
                         <div class="cv-card-icon">
                             <!-- Multi-color Document SVG Icon -->
@@ -665,125 +714,143 @@
                             </svg>
                         </div>
                         <div class="cv-card-info">
-                            <h3 class="cv-card-title">${escapeHtml(cv.ad || 'İsimsiz CV')}</h3>
-                            <p class="cv-card-date">${cv.tarih || '-'}</p>
+                            <h3 class="cv-card-title">${escapeHtml(fullName)}</h3>
+                            <p class="cv-card-date">${escapeHtml(lastEdited)}</p>
                         </div>
                     </div>
                     <div class="cv-card-content">
                         <div class="cv-card-meta">
                             <div class="cv-card-meta-item">
-                                <span class="cv-card-meta-label">Ad:</span>
-                                <span class="cv-card-meta-value">${escapeHtml(cv.kisisel?.ad || 'Boş')}</span>
+                                <span class="cv-card-meta-label">İsim:</span>
+                                <span class="cv-card-meta-value">${escapeHtml(fullName)}</span>
                             </div>
                             <div class="cv-card-meta-item">
                                 <span class="cv-card-meta-label">Şablon:</span>
-                                <span class="cv-card-meta-value">${(cv.sablon || 'template-klasik').replace('template-', '').charAt(0).toUpperCase() + (cv.sablon || 'template-klasik').replace('template-', '').slice(1)}</span>
+                                <span class="cv-card-meta-value">${template.replace('template-', '').charAt(0).toUpperCase() + template.replace('template-', '').slice(1)}</span>
                             </div>
                             <div class="cv-card-meta-item">
-                                <span class="cv-card-meta-label">Tarih:</span>
-                                <span class="cv-card-meta-value">${cv.tarih || 'Bilinmiyor'}</span>
+                                <span class="cv-card-meta-label">Email:</span>
+                                <span class="cv-card-meta-value">${escapeHtml(email || '-')}</span>
                             </div>
                         </div>
                     </div>
                     <div class="cv-card-actions">
-                        <button class="btn-card-action btn-card-edit" data-cv-idx="${idx}" aria-label="Bu CV'yi düzenle" title="Düzenle"></button>
-                        <button class="btn-card-action btn-card-print" data-cv-idx="${idx}" aria-label="Bu CV'yi yazdır" title="Yazdır"></button>
-                        <button class="btn-card-action btn-card-delete" data-cv-idx="${idx}" aria-label="Bu CV'yi sil" title="Sil"></button>
+                        <button class="btn-card-action btn-card-edit" data-cv-key="${escapeHtml(cv.id || cv.ad || cv.name || '')}" aria-label="Düzenle" title="Düzenle"></button>
+                        <button class="btn-card-action btn-card-print" data-cv-key="${escapeHtml(cv.id || cv.ad || cv.name || '')}" aria-label="Yazdır" title="Yazdır"></button>
+                        <button class="btn-card-action btn-card-delete" data-cv-key="${escapeHtml(cv.id || cv.ad || cv.name || '')}" aria-label="Sil" title="Sil"></button>
                     </div>
                 `;
-                grid.appendChild(kart);
+                grid.appendChild(card);
             });
 
-            // Event listener'lar ekle
-            document.querySelectorAll('.btn-card-edit').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const idx = this.dataset.cvIdx;
-                    const cvListesi = cvListesiAl();
-                    const cv = cvListesi[idx];
-                    localStorage.setItem('aktifCVAdi', cv.ad);
-                    window.location.href = 'editor.html?mode=edit&cv=' + encodeURIComponent(cv.ad);
-                });
-            });
-
-            document.querySelectorAll('.btn-card-print').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const idx = this.dataset.cvIdx;
-                    const cvListesi = cvListesiAl();
-                    const cv = cvListesi[idx];
-                    localStorage.setItem('aktifCVAdi', cv.ad);
-                    window.location.href = 'onizleme.html?cv=' + encodeURIComponent(cv.ad);
-                });
-            });
-
-            document.querySelectorAll('.btn-card-delete').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const idx = this.dataset.cvIdx;
-                    const cvListesi = cvListesiAl();
-                    const cv = cvListesi[idx];
-                    silmeOnayi(idx, cv.ad);
-                });
-            });
+            cvListesindenButonlariBagla();
         }
 
-        // ===== SİLME ONAY MODAL =====
-        let silinecekCVIdx = null;
+        // ===== SİLME MODALI VE BUTONLARI BAĞLAMA =====
+        let silinecekCVKey = null;
 
-        function silmeOnayi(idx, cvAd) {
-            silinecekCVIdx = idx;
+        function silmeOnayi(cvKey) {
+            silinecekCVKey = cvKey;
             document.getElementById('deleteModalText').textContent = 
-                `"${escapeHtml(cvAd)}" adlı CV'yi silmek istediğinize emin misiniz? Bu işlem geri alınamaz.`;
+                `"${escapeHtml(cvKey)}" adlı CV'yi silmek istediğinize emin misiniz? Bu işlem geri alınamaz.`;
             document.getElementById('deleteModal').classList.add('open');
         }
 
         document.getElementById('btnDeleteCancel').addEventListener('click', () => {
             document.getElementById('deleteModal').classList.remove('open');
-            silinecekCVIdx = null;
+            silinecekCVKey = null;
         });
 
         document.getElementById('deleteModal').addEventListener('click', (e) => {
             if (e.target.id === 'deleteModal') {
                 document.getElementById('deleteModal').classList.remove('open');
-                silinecekCVIdx = null;
+                silinecekCVKey = null;
             }
         });
 
-        document.getElementById('btnDeleteConfirm').addEventListener('click', () => {
-            if (silinecekCVIdx !== null) {
-                const cvListesi = cvListesiAl();
-                cvListesi.splice(silinecekCVIdx, 1);
-                cvListesiKaydet(cvListesi);
+        document.getElementById('btnDeleteConfirm').addEventListener('click', async () => {
+            if (silinecekCVKey !== null) {
+                // SaveManager üzerinden sil (Firebase + local)
+                if (typeof saveManager !== 'undefined') {
+                    await saveManager.deleteCV(silinecekCVKey);
+                }
+                
                 document.getElementById('deleteModal').classList.remove('open');
-                kartlarıGuncelle();
+                silinecekCVKey = null;
+                await kartlarıGuncelle();
                 console.log('✅ CV silindi.');
             }
         });
 
+        function cvListesindenButonlariBagla() {
+            const grid = document.getElementById('cvCardsGrid');
+            if (!grid || grid.dataset.actionsBound === 'true') return;
+            
+            grid.dataset.actionsBound = 'true';
+            
+            grid.addEventListener('click', async (event) => {
+                const button = event.target.closest('.btn-card-edit, .btn-card-print, .btn-card-delete');
+                if (!button || !grid.contains(button)) return;
+                
+                const cvKey = button.getAttribute('data-cv-key');
+                if (!cvKey) return;
+
+                if (button.classList.contains('btn-card-edit')) {
+                    if (typeof saveManager !== 'undefined') {
+                        try {
+                            await saveManager.loadCV(cvKey);
+                            window.location.href = 'editor?id=' + encodeURIComponent(cvKey);
+                            return;
+                        } catch (e) { }
+                    }
+                    localStorage.setItem('aktifCVAdi', cvKey);
+                    window.location.href = 'editor?mode=edit&cv=' + encodeURIComponent(cvKey);
+                }
+                else if (button.classList.contains('btn-card-print')) {
+                    localStorage.setItem('aktifCVAdi', cvKey);
+                    window.location.href = 'onizleme?id=' + encodeURIComponent(cvKey);
+                }
+                else if (button.classList.contains('btn-card-delete')) {
+                    silmeOnayi(cvKey);
+                }
+            });
+        }
+
         // ===== YENİ CV OLUŞTUR =====
-        function createNewCV() {
-            const cvListesi = cvListesiAl();
-            if (cvListesi.length >= 5) {
+        async function createNewCV() {
+            const birlesikListesi = await birlesikCVListesiAl();
+            if (birlesikListesi.length >= 5) {
                 alert('⚠️ Maksimum 5 CV\'ye ulaştınız. Yeni CV oluşturmak için bir CV silin.');
                 return;
             }
             localStorage.removeItem('aktifCVAdi');
-            window.location.href = 'editor.html?mode=new';
+            window.location.href = 'editor?mode=new';
         }
 
         document.getElementById('btnNewCV').addEventListener('click', createNewCV);
         document.getElementById('btnEmptyCTA').addEventListener('click', createNewCV);
 
-        // ===== XSS KORUMA =====
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-
         // ===== SAYFA YÜKLENÜNCE =====
-        document.addEventListener('DOMContentLoaded', () => {
-            kartlarıGuncelle();
+        document.addEventListener('DOMContentLoaded', async () => {
+            window.kartlarıGuncelleSaveManager = kartlarıGuncelle;
+
+            // Auth hazır olana kadar bekle, sonra kartları yükle
+            if (window.auth) {
+                window.auth.onAuthStateChanged(async (user) => {
+                    if (user && window.saveManager) {
+                        try {
+                            await window.saveManager.syncWithFirebase();
+                        } catch(e) {}
+                    }
+                    await kartlarıGuncelle();
+                });
+            } else {
+                await kartlarıGuncelle();
+            }
+
             console.log('📋 CV\'lerim sayfası yüklendi (SaaS Dashboard)');
         });
     </script>
+    <script src="js/i18n.js"></script>
 </body>
 </html>
