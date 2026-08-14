@@ -538,7 +538,7 @@
                 </div>
                 
                 <!-- Yeni CV Oluştur / Auth Butonu -->
-                <div class="nav-buttons" style="display: flex; gap: 10px; align-items: center;">
+                <div class="nav-actions">
                     <button onclick="window.toggleUiLanguage()" class="nav-action-btn lang-toggle-btn" title="Switch to English" style="background: transparent; border: 1px solid #ddd; padding: 0.5rem; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 0.85rem;">🇹🇷 TR</button>
                     <button onclick="window.showPremiumModal('Premium Üyelik')" class="nav-action-btn premium-btn" style="background: linear-gradient(135deg, #f59e0b, #d97706); color: white; border: none; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; font-weight: 600;">👑 Premium'a Geç</button>
                     <button id="auth-btn" class="nav-action-btn">Giriş Yap</button>
@@ -820,7 +820,11 @@
         async function createNewCV() {
             const birlesikListesi = await birlesikCVListesiAl();
             if (birlesikListesi.length >= 5) {
-                alert('⚠️ Maksimum 5 CV\'ye ulaştınız. Yeni CV oluşturmak için bir CV silin.');
+                if (typeof showNotification === 'function') {
+                    showNotification('Maksimum 5 CV\'ye ulaştınız. Yeni CV oluşturmak için bir CV silin.', 'warning');
+                } else {
+                    alert('⚠️ Maksimum 5 CV\'ye ulaştınız. Yeni CV oluşturmak için bir CV silin.');
+                }
                 return;
             }
             localStorage.removeItem('aktifCVAdi');

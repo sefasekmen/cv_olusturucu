@@ -885,7 +885,7 @@ body.preview-page .cv-paper::-webkit-scrollbar-thumb {
 @media print {
     @page {
         size: A4 portrait;
-        margin: 0;
+        margin: 12mm 0;
     }
 
     * {
@@ -966,8 +966,7 @@ body.preview-page .cv-paper::-webkit-scrollbar-thumb {
         box-decoration-break: clone;
     }
 
-    .cv-entry,
-    .cv-section {
+    .cv-entry {
         page-break-inside: avoid;
     }
 

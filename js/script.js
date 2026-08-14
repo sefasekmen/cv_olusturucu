@@ -5,6 +5,13 @@
    100% Vanilla JS - No Libraries
    ======================================================== */
 
+// ===== PRODUCTION OPTIMIZATIONS =====
+if (!['localhost', '127.0.0.1', '::1'].includes(window.location.hostname)) {
+    console.log = function() {};
+    console.warn = function() {};
+    console.info = function() {};
+}
+
 // ===== CANVAS SETUP & INITIALIZATION =====
 // Canvas elementini al ve 2D context oluştur
 (function() {
@@ -749,15 +756,15 @@ window.grantPremium = async function() {
     if (window.auth && window.auth.currentUser && window.db) {
         try {
             await window.db.collection("users").doc(window.auth.currentUser.uid).set({ isPremium: true }, { merge: true });
-            alert('Tebrikler! Hesabınız başarıyla ve kalıcı olarak Premium yapıldı! (Firebase güncellendi)');
+            showNotification('Tebrikler! Hesabınız başarıyla ve kalıcı olarak Premium yapıldı!', 'success');
         } catch (e) {
             console.error(e);
-            alert('Tarayıcı üzerinden geçici Premium yapıldı. (Firebase\'e yazma izniniz olmayabilir)');
+            showNotification('Tarayıcı üzerinden geçici Premium yapıldı.', 'warning');
         }
     } else {
-        alert('Şu an giriş yapmadığınız için tarayıcıda geçici olarak Premium oldunuz.');
+        showNotification('Şu an giriş yapmadığınız için tarayıcıda geçici olarak Premium oldunuz.', 'info');
     }
-    window.location.reload();
+    setTimeout(() => window.location.reload(), 1500);
 }
 
 window.showPremiumModal = function(featureName = 'Bu özellik') {
@@ -779,7 +786,7 @@ window.showPremiumModal = function(featureName = 'Bu özellik') {
                         <li>📄 Farklı Pozisyonlar İçin Sınırsız CV Versiyonu</li>
                     </ul>
                 </div>
-                <button class="btn btn-primary btn-cta" style="width: 100%;" onclick="alert('Ödeme altyapısı yakında buraya entegre edilecek!')">Hemen Premium Al - 49₺/Ay</button>
+                <button class="btn btn-primary btn-cta" style="width: 100%;" onclick="showNotification('Ödeme altyapısı yakında buraya entegre edilecek!', 'info')">Hemen Premium Al - 49₺/Ay</button>
             </div>
         `;
         document.body.appendChild(modal);

@@ -130,6 +130,7 @@ class SaveManager {
             if (error.code === 'permission-denied') {
                 const msg = "Firebase Erişim Reddedildi! Lütfen Firebase Console'dan 'firestore.rules' dosyasındaki kuralları uyguladığınıza emin olun.";
                 if (typeof window.toastGoster === 'function') window.toastGoster(msg, 'error');
+                else if (typeof window.showNotification === 'function') window.showNotification(msg, 'error');
                 else alert(msg);
             }
             throw error; // Hatayı cvlerim.html'e fırlat

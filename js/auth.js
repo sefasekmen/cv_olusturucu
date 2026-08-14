@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const currentPage = window.location.pathname.toLowerCase();
             if (!isLocalDev && (currentPage.includes('editor') || currentPage.includes('cvlerim'))) {
                 const currentUrl = window.location.href;
-                window.location.replace('auth?redirect=' + encodeURIComponent(currentUrl));
+                window.location.replace('auth.html?redirect=' + encodeURIComponent(currentUrl));
                 return;
             }
         }
@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 authBtn.innerHTML = `Giriş Yap`;
                 authBtn.onclick = () => {
                     const currentUrl = window.location.href;
-                    window.location.href = 'auth?redirect=' + encodeURIComponent(currentUrl);
+                    window.location.href = 'auth.html?redirect=' + encodeURIComponent(currentUrl);
                 };
                 if (loadCVBtn) loadCVBtn.style.display = 'none';
             }

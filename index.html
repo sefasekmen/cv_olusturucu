@@ -49,7 +49,7 @@
                 </div>
 
                 <!-- Nav Actions -->
-                <div class="nav-actions" style="display: flex; gap: 10px; align-items: center;">
+                <div class="nav-actions">
                     <button onclick="window.toggleUiLanguage()" class="nav-action-btn lang-toggle-btn" title="Switch to English" style="background: transparent; border: 1px solid #ddd; padding: 0.5rem; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1rem;">🇹🇷 TR</button>
                     <button onclick="window.showPremiumModal('Premium Üyelik')" class="nav-action-btn premium-btn"
                         style="background: linear-gradient(135deg, #f59e0b, #d97706); color: white; border: none; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; font-weight: 600;">👑
@@ -314,16 +314,25 @@
     <!-- ===== Footer ===== -->
     <footer class="footer">
         <div class="footer-container">
-            <p class="footer-text">
-                &copy; 2026 CV Oluşturucu. Tüm hakları saklıdır. |
-                <a href="gizlilik.html" style="color: var(--cherry-ruby); text-decoration: none;">Gizlilik
-                    Politikası</a> •
-                <a href="kullanim-kosullari.html" style="color: var(--cherry-ruby); text-decoration: none;">Kullanım
-                    Koşulları</a>
-            </p>
-            <p class="footer-subtitle">
-                Profesyonel CV'nizi dakikalar içinde oluşturun ✨
-            </p>
+            <div class="footer-left">
+                <div class="footer-logo">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--cherry-ruby)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                        <polyline points="10 9 9 9 8 9"></polyline>
+                    </svg>
+                    <span style="font-weight:900; color: #fff; letter-spacing: 0.5px;">CV</span>
+                    <span style="font-weight:500; color: rgba(255, 255, 255, 0.75);">Oluşturucu</span>
+                </div>
+                <span class="footer-copyright">&copy; 2026 Tüm hakları saklıdır.</span>
+            </div>
+            <div class="footer-right">
+                <a href="gizlilik.html">Gizlilik Politikası</a>
+                <a href="kullanim-kosullari.html">Kullanım Koşulları</a>
+                <a href="mailto:iletisim@cv-olusturucu.com">İletişim</a>
+            </div>
         </div>
     </footer>
 

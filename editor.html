@@ -558,6 +558,10 @@
         /* Form alanları */
         .form-group {
             margin-bottom: 0.9rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            height: 100%;
         }
 
         .form-label {
@@ -676,6 +680,10 @@
             margin-top: 0.3rem;
             font-size: 0.72rem;
             color: red;
+        }
+        
+        .input-error-text:empty {
+            display: none;
         }
 
         /* Renk teması seçici */
@@ -1499,29 +1507,6 @@
                     <span class="btn-toolbar-text">PDF / Yazdır</span>
                 </button>
 
-                <!-- Word İndir (Premium) -->
-                <button class="btn-toolbar" onclick="window.downloadAsWord()" aria-label="Word olarak indir"
-                    title="Word (.docx) olarak indir">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
-                        stroke-linejoin="round">
-                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                        <polyline points="14 2 14 8 20 8"></polyline>
-                        <line x1="16" y1="13" x2="8" y2="13"></line>
-                        <line x1="16" y1="17" x2="8" y2="17"></line>
-                    </svg>
-                    <span class="btn-toolbar-text">Word</span>
-                </button>
-
-                <!-- Canlı Link Paylaş (Premium) -->
-                <button class="btn-toolbar" onclick="window.shareLiveLink()" aria-label="Canlı link paylaş"
-                    title="CV'nizi online link olarak paylaşın">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
-                        stroke-linejoin="round">
-                        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
-                        <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
-                    </svg>
-                    <span class="btn-toolbar-text">Link</span>
-                </button>
 
                 <!-- SAVE STATUS INDICATOR -->
                 <div class="save-status" id="saveStatus" role="status" aria-live="polite" aria-label="Kayıt durumu">
@@ -1904,6 +1889,7 @@
                             <div class="analysis-card-kicker">ATS</div>
                             <h3 class="analysis-card-title">ATS Uyum Skoru</h3>
                         </div>
+                        <div id="atsSectorBadge" style="display:none; font-size:0.7rem; font-weight:700; background:rgba(194,0,0,0.12); color:var(--cherry-ruby); padding:0.2rem 0.6rem; border-radius:2rem; white-space:nowrap;"></div>
                     </div>
                     <div class="analysis-ring-row">
                         <div class="score-ring" id="atsScoreRing" style="--score: 0;">
@@ -1919,6 +1905,10 @@
                     <div class="analysis-reco">
                         <h4>Öneriler</h4>
                         <ul id="atsRecommendationsList"></ul>
+                    </div>
+                    <div id="atsKeywordSuggestions" style="display:none; margin-top:0.5rem; padding:0.5rem 0.6rem; background:rgba(194,0,0,0.04); border-radius:0.5rem; border:1px solid rgba(194,0,0,0.1);">
+                        <div style="font-size:0.68rem; font-weight:700; color:var(--cherry-deep); margin-bottom:0.3rem;">💡 Önerilen Anahtar Kelimeler</div>
+                        <div id="atsKeywordTags" style="display:flex; flex-wrap:wrap; gap:0.25rem;"></div>
                     </div>
                 </article>
             </section>
@@ -3034,6 +3024,7 @@
                 bolumGorunurlukAyarla('cvDeneyimSection', durum.deneyimler.some(d => d.sirket || d.pozisyon));
                 bolumGorunurlukAyarla('cvDeneyimSectionModern', durum.deneyimler.some(d => d.sirket || d.pozisyon));
                 analizPaneliniGuncelle();
+                if (typeof onizlemeyiGuncelle === 'function') onizlemeyiGuncelle();
             }
 
             // ===== DİNAMİK BÖLÜM: EĞİTİM =====
@@ -3083,6 +3074,28 @@
                         if (this.classList.contains('entry-tarih')) durum.egitimler[idx].tarih = this.value;
                         if (this.classList.contains('entry-not')) durum.egitimler[idx].not = this.value;
                         egitimOnizlemesiGuncelle();
+                    });
+                    
+                    input.addEventListener('blur', function() {
+                        if (this.classList.contains('entry-not')) {
+                            let val = this.value.trim();
+                            if (val && !val.includes('/')) {
+                                let num = parseFloat(val.replace(',', '.'));
+                                if (!isNaN(num)) {
+                                    if (num <= 4) {
+                                        this.value = num.toFixed(2) + " / 4.00";
+                                    } else if (num <= 100 && num > 4) {
+                                        this.value = num.toFixed(2) + " / 100";
+                                    }
+                                    
+                                    const idx = durum.egitimler.findIndex(e => e.id === this.dataset.id);
+                                    if (idx !== -1) {
+                                        durum.egitimler[idx].not = this.value;
+                                        egitimOnizlemesiGuncelle();
+                                    }
+                                }
+                            }
+                        }
                     });
                 });
 
@@ -3140,6 +3153,7 @@
                 bolumGorunurlukAyarla('cvEgitimSection', durum.egitimler.some(e => e.okul || e.bolum));
                 bolumGorunurlukAyarla('cvEgitimSectionModern', durum.egitimler.some(e => e.okul || e.bolum));
                 analizPaneliniGuncelle();
+                if (typeof onizlemeyiGuncelle === 'function') onizlemeyiGuncelle();
             }
 
             // ===== DİNAMİK BÖLÜM: BECERİLER =====
@@ -3232,7 +3246,7 @@
                 </div>
                 <div class="form-group">
                     <label class="form-label">Açıklama</label>
-                    <textarea class="form-control entry-proje-aciklama" data-id="${id}" rows="2" placeholder="Projeyi kısaca açıklayın..." maxlength="300"></textarea>
+                    <textarea class="form-control entry-proje-aciklama" data-id="${id}" rows="3" placeholder="Projeyi kısaca açıklayın..." maxlength="1000"></textarea>
                 </div>
             `;
 
@@ -3288,6 +3302,7 @@
                 bolumGorunurlukAyarla('cvProjeSection', durum.projeler.some(p => p.ad));
                 bolumGorunurlukAyarla('cvProjeSectionModern', durum.projeler.some(p => p.ad));
                 analizPaneliniGuncelle();
+                if (typeof onizlemeyiGuncelle === 'function') onizlemeyiGuncelle();
             }
 
             // ===== DİNAMİK BÖLÜM: YABANCI DİLLER =====
@@ -3396,6 +3411,7 @@
                 bolumGorunurlukAyarla('cvDilSection', durum.diller.some(d => d.ad));
                 bolumGorunurlukAyarla('cvDilSectionModern', durum.diller.some(d => d.ad));
                 analizPaneliniGuncelle();
+                if (typeof onizlemeyiGuncelle === 'function') onizlemeyiGuncelle();
             }
 
             // ===== DİNAMİK BÖLÜM: SERTİFİKA & KURSLAR =====
@@ -3472,6 +3488,7 @@
                 bolumGorunurlukAyarla('cvSertifikaSection', durum.sertifikalar.some(s => s.ad || s.kurum));
                 bolumGorunurlukAyarla('cvSertifikaSectionModern', durum.sertifikalar.some(s => s.ad || s.kurum));
                 analizPaneliniGuncelle();
+                if (typeof onizlemeyiGuncelle === 'function') onizlemeyiGuncelle();
             }
 
             // ===== DİNAMİK BÖLÜM: GÖNÜLLÜ ÇALIŞMALAR =====
@@ -3554,6 +3571,7 @@
                 bolumGorunurlukAyarla('cvGonulluSection', durum.gonullu.some(g => g.kurum || g.rol));
                 bolumGorunurlukAyarla('cvGonulluSectionModern', durum.gonullu.some(g => g.kurum || g.rol));
                 analizPaneliniGuncelle();
+                if (typeof onizlemeyiGuncelle === 'function') onizlemeyiGuncelle();
             }
 
             // ===== DİNAMİK BÖLÜM: REFERANSLAR =====
@@ -3628,6 +3646,7 @@
                 bolumGorunurlukAyarla('cvReferansSection', durum.referanslar.some(r => r.ad || r.unvan || r.iletisim));
                 bolumGorunurlukAyarla('cvReferansSectionModern', durum.referanslar.some(r => r.ad || r.unvan || r.iletisim));
                 analizPaneliniGuncelle();
+                if (typeof onizlemeyiGuncelle === 'function') onizlemeyiGuncelle();
             }
 
             function skorSeviyesiEtiketi(score) {
@@ -3714,13 +3733,16 @@
                 const atsLevel = document.getElementById('atsScoreLevel');
                 const atsHint = document.getElementById('atsScoreHint');
                 const atsRecommendationsList = document.getElementById('atsRecommendationsList');
+                const sectorBadge = document.getElementById('atsSectorBadge');
+                const keywordSuggestions = document.getElementById('atsKeywordSuggestions');
+                const keywordTags = document.getElementById('atsKeywordTags');
 
                 if (completionRing) completionRing.style.setProperty('--score', completion.score);
                 if (completionValue) completionValue.textContent = completion.score;
                 if (completionLevel) completionLevel.textContent = skorSeviyesiEtiketi(completion.score);
                 if (completionHint) {
-                    completionHint.textContent = completion.missingSections.length
-                        ? `Eksik kalan alanlar: ${completion.missingSections.slice(0, 3).join(', ')}.`
+                    completionHint.textContent = completion.missingSections && completion.missingSections.length
+                        ? `Eksik kalan alanlar: ${completion.missingSections.slice(0, 4).join(', ')}.`
                         : 'Tüm ana bölümler dolu görünüyor.';
                 }
 
@@ -3729,14 +3751,42 @@
                 if (atsLevel) atsLevel.textContent = ats.level;
                 if (atsHint) atsHint.textContent = ats.summary;
 
+                // Sektör badge
+                if (sectorBadge) {
+                    if (ats.detectedSector) {
+                        sectorBadge.textContent = '🎯 ' + ats.detectedSector;
+                        sectorBadge.style.display = 'inline-block';
+                    } else {
+                        sectorBadge.style.display = 'none';
+                    }
+                }
+
+                // Öneriler listesi (max 6)
                 if (atsRecommendationsList) {
                     atsRecommendationsList.innerHTML = '';
-                    const items = ats.recommendations.length ? ats.recommendations : ['ATS uyumunuz iyi görünüyor.'];
-                    items.slice(0, 4).forEach((item) => {
+                    const items = ats.recommendations && ats.recommendations.length ? ats.recommendations : ['ATS uyumunuz iyi görünüyor.'];
+                    items.slice(0, 6).forEach((item) => {
                         const li = document.createElement('li');
                         li.textContent = item;
                         atsRecommendationsList.appendChild(li);
                     });
+                }
+
+                // Anahtar kelime önerileri
+                if (keywordSuggestions && keywordTags) {
+                    const suggestions = ats.keywordStats && ats.keywordStats.suggestions ? ats.keywordStats.suggestions : [];
+                    if (suggestions.length > 0) {
+                        keywordSuggestions.style.display = 'block';
+                        keywordTags.innerHTML = '';
+                        suggestions.forEach(kw => {
+                            const tag = document.createElement('span');
+                            tag.textContent = kw;
+                            tag.style.cssText = 'display:inline-block; font-size:0.65rem; background:rgba(194,0,0,0.08); color:var(--cherry-deep); padding:0.15rem 0.45rem; border-radius:0.3rem; font-weight:600;';
+                            keywordTags.appendChild(tag);
+                        });
+                    } else {
+                        keywordSuggestions.style.display = 'none';
+                    }
                 }
             }
 
@@ -4511,7 +4561,11 @@
                 modal.addEventListener('click', (e) => { if (e.target === modal) modal.style.display = 'none'; });
                 document.getElementById('btnSaveAiKey').addEventListener('click', function () {
                     const key = document.getElementById('aiKeyInput').value.trim();
-                    if (key.length < 10) { alert('Geçerli bir API anahtarı girin.'); return; }
+                    if (key.length < 10) { 
+                        if (typeof toastGoster === 'function') toastGoster('Geçerli bir API anahtarı girin.', 'warning');
+                        else alert('Geçerli bir API anahtarı girin.'); 
+                        return; 
+                    }
                     window.aiAssistant.saveApiKey(key);
                     modal.style.display = 'none';
                     if (typeof toastGoster === 'function') toastGoster('✅ API anahtarı kaydedildi!', 'success');
