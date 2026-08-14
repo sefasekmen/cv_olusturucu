@@ -1,0 +1,24 @@
+# Dependencies
+node_modules/
+.venv/
+
+# Firebase
+.firebase/
+
+# Python fix scripts (dev-only)
+fix_*.py
+update_*.py
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Dev context
+AI_CONTEXT.md
