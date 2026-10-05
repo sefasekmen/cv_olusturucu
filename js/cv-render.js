@@ -9,6 +9,39 @@
             return div.innerHTML.replace(/\n/g, '<br>');
         }
 
+        // Tam ay isimleri (önce bunlar değiştirilmeli)
+        const turkceAylarTam = [
+            ['Ocak', 'January'], ['Şubat', 'February'], ['Mart', 'March'],
+            ['Nisan', 'April'], ['Mayıs', 'May'], ['Haziran', 'June'],
+            ['Temmuz', 'July'], ['Ağustos', 'August'], ['Eylül', 'September'],
+            ['Ekim', 'October'], ['Kasım', 'November'], ['Aralık', 'December']
+        ];
+        // Kısaltılmış ay isimleri
+        const turkceAylarKisa = [
+            ['Oca', 'Jan'], ['Şub', 'Feb'], ['Mar', 'Mar'],
+            ['Nis', 'Apr'], ['May', 'May'], ['Haz', 'Jun'],
+            ['Tem', 'Jul'], ['Ağu', 'Aug'], ['Eyl', 'Sep'],
+            ['Eki', 'Oct'], ['Kas', 'Nov'], ['Ara', 'Dec']
+        ];
+
+        function translateDate(tarih, lang) {
+            if (!tarih || lang !== 'en') return tarih;
+            let result = tarih;
+            // Önce tam ay isimlerini çevir
+            for (const [tr, en] of turkceAylarTam) {
+                result = result.replace(new RegExp('\\b' + tr + '\\b', 'gi'), en);
+            }
+            // Sonra kısaltılmış ay isimlerini çevir (word boundary ile)
+            for (const [tr, en] of turkceAylarKisa) {
+                result = result.replace(new RegExp('\\b' + tr + '\\b', 'gi'), en);
+            }
+            // "Günümüz", "Halen", "Devam Ediyor" → "Present"
+            result = result.replace(/Günümüz/gi, 'Present');
+            result = result.replace(/Halen/gi, 'Present');
+            result = result.replace(/Devam Ediyor/gi, 'Present');
+            return result;
+        }
+
         function modernLayoutMi(template) {
             return template === 'template-modern' || template === 'template-tech';
         }
@@ -66,7 +99,7 @@
             return html;
         }
 
-        function deneyimHtml(liste, baslik = 'İş Deneyimi') {
+        function deneyimHtml(liste, baslik = 'İş Deneyimi', lang = 'tr') {
             if (!liste || !liste.length) return '';
             const items = liste.filter(d => d.sirket || d.pozisyon).map(d => `
             <div class="cv-entry">
@@ -75,7 +108,7 @@
                         <div class="cv-entry-title">${escapeHtml(d.pozisyon || '')}</div>
                         <div class="cv-entry-subtitle">${escapeHtml(d.sirket || '')}</div>
                     </div>
-                    ${d.tarih ? `<div class="cv-entry-date">${escapeHtml(d.tarih)}</div>` : ''}
+                    ${d.tarih ? `<div class="cv-entry-date">${escapeHtml(translateDate(d.tarih, lang))}</div>` : ''}
                 </div>
                 ${d.aciklama ? formatAciklama(d.aciklama) : ''}
             </div>`).join('');
@@ -83,7 +116,7 @@
             return `<div class="cv-section"><h2 class="cv-section-title">${baslik}</h2>${items}</div>`;
         }
 
-        function egitimHtml(liste, baslik = 'Eğitim') {
+        function egitimHtml(liste, baslik = 'Eğitim', lang = 'tr') {
             if (!liste || !liste.length) return '';
             const items = liste.filter(e => e.okul || e.bolum).map(e => `
             <div class="cv-entry">
@@ -92,7 +125,7 @@
                         <div class="cv-entry-title">${escapeHtml(e.bolum || '')}</div>
                         <div class="cv-entry-subtitle">${escapeHtml(e.okul || '')}${e.not ? ` • ${escapeHtml(e.not)}` : ''}</div>
                     </div>
-                    ${e.tarih ? `<div class="cv-entry-date">${escapeHtml(e.tarih)}</div>` : ''}
+                    ${e.tarih ? `<div class="cv-entry-date">${escapeHtml(translateDate(e.tarih, lang))}</div>` : ''}
                 </div>
             </div>`).join('');
             if (!items) return '';
@@ -158,26 +191,25 @@
                 }
                 return `
             <div class="cv-entry">
-                <div class="cv-entry-title">${escapeHtml(dilAd)}</div>
-                <div class="cv-entry-subtitle">${escapeHtml(d.seviye || '')}</div>
+                <div class="cv-entry-title">${escapeHtml(dilAd)}${d.seviye ? ` <span style="font-weight: 400; font-style: italic; color: #555;">— ${escapeHtml(d.seviye)}</span>` : ''}</div>
             </div>`;
             }).join('');
             if (!items) return '';
             return `<div class="cv-section"><h2 class="cv-section-title">${baslik}</h2>${items}</div>`;
         }
 
-        function sertifikaHtml(liste, baslik = 'Sertifika & Kurslar') {
+        function sertifikaHtml(liste, baslik = 'Sertifika & Kurslar', lang = 'tr') {
             if (!liste || !liste.length) return '';
             const items = liste.filter(s => s.ad).map(s => `
             <div class="cv-entry">
                 <div class="cv-entry-title">${escapeHtml(s.ad)}</div>
-                <div class="cv-entry-subtitle">${escapeHtml(s.kurum || '')}${s.tarih ? ` • ${escapeHtml(s.tarih)}` : ''}</div>
+                <div class="cv-entry-subtitle">${escapeHtml(s.kurum || '')}${s.tarih ? ` • ${escapeHtml(translateDate(s.tarih, lang))}` : ''}</div>
             </div>`).join('');
             if (!items) return '';
             return `<div class="cv-section"><h2 class="cv-section-title">${baslik}</h2>${items}</div>`;
         }
 
-        function gonulluHtml(liste, baslik = 'Gönüllü Çalışmalar') {
+        function gonulluHtml(liste, baslik = 'Gönüllü Çalışmalar', lang = 'tr') {
             if (!liste || !liste.length) return '';
             const items = liste.filter(g => g.kurum || g.rol).map(g => `
             <div class="cv-entry">
@@ -186,7 +218,7 @@
                         <div class="cv-entry-title">${escapeHtml(g.rol || '')}</div>
                         <div class="cv-entry-subtitle">${escapeHtml(g.kurum || '')}</div>
                     </div>
-                    ${g.tarih ? `<div class="cv-entry-date">${escapeHtml(g.tarih)}</div>` : ''}
+                    ${g.tarih ? `<div class="cv-entry-date">${escapeHtml(translateDate(g.tarih, lang))}</div>` : ''}
                 </div>
                 ${g.aciklama ? `<p class="cv-entry-desc">${escapeHtml(g.aciklama)}</p>` : ''}
             </div>`).join('');
@@ -271,11 +303,11 @@
                             ${referansHtml(referanslar, dict.referans)}
                         </div>
                         <div class="cv-modern-main">
-                            ${deneyimHtml(deneyimler, dict.deneyim)}
-                            ${egitimHtml(egitimler, dict.egitim)}
+                            ${deneyimHtml(deneyimler, dict.deneyim, lang)}
+                            ${egitimHtml(egitimler, dict.egitim, lang)}
                             ${projeHtml(projeler, dict.proje)}
-                            ${sertifikaHtml(sertifikalar, dict.sertifika)}
-                            ${gonulluHtml(gonullu, dict.gonullu)}
+                            ${sertifikaHtml(sertifikalar, dict.sertifika, lang)}
+                            ${gonulluHtml(gonullu, dict.gonullu, lang)}
                         </div>
                     </div>
                 </div>`;
@@ -294,13 +326,13 @@
             <div class="cv-body">
                 <div id="cvTekSutun">
                     ${ozetHtml(cvVerisi.summary || k.ozet, ozetBaslik)}
-                    ${deneyimHtml(deneyimler, dict.deneyim)}
-                    ${egitimHtml(egitimler, dict.egitim)}
+                    ${deneyimHtml(deneyimler, dict.deneyim, lang)}
+                    ${egitimHtml(egitimler, dict.egitim, lang)}
                     ${beceriHtml(beceriler, false, dict.beceri)}
                     ${projeHtml(projeler, dict.proje)}
                     ${dilHtml(diller, dict.dil, lang)}
-                    ${sertifikaHtml(sertifikalar, dict.sertifika)}
-                    ${gonulluHtml(gonullu, dict.gonullu)}
+                    ${sertifikaHtml(sertifikalar, dict.sertifika, lang)}
+                    ${gonulluHtml(gonullu, dict.gonullu, lang)}
                     ${referansHtml(referanslar, dict.referans)}
                 </div>
             </div>`;

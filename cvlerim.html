@@ -24,6 +24,9 @@
         body.dashboard-page {
             background: transparent;
             overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
         /* ===== BAŞLIK BÖLÜMÜ - REFINED ===== */
@@ -51,6 +54,10 @@
             color: rgba(255, 255, 255, 0.68);
             margin-bottom: 2rem;
             font-weight: 500;
+        }
+
+        .main-content {
+            flex: 1;
         }
 
         .dashboard-actions {
@@ -540,8 +547,8 @@
                 <!-- Yeni CV Oluştur / Auth Butonu -->
                 <div class="nav-actions">
                     <button onclick="window.toggleUiLanguage()" class="nav-action-btn lang-toggle-btn" title="Switch to English" style="background: transparent; border: 1px solid #ddd; padding: 0.5rem; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 0.85rem;">🇹🇷 TR</button>
-                    <button onclick="window.showPremiumModal('Premium Üyelik')" class="nav-action-btn premium-btn" style="background: linear-gradient(135deg, #f59e0b, #d97706); color: white; border: none; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; font-weight: 600;">👑 Premium'a Geç</button>
-                    <button id="auth-btn" class="nav-action-btn">Giriş Yap</button>
+                    <button onclick="window.showSupportModal()" class="nav-action-btn premium-btn" style="background: linear-gradient(135deg, #10b981, #059669); color: white; border: none; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; font-weight: 600;">💖 Bana Destek Ol</button>
+                    <button id="auth-btn" class="nav-action-btn">...</button>
                     <a href="index.html" class="btn btn-primary" style="padding: 0.5rem 1.5rem; font-size: 0.9rem;">
                         <span class="btn-text">Yeni CV Oluştur</span>
                     </a>
@@ -588,7 +595,7 @@
 
     <!-- ===== FOOTER ===== -->
     <footer class="footer" role="contentinfo">
-        <p>&copy; 2026 CV Oluşturucu. Tüm hakları saklıdır. | <a href="gizlilik.html">Gizlilik Politikası</a> • <a href="kullanim-kosullari.html">Kullanım Koşulları</a></p>
+        <p>&copy; 2026 CV Oluşturucu. Tüm hakları saklıdır. | <a href="gizlilik.html">Gizlilik Politikası</a> • <a href="kullanim-kosullari.html">Kullanım Koşulları</a> • <a href="iletisim.html">İletişim</a></p>
     </footer>
 
     <!-- ===== SİLME ONAY MODAL ===== -->

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Online CV Oluşturucu İletişim Sayfası. Bizimle iletişime geçin.">
+    <title>İletişim - Online CV Oluşturucu</title>
+    <link rel="icon" type="image/webp" href="logo.webp">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="styles/style.css">
+    
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .main-content {
+            flex: 1;
+        }
+        .contact-content {
+            max-width: 600px;
+            margin: 120px auto 60px;
+            padding: 50px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.85);
+            text-align: center;
+        }
+        .contact-title {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: var(--white);
+            background: linear-gradient(135deg, var(--cherry-ruby), var(--pink-powder));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .contact-item {
+            margin: 1.5rem 0;
+            padding: 1.5rem;
+            background: rgba(0, 0, 0, 0.15);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        .contact-item:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .contact-icon {
+            font-size: 1.8rem;
+        }
+        .contact-link {
+            color: var(--white);
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+        .contact-link:hover {
+            color: var(--pink-powder);
+        }
+    </style>
+</head>
+<body>
+    <canvas id="particleCanvas" class="canvas-background"></canvas>
+
+    <header class="header">
+        <nav class="navbar">
+            <div class="navbar-container">
+                <div class="logo">
+                    <a href="index.html" class="logo-link">
+                        <img src="logo.webp" alt="CV Oluşturucu Logo" class="logo-img">
+                    </a>
+                </div>
+                <div class="nav-actions">
+                    <button onclick="window.toggleUiLanguage()" class="nav-action-btn lang-toggle-btn" title="Switch to English" style="background: transparent; border: 1px solid #ddd; padding: 0.5rem; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 0.85rem; margin-right: 10px;">🇹🇷 TR</button>
+                    <a href="index.html" class="nav-action-btn" style="text-decoration: none;">Ana Sayfaya Dön</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        <section class="contact-content">
+            <h1 class="contact-title">İletişim</h1>
+            <p style="margin-bottom: 2rem; line-height: 1.6;">Herhangi bir sorunuz, öneriniz veya iş birliği için bana aşağıdaki kanallardan ulaşabilirsiniz.</p>
+            
+            <div class="contact-item">
+                <span class="contact-icon">📧</span>
+                <a href="mailto:sefasekmen52@gmail.com" class="contact-link">sefasekmen52@gmail.com</a>
+            </div>
+
+            <div class="contact-item">
+                <span class="contact-icon">📸</span>
+                <a href="https://instagram.com/sefasekmenn" target="_blank" rel="noopener noreferrer" class="contact-link">instagram.com/sefasekmenn</a>
+            </div>
+
+            <div class="contact-item">
+                <span class="contact-icon">💻</span>
+                <a href="https://github.com/sefasekmen" target="_blank" rel="noopener noreferrer" class="contact-link">github.com/sefasekmen</a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2026 CV Oluşturucu. Tüm hakları saklıdır. | <a href="gizlilik.html">Gizlilik Politikası</a> • <a href="kullanim-kosullari.html">Kullanım Koşulları</a></p>
+    </footer>
+    <script src="js/i18n.js"></script>
+    <script src="js/script.js?v=6"></script>
+</body>
+</html>
