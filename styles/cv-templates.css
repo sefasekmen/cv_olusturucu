@@ -1060,7 +1060,7 @@ body.preview-page .cv-paper::-webkit-scrollbar-thumb {
 /* ===== FREEMIUM WATERMARK ===== */
 @media print {
     body.free-tier .cv-paper::after {
-        content: "Online CV Oluşturucu ile hazırlanmıştır. Filigranı kaldırmak için Premium'a geçin: cv-olusturucu.com";
+        content: "CVMatik ile hazırlanmıştır. Filigranı kaldırmak için Premium'a geçin: cvmatik.app";
         position: fixed;
         bottom: 12px;
         left: 0;

@@ -1,5 +1,5 @@
 /* ========================================================
-   CV OLUŞTURUCU - VANILLA JAVASCRIPT
+   CVMATİK - VANILLA JAVASCRIPT
    Canvas Particle Animation System (Beyaz Partiküller)
    Interactive Background: Mouse Reaction, Physics, Line Drawing
    100% Vanilla JS - No Libraries
@@ -415,7 +415,10 @@ function showNotification(message, type = 'info') {
     if (type === 'error') icon = '❌';
     if (type === 'warning') icon = '⚠️';
 
-    toast.innerHTML = `<span>${icon}</span> <span>${message}</span>`;
+    const msgSpan = document.createElement('span');
+    msgSpan.textContent = message;
+    toast.innerHTML = `<span>${icon}</span> `;
+    toast.appendChild(msgSpan);
     container.appendChild(toast);
 
     setTimeout(() => {
@@ -648,7 +651,7 @@ function throttle(func, limit) {
 // ===== CONSOLE WELCOME MESSAGE =====
 // Geliştirici konsolu için hoş geldin mesajı
 
-console.log('%c✨ CV Oluşturucu v3.0 ✨', 'color: #C20000; font-size: 20px; font-weight: bold;');
+console.log('%c✨ CVMatik v3.0 ✨', 'color: #C20000; font-size: 20px; font-weight: bold;');
 console.log('%cCherry Red + Powder Pink Tema | Canvas Particle Sistemi', 'color: #C20000; font-size: 14px;');
 console.log('---');
 console.log('🎨 Tasarım: Cherry Red hero bölümü, Powder Pink şablonlar');
@@ -799,7 +802,7 @@ window.showSupportModal = function() {
 // Sayfa yüklendiğinde uygulamayı başlat
 
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🚀 CV Oluşturucu başlatılıyor...');
+    console.log('🚀 CVMatik başlatılıyor...');
     
     // Premium Durumunu Başlat
     initPremiumState();

@@ -9,7 +9,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const searchParams = new URLSearchParams(window.location.search);
-    const isLocalDev = ['localhost', '127.0.0.1', '::1'].includes(window.location.hostname) || searchParams.get('dev') === '1' || searchParams.get('noauth') === '1';
+    const isLocalDev = ['localhost', '127.0.0.1', '::1'].includes(window.location.hostname);
+
+    // Güvenli yönlendirme: Sadece aynı origin'e izin ver
+    function safeRedirect(url, fallback) {
+        try {
+            const target = new URL(url, window.location.origin);
+            if (target.origin === window.location.origin) {
+                window.location.replace(target.href);
+                return;
+            }
+        } catch (e) { /* geçersiz URL */ }
+        window.location.replace(fallback || 'index.html');
+    }
 
     // Global auth state listener
     window.auth.onAuthStateChanged(async (user) => {
@@ -94,14 +106,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 errorDiv.style.display = 'none';
                 await window.auth.signInWithEmailAndPassword(email, password);
                 
-                // Smart redirect
+                // Smart redirect (güvenli)
                 const urlParams = new URLSearchParams(window.location.search);
                 const redirectUrl = urlParams.get('redirect');
-                if (redirectUrl) {
-                    window.location.replace(redirectUrl);
-                } else {
-                    window.location.replace('index.html');
-                }
+                safeRedirect(redirectUrl, 'index.html');
             } catch (error) {
                 errorDiv.innerText = "Giriş başarısız. Lütfen bilgilerinizi kontrol edin.";
                 errorDiv.style.display = 'block';
@@ -128,14 +136,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 errorDiv.style.display = 'none';
                 await window.auth.createUserWithEmailAndPassword(email, password);
                 
-                // Smart redirect
+                // Smart redirect (güvenli)
                 const urlParams = new URLSearchParams(window.location.search);
                 const redirectUrl = urlParams.get('redirect');
-                if (redirectUrl) {
-                    window.location.replace(redirectUrl);
-                } else {
-                    window.location.replace('index.html');
-                }
+                safeRedirect(redirectUrl, 'index.html');
             } catch (error) {
                 errorDiv.innerText = "Kayıt başarısız: " + error.message;
                 errorDiv.style.display = 'block';

@@ -8,7 +8,7 @@ class AIAssistant {
         // Google Gemini API - Ücretsiz tier
         this.API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
         this.DEFAULT_KEY = '';
-        this.STORAGE_KEY = 'cv-builder-ai-key';
+        this.STORAGE_KEY = 'cvmatik-ai-key';
         this.API_KEY = this.DEFAULT_KEY;
         this.loadApiKey();
     }

@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /js/firebase-config.js
+Disallow: /js/ai-assistant.js
+Disallow: /js/saveManager.js
+
+Sitemap: https://cvmatik.app/sitemap.xml

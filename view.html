@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CV Görüntüle - Online CV Oluşturucu</title>
+    <title>CV Görüntüle - CVMatik</title>
     <meta name="description" content="Paylaşılan profesyonel CV'yi görüntüleyin.">
-    <link rel="icon" type="image/webp" href="logo.webp">
+    <link rel="icon" type="image/webp" href="CVMatik-logo.webp">
     <link rel="stylesheet" href="styles/style.css">
     <link rel="stylesheet" href="styles/cv-templates.css?v=6">
     <style>
@@ -88,7 +88,7 @@
 <body>
     <header class="view-header">
         <a href="index.html">
-            <img src="logo.webp" alt="CV Oluşturucu Logo">
+            <img src="CVMatik-logo.webp" alt="CVMatik Logo">
         </a>
         <div class="view-actions">
             <button onclick="window.print()">📄 PDF / Yazdır</button>
@@ -166,13 +166,20 @@
         }
     })();
 
+    function escapeHtml(text) {
+        if (!text) return '';
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
     function renderBasicCV(data) {
         const p = data.personal || {};
         let html = `<div class="cv-header"><div class="cv-header-info">`;
-        html += `<h1 class="cv-name">${p.fullName || data.ad || ''}</h1>`;
-        if (p.title) html += `<div class="cv-title">${p.title}</div>`;
+        html += `<h1 class="cv-name">${escapeHtml(p.fullName || data.ad || '')}</h1>`;
+        if (p.title) html += `<div class="cv-title">${escapeHtml(p.title)}</div>`;
         html += `</div></div>`;
-        if (data.summary) html += `<div class="cv-section"><h2 class="cv-section-title">Profesyonel Özet</h2><p class="cv-summary-text">${data.summary}</p></div>`;
+        if (data.summary) html += `<div class="cv-section"><h2 class="cv-section-title">Profesyonel Özet</h2><p class="cv-summary-text">${escapeHtml(data.summary)}</p></div>`;
         return html;
     }
     </script>
