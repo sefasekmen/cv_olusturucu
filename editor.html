@@ -47,51 +47,210 @@
             background: transparent;
         }
 
-        /* Editor Header - Araç çubuğu */
+        /* ========================================================
+           EDITOR HEADER - PROFESSIONAL SAAS TOOLBAR
+           ======================================================== */
         .editor-header {
-            background: rgba(74, 14, 14, 0.92);
-            backdrop-filter: blur(10px);
-            border-bottom: 2px solid rgba(255, 255, 255, 0.12);
+            background: linear-gradient(180deg, rgba(20, 20, 28, 0.98) 0%, rgba(26, 18, 22, 0.95) 100%);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
             position: sticky;
             top: 0;
             z-index: 1000;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-            animation: slideDownHeader 0.4s ease-out;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+            height: 58px;
+            animation: slideDownHeader 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes slideDownHeader {
+            from { transform: translateY(-100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
 
         .editor-toolbar {
             max-width: 100%;
-            padding: 0.75rem 1.5rem;
+            height: 100%;
+            padding: 0 1.25rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 1rem;
-            flex-wrap: nowrap;
+            gap: 0.75rem;
+            box-sizing: border-box;
         }
 
-        /* Logo - Sol taraf */
+        /* ---- Toolbar Bölüm Grupları ---- */
+        .toolbar-group-left {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            flex-shrink: 0;
+        }
+
+        .toolbar-group-center {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .toolbar-group-right {
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+            flex-shrink: 0;
+        }
+
+        /* Dikey Ayırıcı Çizgi */
+        .toolbar-divider {
+            width: 1px;
+            height: 22px;
+            background: rgba(255, 255, 255, 0.12);
+            flex-shrink: 0;
+            margin: 0 0.25rem;
+        }
+
+        /* 1. SOL: Logo */
         .editor-logo {
             display: flex;
             align-items: center;
             text-decoration: none;
             flex-shrink: 0;
+            transition: transform 0.2s ease, opacity 0.2s ease;
+        }
+
+        .editor-logo:hover {
+            transform: scale(1.03);
+            opacity: 0.95;
         }
 
         .editor-logo-img {
-            height: 54px;
+            height: 32px;
             width: auto;
             object-fit: contain;
             display: block;
-            transform: scale(1.42);
-            transform-origin: left center;
-            transition: transform var(--transition-fast);
         }
 
-        .editor-logo:hover .editor-logo-img {
-            transform: scale(1.48);
+        /* CV Başlığı Giriş Kutusu */
+        .cv-title-box {
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 0.28rem 0.65rem;
+            transition: all 0.2s ease;
         }
 
-        /* Şablon Seçici (Dropdown) */
+        .cv-title-box:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .cv-title-box:focus-within {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(194, 0, 0, 0.65);
+            box-shadow: 0 0 0 3px rgba(194, 0, 0, 0.2);
+        }
+
+        .cv-title-icon {
+            width: 14px;
+            height: 14px;
+            color: rgba(255, 255, 255, 0.45);
+            flex-shrink: 0;
+        }
+
+        .cv-name-input {
+            background: transparent;
+            border: none;
+            outline: none;
+            color: #ffffff;
+            font-family: var(--font-primary);
+            font-size: 0.84rem;
+            font-weight: 600;
+            width: 145px;
+            padding: 0;
+            transition: width 0.2s ease;
+        }
+
+        .cv-name-input::placeholder {
+            color: rgba(255, 255, 255, 0.35);
+            font-weight: 500;
+        }
+
+        /* Kayıt Durumu Göstergesi (Save Status) */
+        .save-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.55);
+            padding: 0.25rem 0.55rem;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            height: 28px;
+            box-sizing: border-box;
+            flex-shrink: 0;
+        }
+
+        .save-status-icon {
+            color: currentColor;
+            flex-shrink: 0;
+            transition: transform 0.2s ease;
+        }
+
+        .save-status.saved {
+            color: #4ade80;
+            background: rgba(74, 222, 128, 0.1);
+            border-color: rgba(74, 222, 128, 0.25);
+        }
+
+        .save-status.saved .save-status-icon {
+            animation: popIn 0.3s ease-out;
+        }
+
+        .save-status.saving {
+            color: #f472b6;
+            background: rgba(244, 114, 182, 0.1);
+            border-color: rgba(244, 114, 182, 0.25);
+            animation: pulse 1.2s infinite ease-in-out;
+        }
+
+        .save-status.saving .save-status-icon {
+            animation: spin 1s linear infinite;
+        }
+
+        .save-status.error {
+            color: #f87171;
+            background: rgba(248, 113, 113, 0.12);
+            border-color: rgba(248, 113, 113, 0.25);
+        }
+
+        /* 2. ORTA: Segmented Kontroller Pilli */
+        .toolbar-controls-pill {
+            display: inline-flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.09);
+            border-radius: 10px;
+            padding: 3px;
+            gap: 2px;
+        }
+
+        .pill-divider {
+            width: 1px;
+            height: 18px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 0 2px;
+            flex-shrink: 0;
+        }
+
         .template-dropdown-container {
             position: relative;
             flex-shrink: 0;
@@ -99,37 +258,85 @@
         }
 
         .dropdown-toggle {
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: var(--radius-lg);
-            padding: 0.6rem 1.2rem;
-            color: #fff;
-            font-size: 0.9rem;
+            background: transparent;
+            border: none;
+            border-radius: 7px;
+            padding: 0.35rem 0.65rem;
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 0.78rem;
             cursor: pointer;
-            transition: all var(--transition-fast);
+            transition: all 0.2s ease;
             display: flex;
             align-items: center;
-            gap: 0.8rem;
+            gap: 0.45rem;
+            font-weight: 500;
+            font-family: var(--font-primary);
         }
 
         .dropdown-toggle:hover {
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.08);
+            color: #ffffff;
+        }
+
+        .dropdown-icon {
+            width: 14px;
+            height: 14px;
+            color: rgba(255, 255, 255, 0.5);
+            flex-shrink: 0;
+        }
+
+        .chevron-icon {
+            width: 12px;
+            height: 12px;
+            color: rgba(255, 255, 255, 0.45);
+            flex-shrink: 0;
+            transition: transform 0.2s ease;
+        }
+
+        .dropdown-toggle[aria-expanded="true"] .chevron-icon {
+            transform: rotate(180deg);
+        }
+
+        .dropdown-label {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            white-space: nowrap;
+        }
+
+        .dropdown-prefix {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.74rem;
+        }
+
+        .dropdown-label strong {
+            color: #ffffff;
+            font-weight: 700;
         }
 
         .template-dropdown-menu {
             display: none;
             position: absolute;
-            top: 110%;
-            left: 0;
-            background: #fff;
-            border-radius: 8px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            width: 260px;
+            top: calc(100% + 8px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(24, 24, 32, 0.98);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 12px;
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.65), 0 0 1px rgba(255, 255, 255, 0.2);
+            width: 250px;
             flex-direction: column;
-            padding: 0.6rem;
-            gap: 0.3rem;
+            padding: 0.45rem;
+            gap: 0.25rem;
             max-height: 70vh;
             overflow-y: auto;
+            z-index: 2500;
+        }
+
+        .template-dropdown-menu.lang-dropdown-menu {
+            width: 150px;
         }
 
         .template-dropdown-menu.show {
@@ -143,264 +350,244 @@
             justify-content: space-between;
             align-items: center;
             width: 100%;
-            min-width: unset;
             border: 1px solid transparent;
             background: transparent;
-            padding: 0.6rem 1rem;
-            color: #333;
-            border-radius: 6px;
+            padding: 0.5rem 0.8rem;
+            color: rgba(255, 255, 255, 0.78);
+            border-radius: 8px;
             text-align: left;
-            transform: scale(1);
-            opacity: 1;
             cursor: pointer;
             transition: all 0.2s;
+            font-size: 0.82rem;
         }
 
         .template-dropdown-menu .btn-tpl:hover {
-            background: #f1f5f9;
+            background: rgba(255, 255, 255, 0.08);
+            color: #ffffff;
         }
 
         .template-dropdown-menu .btn-tpl.active {
-            background: rgba(220, 38, 38, 0.08);
-            border-color: rgba(220, 38, 38, 0.2);
+            background: rgba(194, 0, 0, 0.16);
+            border-color: rgba(194, 0, 0, 0.35);
+            color: #ffffff;
+            font-weight: 600;
         }
 
         .template-dropdown-menu .tpl-mini-name {
-            font-size: 0.95rem;
+            font-size: 0.84rem;
             color: inherit;
             font-weight: 600;
         }
 
         .template-dropdown-menu .tpl-mini-tag {
-            font-size: 0.75rem;
-            background: #e2e8f0;
-            color: #475569;
-            padding: 0.2rem 0.5rem;
+            font-size: 0.66rem;
+            background: rgba(255, 255, 255, 0.08);
+            color: rgba(255, 255, 255, 0.55);
+            padding: 0.15rem 0.45rem;
             border-radius: 4px;
         }
 
         .template-dropdown-menu .btn-tpl.active .tpl-mini-tag {
-            background: rgba(220, 38, 38, 0.15);
-            color: #dc2626;
+            background: rgba(194, 0, 0, 0.25);
+            color: rgba(255, 210, 210, 0.95);
         }
 
         .template-dropdown-menu .premium-badge {
             position: static;
             font-size: 0.6rem;
             padding: 0.15rem 0.4rem;
-            margin-right: 0.5rem;
+            margin-right: 0.4rem;
         }
 
-        .btn-tpl.is-focus {
-            transform: scale(1.08);
-            opacity: 1;
-            border-color: rgba(255, 228, 225, 0.7);
-            box-shadow: 0 0 16px rgba(194, 0, 0, 0.42);
-        }
-
-        .btn-tpl.active {
-            background: linear-gradient(135deg, rgba(194, 0, 0, 0.95), rgba(220, 20, 60, 0.95));
-            color: var(--white);
-            border-color: rgba(255, 228, 225, 0.9);
-            opacity: 1;
-            box-shadow: 0 0 22px rgba(194, 0, 0, 0.54);
-        }
-
-        /* Araç çubuğu sağ taraf - Aksiyon butonları */
-        .toolbar-actions {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            flex-shrink: 0;
-        }
-
-        /* Toolbar butonları - kompakt stil */
+        /* 3. SAĞ: Butonlar */
         .btn-toolbar {
             display: inline-flex;
             align-items: center;
-            gap: 0.4rem;
-            padding: 0.5rem 1rem;
-            font-size: 0.8rem;
-            font-weight: 700;
-            border: none;
-            border-radius: var(--radius-md);
+            justify-content: center;
+            gap: 0.38rem;
+            padding: 0.42rem 0.75rem;
+            font-size: 0.78rem;
+            font-weight: 600;
+            border-radius: 8px;
             cursor: pointer;
-            transition: all var(--transition-fast);
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
             font-family: var(--font-primary);
             white-space: nowrap;
+            text-decoration: none;
+            border: 1px solid transparent;
+            line-height: 1.2;
+            box-sizing: border-box;
         }
 
         .btn-toolbar svg {
-            width: 15px;
-            height: 15px;
+            width: 14px;
+            height: 14px;
             flex-shrink: 0;
         }
 
+        /* CV'lerim linki */
+        .btn-toolbar-link {
+            background: rgba(255, 255, 255, 0.04);
+            color: rgba(255, 255, 255, 0.75);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .btn-toolbar-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
+        }
+
+        /* Yeni CV (Ghost) */
+        .btn-toolbar-ghost,
+        .btn-toolbar-new {
+            background: rgba(255, 255, 255, 0.04);
+            color: rgba(255, 255, 255, 0.75);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .btn-toolbar-ghost:hover,
+        .btn-toolbar-new:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
+        }
+
+        /* Kaydet */
         .btn-toolbar-save {
-            background: rgba(255, 255, 255, 0.9);
-            color: var(--cherry-deep);
-            border: 2px solid var(--cherry-bright);
+            background: rgba(255, 255, 255, 0.08);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.16);
         }
 
         .btn-toolbar-save:hover {
-            background: var(--cherry-bright);
-            color: var(--white);
-            box-shadow: var(--shadow-cherry-glow);
-            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 0.16);
+            color: #ffffff;
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
         }
 
+        /* PDF / Yazdır (Ana CTA) */
         .btn-toolbar-print {
-            background: linear-gradient(135deg, var(--cherry-ruby), var(--cherry-bright));
-            color: var(--white);
-            box-shadow: 0 0 15px rgba(194, 0, 0, 0.3);
+            background: linear-gradient(135deg, #c20000 0%, #dc143c 100%);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-weight: 700;
+            box-shadow: 0 2px 12px rgba(194, 0, 0, 0.35);
         }
 
         .btn-toolbar-print:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 0 25px rgba(194, 0, 0, 0.5);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(194, 0, 0, 0.55);
+            filter: brightness(1.08);
         }
 
-        .btn-toolbar-new {
-            background: rgba(255, 255, 255, 0.1);
+        /* Arayüz Dil Butonu */
+        .editor-lang-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.12);
             color: rgba(255, 255, 255, 0.85);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .btn-toolbar-new:hover {
-            background: rgba(255, 255, 255, 0.18);
-            color: var(--white);
-            transform: translateY(-2px);
-        }
-
-        /* SAVE STATUS INDICATOR */
-        .save-status {
-            display: flex;
+            font-weight: 700;
+            font-size: 0.74rem;
+            padding: 0.36rem 0.65rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 0.4rem;
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: rgba(255, 255, 255, 0.7);
-            padding: 0.4rem 0.8rem;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: var(--radius-md);
-            transition: all var(--transition-fast);
-            animation: fadeIn 0.3s ease-out;
-            min-width: 150px;
-            max-width: 150px;
-            width: 150px;
-            height: 34px;
-            white-space: nowrap;
-            box-sizing: border-box;
-            flex-shrink: 0;
-            overflow: hidden;
+            font-family: var(--font-primary);
         }
 
-        .save-status-icon {
-            color: rgba(255, 255, 255, 0.7);
-            transition: all var(--transition-fast);
+        .editor-lang-btn:hover {
+            background: rgba(255, 255, 255, 0.14);
+            border-color: rgba(255, 255, 255, 0.25);
+            color: #ffffff;
+            transform: translateY(-1px);
         }
 
-        /* Saving durumu */
-        .save-status.saving {
-            color: var(--powder-pink);
-            animation: pulse 1s infinite;
+        /* Responsive Breakpoints */
+        @media (max-width: 1250px) {
+            .dropdown-prefix {
+                display: none;
+            }
+            .cv-name-input {
+                width: 120px;
+            }
+            .btn-toolbar {
+                padding: 0.38rem 0.65rem;
+                font-size: 0.74rem;
+            }
         }
 
-        .save-status.saving .save-status-icon {
-            color: var(--powder-pink);
-            animation: spin 1s linear infinite;
+        @media (max-width: 1080px) {
+            .save-status-text {
+                display: none;
+            }
+            .save-status {
+                padding: 0.25rem 0.45rem;
+            }
+            .btn-toolbar-link .btn-toolbar-text,
+            .btn-toolbar-ghost .btn-toolbar-text,
+            .btn-toolbar-new .btn-toolbar-text {
+                display: none;
+            }
+            .cv-name-input {
+                width: 105px;
+            }
         }
 
-        /* Saved durumu */
-        .save-status.saved {
-            color: #4ade80;
+        @media (max-width: 860px) {
+            .editor-header {
+                height: auto;
+            }
+            .editor-toolbar {
+                padding: 0.5rem 0.75rem;
+                flex-wrap: wrap;
+                height: auto;
+                gap: 0.5rem;
+            }
+            .toolbar-group-left {
+                width: 100%;
+                justify-content: space-between;
+            }
+            .toolbar-group-center {
+                order: 2;
+                width: auto;
+            }
+            .toolbar-group-right {
+                order: 3;
+                width: auto;
+                margin-left: auto;
+            }
+            .cv-name-input {
+                width: 130px;
+            }
         }
 
-        .save-status.saved .save-status-icon {
-            color: #4ade80;
-            animation: popIn 0.3s ease-out;
-        }
-
-        /* Error durumu */
-        .save-status.error {
-            color: #f87171;
-            background: rgba(244, 63, 94, 0.15);
-        }
-
-        .save-status.error .save-status-icon {
-            color: #f87171;
-        }
-
+        /* Mikro Animasyonlar */
         @keyframes spin {
-            from {
-                transform: rotate(0deg);
-            }
-
-            to {
-                transform: rotate(360deg);
-            }
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
 
         @keyframes pulse {
-
-            0%,
-            100% {
-                opacity: 1;
-            }
-
-            50% {
-                opacity: 0.6;
-            }
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
         }
 
         @keyframes popIn {
-            0% {
-                transform: scale(0.8);
-            }
-
-            50% {
-                transform: scale(1.1);
-            }
-
-            100% {
-                transform: scale(1);
-            }
+            0% { transform: scale(0.8); }
+            50% { transform: scale(1.15); }
+            100% { transform: scale(1); }
         }
 
         @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-
-            to {
-                opacity: 1;
-            }
-        }
-
-        /* CV Adı input - Başlık çubuğunda */
-        .cv-name-input {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: var(--radius-md);
-            color: var(--white);
-            font-family: var(--font-primary);
-            font-size: 0.85rem;
-            font-weight: 600;
-            padding: 0.45rem 0.75rem;
-            outline: none;
-            transition: all var(--transition-fast);
-            width: 170px;
-        }
-
-        .cv-name-input::placeholder {
-            color: rgba(255, 255, 255, 0.4);
-        }
-
-        .cv-name-input:focus {
-            border-color: var(--cherry-light);
-            background: rgba(255, 255, 255, 0.15);
-            box-shadow: 0 0 0 2px rgba(240, 128, 128, 0.25);
+            from { opacity: 0; transform: translateY(-4px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         /* ===== ANA EDITOR DÜZENI ===== */
@@ -1247,39 +1434,62 @@
                 margin-bottom: 1rem;
             }
 
+            .editor-header {
+                height: auto;
+            }
+
             .editor-toolbar {
-                padding: 0.75rem;
-                gap: 0.75rem;
+                padding: 0.5rem 0.75rem;
+                gap: 0.5rem;
                 flex-direction: column;
                 align-items: stretch;
+                height: auto;
             }
 
-            .editor-logo {
-                align-self: center;
-                margin-bottom: 0.25rem;
-            }
-
-            .toolbar-actions {
+            .toolbar-group-left {
                 width: 100%;
+                display: flex;
+                align-items: center;
                 justify-content: space-between;
-                flex-wrap: nowrap;
-                gap: 0.4rem;
+                gap: 0.5rem;
+            }
+
+            .cv-title-box {
+                flex: 1;
+                min-width: 0;
             }
 
             .cv-name-input {
                 width: 100%;
-                flex: 1;
-                font-size: 0.85rem;
-                padding: 0.5rem;
+                font-size: 0.82rem;
             }
 
-            .btn-toolbar .btn-toolbar-text {
-                display: none;
-            }
-
-            .template-switcher {
+            .toolbar-group-center {
                 width: 100%;
-                order: 3;
+                justify-content: center;
+            }
+
+            .toolbar-controls-pill {
+                width: 100%;
+                justify-content: space-around;
+            }
+
+            .toolbar-group-right {
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 0.35rem;
+            }
+
+            .btn-toolbar {
+                padding: 0.4rem 0.55rem;
+                font-size: 0.75rem;
+                flex: 1;
+            }
+
+            .toolbar-divider {
+                display: none;
             }
 
             .template-carousel-mini {
@@ -1297,14 +1507,6 @@
 
             .btn-tpl .tpl-mini-tag {
                 font-size: 0.56rem;
-            }
-
-            .toolbar-actions {
-                gap: 0.3rem;
-            }
-
-            .btn-toolbar {
-                padding: 0.45rem 0.6rem;
             }
 
             .form-row {
@@ -1375,117 +1577,157 @@
     <header class="editor-header" role="banner">
         <div class="editor-toolbar">
 
-            <!-- Sol: Logo & Ana sayfa linki -->
-            <div style="display: flex; align-items: center; gap: 15px;">
-                <a href="index.html" class="editor-logo" aria-label="Ana sayfaya git">
+            <!-- SOL BÖLÜM: Logo, CV Başlığı & Kayıt Durumu -->
+            <div class="toolbar-group-left">
+                <a href="index.html" class="editor-logo" aria-label="Ana sayfaya git" title="CVMatik Ana Sayfa">
                     <img src="CVMatik-logo.webp" alt="CVMatik Logo" class="editor-logo-img">
                 </a>
-                <button onclick="window.toggleUiLanguage()" class="nav-action-btn lang-toggle-btn"
-                    title="Switch to English"
-                    style="background: transparent; border: 1px solid #ddd; padding: 0.5rem; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 0.85rem;">🇹🇷
-                    TR</button>
-            </div>
 
-            <!-- Orta: Şablon değiştirici (Dropdown) -->
-            <div class="template-dropdown-container" id="editorTemplateSwitcher" role="group"
-                aria-label="Şablon seçimi">
-                <button class="btn-toolbar dropdown-toggle" id="templateDropdownBtn" aria-haspopup="true"
-                    aria-expanded="false">
-                    <span class="dropdown-label">Şablon: <strong id="activeTemplateName">Klasik</strong></span>
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
-                        <polyline points="6 9 12 15 18 9"></polyline>
+                <div class="toolbar-divider"></div>
+
+                <!-- CV Başlığı -->
+                <div class="cv-title-box" title="CV Başlığını Düzenle">
+                    <svg class="cv-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                     </svg>
-                </button>
-                <div class="template-dropdown-menu" id="templateDropdownMenu">
-                    <button class="btn-tpl active" data-template="template-klasik" aria-pressed="true">
-                        <span class="tpl-mini-name">Klasik</span>
-                        <span class="tpl-mini-tag">Kurumsal</span>
-                    </button>
-                    <button class="btn-tpl" data-template="template-modern" aria-pressed="false">
-                        <span class="tpl-mini-name">Modern</span>
-                        <span class="tpl-mini-tag">Dinamik</span>
-                    </button>
-                    <button class="btn-tpl" data-template="template-minimal" aria-pressed="false">
-                        <div class="premium-badge"></div>
-                        <span class="tpl-mini-name">Minimal</span>
-                        <span class="tpl-mini-tag">Yalın</span>
-                    </button>
-                    <button class="btn-tpl" data-template="template-creative" aria-pressed="false">
-                        <div class="premium-badge"></div>
-                        <span class="tpl-mini-name">Creative</span>
-                        <span class="tpl-mini-tag">Asimetrik</span>
-                    </button>
-                    <button class="btn-tpl" data-template="template-tech" aria-pressed="false">
-                        <div class="premium-badge"></div>
-                        <span class="tpl-mini-name">Tech</span>
-                        <span class="tpl-mini-tag">Dark</span>
-                    </button>
-                    <button class="btn-tpl" data-template="template-executive" aria-pressed="false">
-                        <div class="premium-badge"></div>
-                        <span class="tpl-mini-name">Executive</span>
-                        <span class="tpl-mini-tag">Serif</span>
-                    </button>
-                    <button class="btn-tpl" data-template="template-harvard" aria-pressed="false">
-                        <div class="premium-badge"></div>
-                        <span class="tpl-mini-name">Harvard</span>
-                        <span class="tpl-mini-tag">ATS Klasik</span>
-                    </button>
-                    <button class="btn-tpl" data-template="template-stanford" aria-pressed="false">
-                        <div class="premium-badge"></div>
-                        <span class="tpl-mini-name">Stanford</span>
-                        <span class="tpl-mini-tag">ATS Modern</span>
-                    </button>
-                    <button class="btn-tpl" data-template="template-tech-ats" aria-pressed="false">
-                        <div class="premium-badge"></div>
-                        <span class="tpl-mini-name">Tech ATS</span>
-                        <span class="tpl-mini-tag">IT Odaklı</span>
-                    </button>
+                    <input type="text" id="cvNameInput" class="cv-name-input" placeholder="CV Adı..."
+                        aria-label="CV'ye bir isim verin" maxlength="40">
+                </div>
+
+                <!-- Kayıt Durumu -->
+                <div class="save-status" id="saveStatus" role="status" aria-live="polite" aria-label="Kayıt durumu">
+                    <svg class="save-status-icon" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                        <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                        <polyline points="7 3 7 8 15 8"></polyline>
+                    </svg>
+                    <span class="save-status-text" id="saveStatusText">Kaydedildi</span>
                 </div>
             </div>
 
-            <!-- Orta 2: CV Dili Değiştirici (Dropdown) -->
-            <div class="template-dropdown-container" id="editorLanguageSwitcher" role="group"
-                aria-label="CV Dili seçimi">
-                <button class="btn-toolbar dropdown-toggle" id="langDropdownBtn" aria-haspopup="true"
-                    aria-expanded="false">
-                    <span class="dropdown-label">Dil: <strong id="activeLanguageName">Türkçe</strong></span>
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
-                        <polyline points="6 9 12 15 18 9"></polyline>
-                    </svg>
-                </button>
-                <div class="template-dropdown-menu" id="langDropdownMenu" style="min-width: 120px;">
-                    <button class="btn-tpl active" data-lang="tr" aria-pressed="true">
-                        <span class="tpl-mini-name">Türkçe</span>
-                    </button>
-                    <button class="btn-tpl" data-lang="en" aria-pressed="false">
-                        <div class="premium-badge"></div>
-                        <span class="tpl-mini-name">English</span>
-                    </button>
+            <!-- ORTA BÖLÜM: Şablon ve Dil Kontrolleri -->
+            <div class="toolbar-group-center">
+                <div class="toolbar-controls-pill">
+                    <!-- Şablon Seçici (Dropdown) -->
+                    <div class="template-dropdown-container" id="editorTemplateSwitcher" role="group"
+                        aria-label="Şablon seçimi">
+                        <button class="btn-toolbar dropdown-toggle" id="templateDropdownBtn" aria-haspopup="true"
+                            aria-expanded="false" title="Şablon Değiştir">
+                            <svg class="dropdown-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="3" y1="9" x2="21" y2="9"></line>
+                                <line x1="9" y1="21" x2="9" y2="9"></line>
+                            </svg>
+                            <span class="dropdown-label"><span class="dropdown-prefix">Şablon:</span> <strong id="activeTemplateName">Klasik</strong></span>
+                            <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </button>
+                        <div class="template-dropdown-menu" id="templateDropdownMenu">
+                            <button class="btn-tpl active" data-template="template-klasik" aria-pressed="true">
+                                <span class="tpl-mini-name">Klasik</span>
+                                <span class="tpl-mini-tag">Kurumsal</span>
+                            </button>
+                            <button class="btn-tpl" data-template="template-modern" aria-pressed="false">
+                                <span class="tpl-mini-name">Modern</span>
+                                <span class="tpl-mini-tag">Dinamik</span>
+                            </button>
+                            <button class="btn-tpl" data-template="template-minimal" aria-pressed="false">
+                                <div class="premium-badge"></div>
+                                <span class="tpl-mini-name">Minimal</span>
+                                <span class="tpl-mini-tag">Yalın</span>
+                            </button>
+                            <button class="btn-tpl" data-template="template-creative" aria-pressed="false">
+                                <div class="premium-badge"></div>
+                                <span class="tpl-mini-name">Creative</span>
+                                <span class="tpl-mini-tag">Asimetrik</span>
+                            </button>
+                            <button class="btn-tpl" data-template="template-tech" aria-pressed="false">
+                                <div class="premium-badge"></div>
+                                <span class="tpl-mini-name">Tech</span>
+                                <span class="tpl-mini-tag">Dark</span>
+                            </button>
+                            <button class="btn-tpl" data-template="template-executive" aria-pressed="false">
+                                <div class="premium-badge"></div>
+                                <span class="tpl-mini-name">Executive</span>
+                                <span class="tpl-mini-tag">Serif</span>
+                            </button>
+                            <button class="btn-tpl" data-template="template-harvard" aria-pressed="false">
+                                <div class="premium-badge"></div>
+                                <span class="tpl-mini-name">Harvard</span>
+                                <span class="tpl-mini-tag">ATS Klasik</span>
+                            </button>
+                            <button class="btn-tpl" data-template="template-stanford" aria-pressed="false">
+                                <div class="premium-badge"></div>
+                                <span class="tpl-mini-name">Stanford</span>
+                                <span class="tpl-mini-tag">ATS Modern</span>
+                            </button>
+                            <button class="btn-tpl" data-template="template-tech-ats" aria-pressed="false">
+                                <div class="premium-badge"></div>
+                                <span class="tpl-mini-name">Tech ATS</span>
+                                <span class="tpl-mini-tag">IT Odaklı</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="pill-divider"></div>
+
+                    <!-- CV Dili Değiştirici (Dropdown) -->
+                    <div class="template-dropdown-container" id="editorLanguageSwitcher" role="group"
+                        aria-label="CV Dili seçimi">
+                        <button class="btn-toolbar dropdown-toggle" id="langDropdownBtn" aria-haspopup="true"
+                            aria-expanded="false" title="CV İçerik Dili">
+                            <svg class="dropdown-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="2" y1="12" x2="22" y2="12"></line>
+                                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                            </svg>
+                            <span class="dropdown-label"><span class="dropdown-prefix">Dil:</span> <strong id="activeLanguageName">Türkçe</strong></span>
+                            <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </button>
+                        <div class="template-dropdown-menu lang-dropdown-menu" id="langDropdownMenu">
+                            <button class="btn-tpl active" data-lang="tr" aria-pressed="true">
+                                <span class="tpl-mini-name">🇹🇷 Türkçe</span>
+                            </button>
+                            <button class="btn-tpl" data-lang="en" aria-pressed="false">
+                                <div class="premium-badge"></div>
+                                <span class="tpl-mini-name">🇬🇧 English</span>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Sağ: CV adı + aksiyon butonları -->
-            <div class="toolbar-actions">
-                <!-- CV Adı -->
-                <input type="text" id="cvNameInput" class="cv-name-input" placeholder="CV Adı..."
-                    aria-label="CV'ye bir isim verin" maxlength="40">
+            <!-- SAĞ BÖLÜM: Dashboard Linki, Aksiyon Butonları & Arayüz Dili -->
+            <div class="toolbar-group-right">
+                <!-- CV'lerim Paneli -->
+                <a href="cvlerim.html" class="btn-toolbar btn-toolbar-link" title="Kayıtlı CV'lerime Git" aria-label="CV'lerime Git">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                    <span class="btn-toolbar-text">CV'lerim</span>
+                </a>
+
+                <div class="toolbar-divider"></div>
 
                 <!-- Yeni CV -->
-                <button class="btn-toolbar btn-toolbar-new" id="btnNewCV" aria-label="Yeni boş CV oluştur">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
-                        stroke-linejoin="round">
+                <button class="btn-toolbar btn-toolbar-ghost" id="btnNewCV" aria-label="Yeni boş CV oluştur" title="Yeni Boş CV">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                         <polyline points="14 2 14 8 20 8"></polyline>
-                        <line x1="12" y1="12" x2="12" y2="18"></line>
-                        <line x1="9" y1="15" x2="15" y2="15"></line>
+                        <line x1="12" y1="11" x2="12" y2="17"></line>
+                        <line x1="9" y1="14" x2="15" y2="14"></line>
                     </svg>
                     <span class="btn-toolbar-text">Yeni</span>
                 </button>
 
                 <!-- Kaydet -->
-                <button class="btn-toolbar btn-toolbar-save" id="btnSaveCV" aria-label="CV'yi kaydet">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
-                        stroke-linejoin="round">
+                <button class="btn-toolbar btn-toolbar-save" id="btnSaveCV" aria-label="CV'yi kaydet" title="CV'yi Kaydet (Ctrl+S)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
                         <polyline points="17 21 17 13 7 13 7 21"></polyline>
                         <polyline points="7 3 7 8 15 8"></polyline>
@@ -1493,11 +1735,9 @@
                     <span class="btn-toolbar-text">Kaydet</span>
                 </button>
 
-                <!-- İndir / Yazdır -->
-                <button class="btn-toolbar btn-toolbar-print" id="btnPrintCV"
-                    aria-label="CV'yi yazdır veya PDF olarak kaydet">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
-                        stroke-linejoin="round">
+                <!-- PDF / Yazdır (Ana CTA) -->
+                <button class="btn-toolbar btn-toolbar-print" id="btnPrintCV" aria-label="CV'yi yazdır veya PDF olarak indir" title="PDF Olarak İndir / Yazdır">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <polyline points="6 9 6 2 18 2 18 9"></polyline>
                         <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
                         <rect x="6" y="14" width="12" height="8"></rect>
@@ -1505,15 +1745,11 @@
                     <span class="btn-toolbar-text">PDF / Yazdır</span>
                 </button>
 
+                <div class="toolbar-divider"></div>
 
-                <!-- SAVE STATUS INDICATOR -->
-                <div class="save-status" id="saveStatus" role="status" aria-live="polite" aria-label="Kayıt durumu">
-                    <svg class="save-status-icon" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2">
-                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
-                    </svg>
-                    <span class="save-status-text" id="saveStatusText">Kaydedildi</span>
-                </div>
+                <!-- Arayüz Dili Değiştirici -->
+                <button onclick="window.toggleUiLanguage()" class="nav-action-btn lang-toggle-btn editor-lang-btn"
+                    title="Arayüz Dilini Değiştir" aria-label="Arayüz Dilini Değiştir">🇹🇷 TR</button>
             </div>
         </div>
     </header>
