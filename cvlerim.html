@@ -548,7 +548,6 @@
                 <!-- Yeni CV Oluştur / Auth Butonu -->
                 <div class="nav-actions">
                     <button onclick="window.toggleUiLanguage()" class="nav-action-btn lang-toggle-btn" title="Switch to English" style="background: transparent; border: 1px solid #ddd; padding: 0.5rem; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 0.85rem;">🇹🇷 TR</button>
-                    <button onclick="window.showSupportModal()" class="nav-action-btn premium-btn" style="background: linear-gradient(135deg, #10b981, #059669); color: white; border: none; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; font-weight: 600;">💖 Bana Destek Ol</button>
                     <button id="auth-btn" class="nav-action-btn">...</button>
                     <a href="index.html" class="btn btn-primary" style="padding: 0.5rem 1.5rem; font-size: 0.9rem;">
                         <span class="btn-text">Yeni CV Oluştur</span>
@@ -596,7 +595,19 @@
 
     <!-- ===== FOOTER ===== -->
     <footer class="footer" role="contentinfo">
-        <p>&copy; 2026 CVMatik. Tüm hakları saklıdır. | <a href="gizlilik.html">Gizlilik Politikası</a> • <a href="kullanim-kosullari.html">Kullanım Koşulları</a> • <a href="iletisim.html">İletişim</a></p>
+        <div class="footer-container">
+            <div class="footer-left">
+                <a href="index.html" class="footer-logo" aria-label="CVMatik Ana Sayfa">
+                    <img src="CVMatik-logo.webp" alt="CVMatik Logo" class="footer-logo-img">
+                </a>
+                <span class="footer-copyright">&copy; 2026 Tüm hakları saklıdır.</span>
+            </div>
+            <div class="footer-right">
+                <a href="gizlilik.html">Gizlilik Politikası</a>
+                <a href="kullanim-kosullari.html">Kullanım Koşulları</a>
+                <a href="iletisim.html">İletişim</a>
+            </div>
+        </div>
     </footer>
 
     <!-- ===== SİLME ONAY MODAL ===== -->

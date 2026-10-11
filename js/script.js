@@ -771,32 +771,8 @@ window.grantPremium = async function() {
 }
 
 window.showSupportModal = function() {
-    let modal = document.getElementById('supportModal');
-    if (!modal) {
-        modal = document.createElement('div');
-        modal.id = 'supportModal';
-        modal.className = 'modal premium-modal';
-        modal.innerHTML = `
-            <div class="modal-content premium-modal-content">
-                <span class="close-modal">&times;</span>
-                <h2 style="color: var(--cherry-ruby); margin-top: 0;">💖 Projeye Destek Olun</h2>
-                <p style="font-size: 1.1rem; line-height: 1.6;">Bu siteyi sizler için tamamen <strong>ücretsiz</strong> ve <strong>reklamsız</strong> tutmaya çalışıyorum. Eğer oluşturduğunuz CV işinize yaradıysa, bana destek olabilirsiniz.</p>
-                <div class="premium-features-list" style="background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 12px; margin: 1.5rem 0; text-align: center;">
-                    <p style="margin-bottom: 10px; font-weight: bold; font-size: 1.2rem; letter-spacing: 1px;">TR13 0001 0090 1051 8871 7050 01</p>
-                    <p style="font-size: 0.9rem; color: #888;">Alıcı: Sefa Sekmen</p>
-                </div>
-                <button class="btn btn-primary btn-cta" style="width: 100%;" onclick="navigator.clipboard.writeText('TR13 0001 0090 1051 8871 7050 01').then(() => showNotification('IBAN Kopyalandı!', 'success'))">IBAN'ı Kopyala</button>
-            </div>
-        `;
-        document.body.appendChild(modal);
-        
-        modal.querySelector('.close-modal').onclick = () => modal.style.display = 'none';
-        window.addEventListener('click', (e) => {
-            if (e.target === modal) modal.style.display = 'none';
-        });
-    }
-    modal.style.display = 'flex';
-}
+    // Şimdilik devre dışı bırakıldı
+};
 
 // ===== APP INITIALIZATION =====
 // Sayfa yüklendiğinde uygulamayı başlat
