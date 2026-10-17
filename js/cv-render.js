@@ -9,6 +9,15 @@
             return div.innerHTML.replace(/\n/g, '<br>');
         }
 
+        function safeExternalUrl(value) {
+            try {
+                const url = new URL(String(value || '').trim());
+                return ['http:', 'https:'].includes(url.protocol) ? url.href : '';
+            } catch {
+                return '';
+            }
+        }
+
         // Tam ay isimleri (önce bunlar değiştirilmeli)
         const turkceAylarTam = [
             ['Ocak', 'January'], ['Şubat', 'February'], ['Mart', 'March'],
@@ -151,19 +160,22 @@
 
         function projeHtml(liste, baslik = 'Projeler') {
             if (!liste || !liste.length) return '';
-            const items = liste.filter(p => p.ad).map(p => `
+            const items = liste.filter(p => p.ad).map(p => {
+                const projectUrl = safeExternalUrl(p.link);
+                return `
             <div class="cv-entry">
                 <div class="cv-entry-header">
                     <div>
                         <div class="cv-entry-title">
                             ${escapeHtml(p.ad || '')}
-                            ${p.link ? `<a href="${escapeHtml(p.link)}" target="_blank" style="font-size: 0.85em; text-decoration: none; color: var(--primary-color); margin-left: 0.5rem;" title="Projeyi Gör">🔗</a>` : ''}
+                            ${projectUrl ? `<a href="${escapeHtml(projectUrl)}" target="_blank" rel="noopener noreferrer" style="font-size: 0.85em; text-decoration: none; color: var(--primary-color); margin-left: 0.5rem;" title="Projeyi Gör">🔗</a>` : ''}
                         </div>
                         ${p.teknoloji ? `<div class="cv-entry-subtitle">${escapeHtml(p.teknoloji)}</div>` : ''}
                     </div>
                 </div>
                 ${p.aciklama ? formatAciklama(p.aciklama) : ''}
-            </div>`).join('');
+            </div>`;
+            }).join('');
             if (!items) return '';
             return `<div class="cv-section"><h2 class="cv-section-title">${baslik}</h2>${items}</div>`;
         }
@@ -356,22 +368,19 @@
             cvPaper.style.marginBottom = '';
 
             if (window.innerWidth <= 1024) {
-                const containerWidth = previewPanel.clientWidth;
-                const padding = window.innerWidth <= 480 ? 16 : 24;
-                const availableWidth = containerWidth - padding;
+                const styles = getComputedStyle(previewPanel);
+                const horizontalPadding = parseFloat(styles.paddingLeft) + parseFloat(styles.paddingRight);
+                const availableWidth = previewPanel.clientWidth - horizontalPadding;
                 const paperWidth = cvPaper.offsetWidth || 794;
-
-                const scale = Math.min(1.0, availableWidth / paperWidth);
+                const scale = Math.min(1, availableWidth / paperWidth);
 
                 cvPaper.style.transform = `scale(${scale})`;
-                cvPaper.style.transformOrigin = 'top center';
-
-                // const leftOffset = Math.max(0, (containerWidth - (paperWidth * scale)) / 2);
-                cvPaper.style.marginLeft = '0px';
+                cvPaper.style.transformOrigin = 'top left';
+                cvPaper.style.marginLeft = `${Math.max(0, (availableWidth - (paperWidth * scale)) / 2)}px`;
+                cvPaper.style.marginRight = '0';
 
                 const paperHeight = cvPaper.offsetHeight || 1123;
-                const heightDifference = paperHeight * (1 - scale);
-                cvPaper.style.marginBottom = `-${heightDifference}px`;
+                cvPaper.style.marginBottom = `${paperHeight * (scale - 1)}px`;
             }
         }
 

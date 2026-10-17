@@ -310,14 +310,38 @@ class SaveManager {
     }
 
     async importCV(jsonString) {
+        let cvData;
+
         try {
-            const cvData = JSON.parse(jsonString);
-            cvData.id = this.generateId();
-            cvData.createdAt = new Date().toISOString();
-            return await this.saveCV(cvData);
+            cvData = JSON.parse(jsonString);
         } catch (error) {
             throw new Error('Invalid JSON format');
         }
+
+        if (!cvData || typeof cvData !== 'object' || Array.isArray(cvData)) {
+            throw new Error('Invalid CV data format.');
+        }
+
+        const arrayFields = [
+            'experience',
+            'education',
+            'skills',
+            'projects',
+            'languages',
+            'certificates',
+            'volunteers',
+            'references'
+        ];
+
+        for (const field of arrayFields) {
+            if (field in cvData && !Array.isArray(cvData[field])) {
+                throw new Error('Invalid CV data format: array expected.');
+            }
+        }
+
+        cvData.id = this.generateId();
+        cvData.createdAt = new Date().toISOString();
+        return await this.saveCV(cvData);
     }
 
     // ===== Kullanıcı çıkış yaptığında state sıfırla =====

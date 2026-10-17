@@ -1554,12 +1554,16 @@
                 padding-left: 0 !important;
                 padding-right: 0 !important;
                 overflow-x: hidden !important;
+                align-items: flex-start !important;
             }
 
             .cv-paper {
                 width: 210mm !important;
                 min-width: 210mm !important;
                 flex-shrink: 0 !important;
+                transform-origin: top left !important;
+                margin-left: max(0px, calc((100% - 516px) / 2)) !important;
+                margin-right: 0 !important;
             }
         }
     </style>
@@ -2388,6 +2392,15 @@
             let aktifCVAdi = '';
             let aktifCVKaynagi = 'legacy';
 
+            if (typeof saveManager !== 'undefined') {
+                saveManager.subscribe(({ status }) => {
+                    if (status === 'cloud-sync-success' || status === 'saved') {
+                        aktifCVId = saveManager.currentCVId;
+                        aktifCVKaynagi = 'saveManager';
+                    }
+                });
+            }
+
             // Benzersiz ID üreteci
             let idSayac = 0;
             function yeniId() { return ++idSayac; }
@@ -2640,7 +2653,27 @@
             function aktifSablonEtiketiniGuncelle(sablon) {
                 const activeTemplateNameEl = document.getElementById('activeTemplateName');
                 if (activeTemplateNameEl) {
-                    activeTemplateNameEl.textContent = sablonAdi(sablon || durum.aktifSablon);
+                    const normalized = normalizeTemplateName(sablon || durum.aktifSablon);
+                    const adlar = {
+                        'template-klasik': { tr: 'Klasik', en: 'Classic' },
+                        'template-modern': { tr: 'Modern', en: 'Modern' },
+                        'template-minimal': { tr: 'Minimal', en: 'Minimal' },
+                        'template-creative': { tr: 'Creative', en: 'Creative' },
+                        'template-tech': { tr: 'Tech', en: 'Tech' },
+                        'template-executive': { tr: 'Executive', en: 'Executive' },
+                        'template-harvard': { tr: 'Harvard', en: 'Harvard' },
+                        'template-stanford': { tr: 'Stanford', en: 'Stanford' },
+                        'template-tech-ats': { tr: 'Tech ATS', en: 'Tech ATS' }
+                    };
+
+                    // i18n.js bu elementi otomatik ceviri icin isaretleyebilir.
+                    // Secim sonrasi tekrar Klasik'e donmemesi icin etiketi
+                    // dinamik bir kontrol olarak tut.
+                    activeTemplateNameEl.removeAttribute('data-tr-key');
+                    activeTemplateNameEl.removeAttribute('data-is-html');
+                    activeTemplateNameEl.textContent =
+                        adlar[normalized]?.[durum.cvDili === 'en' ? 'en' : 'tr'] ||
+                        sablonAdi(normalized);
                 }
             }
 
@@ -2848,6 +2881,10 @@
             // Özet karakter sayacı
             if (inputlar.ozet) {
                 inputlar.ozet.addEventListener('input', function () {
+                    if (this.value.length > 600) {
+                        this.value = this.value.slice(0, 600);
+                    }
+
                     document.getElementById('ozetCharCount').textContent = this.value.length + ' / 600';
                 });
             }
@@ -2938,6 +2975,7 @@
                 if (typeof CVRender !== 'undefined' && typeof CVRender.renderCV === 'function' && cvPaperEl) {
                     CVRender.renderCV(cvPaperEl, guncelCvVerisi);
                     try { analizPaneliniGuncelle(); } catch (e) { console.error('Analiz güncelleme hatası:', e); }
+                    requestAutoSave();
                     return;
                 }
 
@@ -3076,8 +3114,35 @@
                 if (typeof CVRender !== 'undefined' && typeof CVRender.adjustCVScale === 'function') {
                     setTimeout(CVRender.adjustCVScale, 50);
                 }
+                requestAutoSave();
                 } catch(e) {
                     console.error('onizlemeyiGuncelle genel hatası:', e);
+                }
+            }
+
+            function requestAutoSave() {
+                if (
+                    typeof saveManager === 'undefined' ||
+                    !window.auth?.currentUser ||
+                    typeof mevcutCVVerisiniTopla === 'undefined'
+                ) {
+                    return;
+                }
+
+                const data = mevcutCVVerisiniTopla();
+                const personal = data.personal || {};
+                const hasContent = Boolean(
+                    String(personal.fullName || '').trim() ||
+                    String(personal.email || '').trim() ||
+                    String(personal.title || '').trim() ||
+                    String(data.summary || '').trim() ||
+                    data.experience?.length ||
+                    data.education?.length ||
+                    data.skills?.length
+                );
+
+                if (hasContent) {
+                    saveManager.autoSave(structuredClone(data));
                 }
             }
 
@@ -3406,7 +3471,7 @@
                     const idx = durum.beceriler.findIndex(b => b.id === this.dataset.id);
                     if (idx === -1) return;
                     durum.beceriler[idx].ad = this.value;
-                    beceriOnizlemesiGuncelle();
+                    onizlemeyiGuncelle();
                 });
 
                 div.querySelector('.btn-remove-entry').addEventListener('click', function () {
@@ -4472,6 +4537,14 @@
             });
 
             function formSifirla() {
+                aktifCVId = null;
+                aktifCVAdi = '';
+                aktifCVKaynagi = 'legacy';
+
+                if (typeof saveManager !== 'undefined') {
+                    saveManager.currentCVId = null;
+                }
+
                 // Tüm input'ları temizle
                 Object.values(inputlar).forEach(input => { if (input) input.value = ''; });
                 document.getElementById('ozetCharCount').textContent = '0 / 600';
