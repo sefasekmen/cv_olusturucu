@@ -14,7 +14,7 @@
 
     <!-- Paylaşılan stil dosyası -->
     <link rel="stylesheet" href="styles/style.css">
-    <link rel="stylesheet" href="styles/cv-templates.css?v=6">
+    <link rel="stylesheet" href="styles/cv-templates.css?v=7">
 
     <style>
         /* ========================================================
@@ -152,13 +152,32 @@
         /* ===== ÖNİZLEME ALANI ===== */
         .preview-area {
             margin-top: 80px;
-            padding: var(--spacing-2xl) var(--spacing-xl);
-            min-height: 100vh;
+            padding: var(--spacing-xl) 1rem var(--spacing-2xl);
+            min-height: calc(100vh - 80px);
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: flex-start;
             position: relative;
             z-index: 10;
+            width: 100%;
+            box-sizing: border-box;
+            overflow-x: hidden;
+        }
+
+        .cv-scale-wrapper {
+            display: block;
+            margin: 0 auto;
+            position: relative;
+            max-width: 100%;
+            box-sizing: border-box;
+            transition: width 0.15s ease, height 0.15s ease;
+        }
+
+        .cv-scale-wrapper .cv-paper {
+            transform-origin: top left;
+            margin: 0;
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.25), 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
         /* ===== RESPONSIVE ===== */
@@ -203,20 +222,9 @@
             }
 
             .preview-area {
-                padding: 0.5rem !important;
-                align-items: flex-start !important;
+                padding: 1rem 0.5rem 2.5rem !important;
+                align-items: center !important;
                 overflow-x: hidden !important;
-            }
-
-            .preview-area .cv-paper {
-                width: 210mm !important;
-                min-width: 210mm !important;
-                flex-shrink: 0 !important;
-                transform: scale(0.65);
-                transform-origin: top left;
-                margin-left: max(0px, calc((100% - 516px) / 2)) !important;
-                margin-right: 0 !important;
-                margin-bottom: -390px;
             }
         }
     </style>
@@ -267,10 +275,12 @@
 
     <!-- ===== ÖNİZLEME ALANI ===== -->
     <main class="preview-area" role="main">
-        <!-- CV KAĞIDI -->
-        <article class="cv-paper template-klasik" id="cvPaper" aria-label="CV önizlemesi">
-            <!-- İçerik buraya dinamik olarak yüklenecek -->
-        </article>
+        <div class="cv-scale-wrapper" id="cvScaleWrapper">
+            <!-- CV KAĞIDI -->
+            <article class="cv-paper template-klasik" id="cvPaper" aria-label="CV önizlemesi">
+                <!-- İçerik buraya dinamik olarak yüklenecek -->
+            </article>
+        </div>
     </main>
 
     <!-- ===== JAVASCRIPT ===== -->
@@ -283,21 +293,25 @@
     <script src="js/auth.js"></script>
     <script src="js/saveManager.js?v=5"></script>
     <script src="js/script.js?v=6"></script>
-    <script src="js/cv-render.js?v=6"></script>
+    <script src="js/cv-render.js?v=7"></script>
     <script>
         const cvPaper = document.getElementById('cvPaper');
         const printRoot = document.documentElement;
 
         function yazdirmaTemasiniGuncelle() {
+            if (!cvPaper) return;
             const techAktifMi = cvPaper.classList.contains('template-tech');
+            const creativeAktifMi = cvPaper.classList.contains('template-creative');
             printRoot.classList.toggle('print-tech-paper', techAktifMi);
             document.body.classList.toggle('print-tech-paper', techAktifMi);
+            printRoot.classList.toggle('print-creative-paper', creativeAktifMi);
+            document.body.classList.toggle('print-creative-paper', creativeAktifMi);
         }
 
         window.addEventListener('beforeprint', yazdirmaTemasiniGuncelle);
         window.addEventListener('afterprint', () => {
-            printRoot.classList.remove('print-tech-paper');
-            document.body.classList.remove('print-tech-paper');
+            printRoot.classList.remove('print-tech-paper', 'print-creative-paper');
+            document.body.classList.remove('print-tech-paper', 'print-creative-paper');
         });
 
         document.querySelectorAll('.color-swatch').forEach(swatch => {

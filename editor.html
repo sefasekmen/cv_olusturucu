@@ -30,7 +30,7 @@
 
     <!-- Ana stil dosyası (index.html ile aynı) -->
     <link rel="stylesheet" href="styles/style.css">
-    <link rel="stylesheet" href="styles/cv-templates.css?v=6">
+    <link rel="stylesheet" href="styles/cv-templates.css?v=7">
 
     <style>
         /* ========================================================
@@ -1551,19 +1551,18 @@
         /* Mobil: CV kağıdını ekran genişliğine sığdır */
         @media (max-width: 768px) {
             .editor-preview-panel {
-                padding-left: 0 !important;
-                padding-right: 0 !important;
+                padding-left: 0.5rem !important;
+                padding-right: 0.5rem !important;
                 overflow-x: hidden !important;
-                align-items: flex-start !important;
+                align-items: center !important;
             }
 
             .cv-paper {
                 width: 210mm !important;
                 min-width: 210mm !important;
                 flex-shrink: 0 !important;
-                transform-origin: top left !important;
-                margin-left: max(0px, calc((100% - 516px) / 2)) !important;
-                margin-right: 0 !important;
+                transform-origin: top center !important;
+                margin: 0 auto !important;
             }
         }
     </style>
@@ -2409,15 +2408,19 @@
             const printRoot = document.documentElement;
 
             function yazdirmaTemasiniGuncelle() {
+                if (!cvPaper) return;
                 const techAktifMi = cvPaper.classList.contains('template-tech');
+                const creativeAktifMi = cvPaper.classList.contains('template-creative');
                 printRoot.classList.toggle('print-tech-paper', techAktifMi);
                 document.body.classList.toggle('print-tech-paper', techAktifMi);
+                printRoot.classList.toggle('print-creative-paper', creativeAktifMi);
+                document.body.classList.toggle('print-creative-paper', creativeAktifMi);
             }
 
             window.addEventListener('beforeprint', yazdirmaTemasiniGuncelle);
             window.addEventListener('afterprint', () => {
-                printRoot.classList.remove('print-tech-paper');
-                document.body.classList.remove('print-tech-paper');
+                printRoot.classList.remove('print-tech-paper', 'print-creative-paper');
+                document.body.classList.remove('print-tech-paper', 'print-creative-paper');
             });
 
             function editorHeaderYuksekliginiGuncelle() {
@@ -4821,7 +4824,7 @@
         })();
     </script>
     <script src="js/saveManager.js?v=5"></script>
-    <script src="js/cv-render.js?v=6"></script>
+    <script src="js/cv-render.js?v=7"></script>
     <script src="js/cookie-consent.js"></script>
     <script src="js/ai-assistant.js?v=3"></script>
 

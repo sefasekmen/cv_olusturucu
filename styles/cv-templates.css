@@ -885,36 +885,43 @@ body.preview-page .cv-paper::-webkit-scrollbar-thumb {
 @media print {
     @page {
         size: A4 portrait;
-        margin: 12mm 0;
+        margin: 0;
     }
 
     * {
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
+        color-adjust: exact !important;
     }
 
     html,
     body {
-        width: auto !important;
+        width: 100% !important;
         height: auto !important;
-        min-height: 0 !important;
+        min-height: 100% !important;
         margin: 0 !important;
         padding: 0 !important;
         overflow: visible !important;
         background: #ffffff !important;
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
+        color-adjust: exact !important;
     }
 
     html.print-tech-paper,
-    body.print-tech-paper {
+    body.print-tech-paper,
+    html:has(.template-tech),
+    body:has(.template-tech) {
         background: #0f172a !important;
+        background-color: #0f172a !important;
     }
 
-    body.print-tech-paper .editor-layout,
-    body.print-tech-paper .preview-area,
-    body.print-tech-paper .editor-preview-panel {
-        background: #0f172a !important;
+    html.print-creative-paper,
+    body.print-creative-paper,
+    html:has(.template-creative),
+    body:has(.template-creative) {
+        background: #fff7fa !important;
+        background-color: #fff7fa !important;
     }
 
     body.editor-page,
@@ -933,26 +940,60 @@ body.preview-page .cv-paper::-webkit-scrollbar-thumb {
     }
 
     body.editor-page .editor-layout,
-    body.preview-page .preview-area {
+    body.preview-page .preview-area,
+    body.preview-page .cv-scale-wrapper {
         display: block !important;
         margin: 0 !important;
         padding: 0 !important;
         min-height: 0 !important;
         height: auto !important;
         overflow: visible !important;
-        background: #ffffff !important;
+        background: transparent !important;
     }
 
-    body.editor-page .editor-preview-panel,
-    body.preview-page .preview-area {
+    body.editor-page .editor-preview-panel {
         padding: 0 !important;
-        background: #ffffff !important;
+        margin: 0 !important;
+        background: transparent !important;
+    }
+
+    body.print-tech-paper .editor-layout,
+    body.print-tech-paper .preview-area,
+    body.print-tech-paper .editor-preview-panel,
+    body.print-tech-paper .cv-scale-wrapper,
+    body:has(.template-tech) .editor-layout,
+    body:has(.template-tech) .preview-area,
+    body:has(.template-tech) .editor-preview-panel,
+    body:has(.template-tech) .cv-scale-wrapper {
+        background: #0f172a !important;
+        background-color: #0f172a !important;
+    }
+
+    body.print-creative-paper .editor-layout,
+    body.print-creative-paper .preview-area,
+    body.print-creative-paper .editor-preview-panel,
+    body.print-creative-paper .cv-scale-wrapper,
+    body:has(.template-creative) .editor-layout,
+    body:has(.template-creative) .preview-area,
+    body:has(.template-creative) .editor-preview-panel,
+    body:has(.template-creative) .cv-scale-wrapper {
+        background: #fff7fa !important;
+        background-color: #fff7fa !important;
+    }
+
+    .cv-scale-wrapper {
+        width: 100% !important;
+        height: auto !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        display: block !important;
+        transform: none !important;
     }
 
     .cv-paper {
         width: 100% !important;
         max-width: 100% !important;
-        min-height: 0 !important;
+        min-height: 297mm !important;
         max-height: none !important;
         margin: 0 !important;
         box-shadow: none !important;
@@ -963,10 +1004,12 @@ body.preview-page .cv-paper::-webkit-scrollbar-thumb {
         page-break-before: auto;
         -webkit-box-decoration-break: clone;
         box-decoration-break: clone;
+        box-sizing: border-box !important;
     }
 
     .cv-entry {
         page-break-inside: avoid;
+        break-inside: avoid;
     }
 
     /* Layout: modern / tech iki kolon */
@@ -983,7 +1026,8 @@ body.preview-page .cv-paper::-webkit-scrollbar-thumb {
         display: grid !important;
     }
 
-    .cv-paper[data-layout="modern"] #cvBody {
+    .cv-paper[data-layout="modern"] #cvBody,
+    .cv-paper[data-layout="modern"] .cv-body {
         padding: 0 !important;
     }
 
@@ -1008,8 +1052,10 @@ body.preview-page .cv-paper::-webkit-scrollbar-thumb {
         grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr) !important;
     }
 
+    /* TECH Şablonu Yazdırma Renkleri */
     .cv-paper.template-tech,
     .cv-paper.template-tech .cv-modern-banner,
+    .cv-paper.template-tech .cv-body,
     .cv-paper.template-tech .cv-modern-body,
     .cv-paper.template-tech .cv-modern-sidebar,
     .cv-paper.template-tech .cv-modern-main {
@@ -1017,6 +1063,7 @@ body.preview-page .cv-paper::-webkit-scrollbar-thumb {
         background-color: #0f172a !important;
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
+        color-adjust: exact !important;
         -webkit-box-decoration-break: clone;
         box-decoration-break: clone;
     }
@@ -1028,7 +1075,7 @@ body.preview-page .cv-paper::-webkit-scrollbar-thumb {
     .cv-paper.template-tech .cv-name,
     .cv-paper.template-tech .cv-section-title,
     .cv-paper.template-tech .cv-entry-title {
-        color: #ffffff !important;
+        color: #ffd7df !important;
     }
 
     .cv-paper.template-tech .cv-title,
@@ -1036,18 +1083,82 @@ body.preview-page .cv-paper::-webkit-scrollbar-thumb {
     .cv-paper.template-tech .cv-entry-date,
     .cv-paper.template-tech .cv-summary-text,
     .cv-paper.template-tech .cv-contact,
-    .cv-paper.template-tech .cv-entry-desc {
-        color: #dbe4f0 !important;
+    .cv-paper.template-tech .cv-entry-desc,
+    .cv-paper.template-tech .cv-skill-item {
+        color: #cbd5e1 !important;
     }
 
-    .cv-paper.template-modern .cv-modern-banner {
+    .cv-paper.template-tech .cv-skill-header span:first-child {
+        background: linear-gradient(135deg, var(--cherry-ruby, #900000), var(--cherry-bright, #C20000)) !important;
+        color: #ffffff !important;
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
     }
 
-    .cv-entry {
-        break-inside: avoid;
-        page-break-inside: avoid;
+    /* CREATIVE Şablonu Yazdırma Renkleri */
+    .cv-paper.template-creative {
+        background: linear-gradient(160deg, #ffffff 0%, #fff7fa 100%) !important;
+        background-color: #fff7fa !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    .cv-paper.template-creative .cv-header {
+        border-bottom: 2px solid rgba(255, 192, 203, 0.52) !important;
+    }
+
+    .cv-paper.template-creative .cv-section-title::after {
+        background: rgba(255, 192, 203, 0.9) !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    /* MODERN Şablonu Yazdırma Renkleri */
+    .cv-paper.template-modern .cv-modern-banner {
+        background: linear-gradient(135deg, var(--accent-color, #C20000) 0%, color-mix(in srgb, var(--accent-color, #C20000) 70%, #000) 100%) !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    .cv-paper.template-modern .cv-modern-sidebar {
+        background-color: #f9f2f2 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    .cv-paper.template-modern .cv-section-title {
+        border-left: 3px solid var(--accent-color, #C20000) !important;
+        color: var(--accent-color, #C20000) !important;
+    }
+
+    .cv-paper.template-modern .cv-skill-bar-fill {
+        background-color: var(--accent-color, #C20000) !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    /* MINIMAL Şablonu Yazdırma Renkleri */
+    .cv-paper.template-minimal .cv-skill-bar-fill {
+        background-color: var(--accent-color, #F08080) !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    /* TECH ATS Şablonu Yazdırma Renkleri */
+    .cv-paper.template-tech-ats .cv-header {
+        border-bottom: 4px solid var(--accent-color, #2563eb) !important;
+    }
+
+    .cv-paper.template-tech-ats .cv-skill-item {
+        background-color: #f1f5f9 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    .cv-paper.template-tech-ats .cv-skill-bar-fill {
+        background-color: var(--accent-color, #2563eb) !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
     }
 
     .cv-paper * {

@@ -7,7 +7,7 @@
     <meta name="description" content="Paylaşılan profesyonel CV'yi görüntüleyin.">
     <link rel="icon" type="image/webp" href="CVMatik-logo.webp">
     <link rel="stylesheet" href="styles/style.css">
-    <link rel="stylesheet" href="styles/cv-templates.css?v=6">
+    <link rel="stylesheet" href="styles/cv-templates.css?v=7">
     <style>
         body {
             background: #1a1a2e;
@@ -80,8 +80,8 @@
         }
         @media print {
             .view-header { display: none !important; }
-            .view-container { padding: 0; }
-            body { background: white; }
+            .view-container { padding: 0 !important; }
+            body:not(:has(.template-tech)):not(:has(.template-creative)) { background: white !important; }
         }
     </style>
 </head>
@@ -107,7 +107,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <script src="js/firebase-config.js"></script>
-    <script src="js/cv-render.js?v=6"></script>
+    <script src="js/cv-render.js?v=7"></script>
 
     <script>
     (async function() {

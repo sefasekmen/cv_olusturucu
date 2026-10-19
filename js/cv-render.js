@@ -323,6 +323,8 @@
                         </div>
                     </div>
                 </div>`;
+                setTimeout(adjustCVScale, 50);
+                setTimeout(adjustCVScale, 250);
                 return;
             }
 
@@ -351,14 +353,42 @@
 
             // Apply responsive scaling
             setTimeout(adjustCVScale, 50);
+            setTimeout(adjustCVScale, 250);
+            const imgs = cvPaper.querySelectorAll('img');
+            imgs.forEach(img => {
+                if (!img.complete) {
+                    img.addEventListener('load', adjustCVScale);
+                }
+            });
         }
 
         function adjustCVScale() {
             const cvPaper = document.getElementById('cvPaper');
             if (!cvPaper) return;
 
+            const scaleWrapper = document.getElementById('cvScaleWrapper');
             const previewPanel = document.querySelector('.editor-preview-panel') || document.querySelector('.preview-area');
             if (!previewPanel) return;
+
+            if (scaleWrapper) {
+                const styles = getComputedStyle(previewPanel);
+                const horizontalPadding = (parseFloat(styles.paddingLeft) || 0) + (parseFloat(styles.paddingRight) || 0);
+                const availableWidth = Math.max(260, previewPanel.clientWidth - horizontalPadding - 16);
+                const paperWidth = 794; // A4 standard width in px at 96 DPI (210mm)
+                const scale = Math.min(1, availableWidth / paperWidth);
+                const paperHeight = cvPaper.scrollHeight || cvPaper.offsetHeight || 1123;
+
+                scaleWrapper.style.width = `${Math.round(paperWidth * scale)}px`;
+                scaleWrapper.style.height = `${Math.round(paperHeight * scale)}px`;
+                scaleWrapper.style.margin = '0 auto';
+
+                cvPaper.style.transform = `scale(${scale})`;
+                cvPaper.style.transformOrigin = 'top left';
+                cvPaper.style.marginLeft = '0';
+                cvPaper.style.marginRight = '0';
+                cvPaper.style.marginBottom = '0';
+                return;
+            }
 
             // Reset inline styles first
             cvPaper.style.transform = '';
@@ -369,15 +399,14 @@
 
             if (window.innerWidth <= 1024) {
                 const styles = getComputedStyle(previewPanel);
-                const horizontalPadding = parseFloat(styles.paddingLeft) + parseFloat(styles.paddingRight);
+                const horizontalPadding = (parseFloat(styles.paddingLeft) || 0) + (parseFloat(styles.paddingRight) || 0);
                 const availableWidth = previewPanel.clientWidth - horizontalPadding;
                 const paperWidth = cvPaper.offsetWidth || 794;
                 const scale = Math.min(1, availableWidth / paperWidth);
 
                 cvPaper.style.transform = `scale(${scale})`;
-                cvPaper.style.transformOrigin = 'top left';
-                cvPaper.style.marginLeft = `${Math.max(0, (availableWidth - (paperWidth * scale)) / 2)}px`;
-                cvPaper.style.marginRight = '0';
+                cvPaper.style.transformOrigin = 'top center';
+                cvPaper.style.margin = '0 auto';
 
                 const paperHeight = cvPaper.offsetHeight || 1123;
                 cvPaper.style.marginBottom = `${paperHeight * (scale - 1)}px`;
